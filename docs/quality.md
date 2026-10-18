@@ -39,7 +39,7 @@ Cobrem comportamento visível e regressões, não repetem o código:
 | Chrome DevTools MCP | Servidor fixado em 1.11.0 respondeu ao handshake MCP e listou 32 ferramentas, incluindo `lighthouse_audit` e traces de desempenho | Uso real por um cliente; as ferramentas apareceram na lista da sessão, mas não foram chamadas |
 | Graphify | Grafo só de código: 191 nós, 316 arestas, 47 arquivos, 5,6 s; `query` e `path` confirmaram uma relação conhecida | Grafo desatualiza a cada mudança: regenerar antes de confiar nele; semântica de documentos não gerada |
 | RTK | `rtk gain` responde (versão correta) e `rtk init --show` confirma o hook | Reescrita real de comandos só observável em sessão nova |
-| Context7 | Endpoint remoto respondeu a `resolve-library-id` e `query-docs` com documentação real do Next.js | Carregamento pelo cliente não observado; índice lista versões até 16.2.9, anteriores ao 16.4.2 do projeto |
+| Context7 | Endpoint remoto e a ferramenta MCP no cliente (sessão de 18/10/2026) responderam com documentação real do Next.js | Índice lista versões até 16.2.9, anteriores ao 16.4.2 do projeto; confirmar contra `node_modules/next/dist/docs/` |
 | Revisão de segurança | Prompt em `docs/prompts/security-review.md` | Nenhuma revisão executada neste projeto |
 
 Instalação e descoberta não provam execução: a coluna "Evidência" só registra o que foi observado.
