@@ -93,7 +93,7 @@ Prompt reutilizável em `docs/prompts/security-review.md`: leitura somente, rela
 
 ## Git e colaboração
 
-- A árvore de trabalho tem trabalho **sem commit**: nunca use `git checkout`, `reset`, `clean` ou `stash` que descarte alterações, mesmo que uma skill (por exemplo `differential-review`) sugira `git checkout`. Inspecione versões antigas por leitura de objetos do Git.
+- A árvore de trabalho pode ter alterações **sem commit**: nunca use `git checkout`, `reset`, `clean` ou `stash` que descarte alterações, mesmo que uma skill (por exemplo `differential-review`) sugira `git checkout`. Inspecione versões antigas por leitura de objetos do Git.
 - Sem bloqueios de push em `main`, exigência de branch/worktree ou hooks `pre-commit`/`pre-push` por padrão. Lint, tipos, testes e build são comandos explícitos.
 - Delegue quando pedido ou quando um fluxo suportado justificar. Tarefas paralelas exigem arquivos distintos e independência dentro da mesma onda.
 
