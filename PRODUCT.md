@@ -69,7 +69,7 @@ Next.js 16.4.2 (App Router), TypeScript estrito, Tailwind CSS 4, sem persistênc
 
 ## Próxima entrega
 
-Fase 3 do redesign: Header e Hero, com a headline "Tecnologia que resolve problemas reais.", nova composição do cubo e correção do menu mobile em telas baixas.
+Escolha da direção criativa do redesign (três propostas em `docs/CREATIVE-DIRECTION.md`). Em seguida, o protótipo de alta fidelidade do Header, do Hero (headline "Tecnologia que resolve problemas reais.") e de um serviço ilustrado, com a correção do menu mobile em telas baixas.
 
 ## Manutenção
 

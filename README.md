@@ -29,8 +29,8 @@ Variáveis de ambiente (`.env.example`): `NEXT_PUBLIC_SITE_URL` (obrigatória em
 - [Verificações de qualidade](docs/quality.md)
 - [Instruções para agentes](AGENTS.md)
 - [Setup do toolkit e evidências](docs/setup.md)
-- [Plano do redesign](docs/DESIGN-REDESIGN.md) e [relatórios de revisão](docs/reviews/)
+- Redesign: [plano atual](docs/DESIGN-REDESIGN.md); [nova direção criativa](docs/CREATIVE-DIRECTION.md) (proposta, aguardando escolha), [sistema de ilustração](docs/ILLUSTRATION-SYSTEM.md) e [plano revisado](docs/REDESIGN-PLAN.md); [relatórios de revisão](docs/reviews/)
 
 ## Próxima entrega
 
-Fase 3 do redesign: Header e Hero. Critério observável: hero com a nova headline e composição do cubo, e menu mobile alcançável por inteiro em telas baixas (568×320 e 667×375).
+Escolha da direção criativa (D6, em `docs/CREATIVE-DIRECTION.md`). Depois, Fase 3A: protótipo de alta fidelidade do Header, do Hero e de um serviço ilustrado. Critério observável: o protótipo aprovado visualmente por você, com o menu mobile alcançável por inteiro em telas baixas (568×320 e 667×375).
