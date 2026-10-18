@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/*
+ * Design system Noxora.
+ *
+ * Princípio: "vidro sobre preto". A página é quase toda silenciosa (preto,
+ * texto, filetes). O brilho metálico aparece só no cubo, no destaque do hero e
+ * nos filetes de alguns cards. Se tudo brilha, nada brilha.
+ *
+ * Contrastes (calculados, WCAG): fg sobre ink 19,3:1; muted sobre ink 8,2:1 e
+ * sobre surface-2 7,4:1; control sobre surface 4,1:1 e sobre surface-2 3,9:1.
+ * `line` (1,4:1) é decorativo: nunca use para delimitar um controle.
+ */
+@theme {
+  /* Superfícies */
+  --color-ink: #000000;
+  --color-surface: #0a0a0a;
+  --color-surface-2: #111111;
+  --color-surface-3: #171717;
+
+  /* Bordas: `line` é decorativa; `control` delimita elementos interativos (≥ 3:1). */
+  --color-line: #27272a;
+  --color-control: #71717a;
+
+  /* Texto */
+  --color-fg: #f5f5f7;
+  --color-muted: #a1a1aa;
+
+  /* Metal e estados */
+  --color-chrome: #d4d8de;
+  --color-danger: #fca5a5;
+  --color-success: #86efac;
+
+  /* Famílias tipográficas (carregadas em layout.tsx) */
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+
+  /* Escala tipográfica. Nenhum texto da interface fica abaixo de 14 px (text-sm). */
+  --text-display: clamp(2.5rem, 1.5rem + 4.2vw, 4rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.04em;
+  --text-h1: clamp(2.25rem, 1.4rem + 3.4vw, 3.5rem);
+  --text-h1--line-height: 1.08;
+  --text-h1--letter-spacing: -0.035em;
+  --text-h2: clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem);
+  --text-h2--line-height: 1.12;
+  --text-h2--letter-spacing: -0.03em;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.35;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.65;
+
+  /* Espaçamento: base de 4 px do Tailwind; ritmo vertical entre seções. */
+  --spacing-section: clamp(4rem, 3rem + 4vw, 6rem);
+
+  /* Raios */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  /* Sombras: só duas, sem brilho colorido. */
+  --shadow-ring: inset 0 0 0 1px rgb(255 255 255 / 0.04);
+  --shadow-lift: 0 12px 32px -12px rgb(0 0 0 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.05);
+
+  /* Movimento: três durações e uma curva. */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 600ms;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-rise: rise var(--duration-slow) var(--ease-out-soft) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 12px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+}
+
+@layer base {
+  html {
+    /* Compensa o header fixo em âncoras e ao mover o foco (WCAG 2.4.11). */
+    scroll-padding-top: 6rem;
+    color-scheme: dark;
+    background-color: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+  }
+
+  /* Anel de foco único. Não altera o raio, para não "quadrar" botões arredondados. */
+  :focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: #e4e4e7;
+    color: #000000;
+  }
+}
+
+@layer utilities {
+  /* Texto com reflexo metálico. Paradas claras mantêm contraste alto sobre preto. */
+  .chrome-text {
+    background-image: linear-gradient(
+      100deg,
+      #ffffff 0%,
+      #c7ccd3 28%,
+      #ffffff 46%,
+      #aab1ba 70%,
+      #f4f4f5 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  /* Filete metálico no topo de um card. Use com moderação. */
+  .chrome-line {
+    position: relative;
+  }
+  .chrome-line::before {
+    content: "";
+    position: absolute;
+    inset-inline: 10%;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(255 255 255 / 0.55),
+      transparent
+    );
+    opacity: var(--chrome-line-opacity, 0.45);
+    transition: opacity var(--duration-base) var(--ease-out-soft);
+    pointer-events: none;
+  }
+  .chrome-line:hover,
+  .chrome-line:focus-within {
+    --chrome-line-opacity: 1;
+  }
+}
+
+/*
+ * Reveal (ui/Reveal.tsx): o conteúdo é visível por padrão. O atributo só existe
+ * depois da hidratação, para elementos fora da tela e sem preferência de
+ * movimento reduzido. Sem JavaScript, nada fica escondido.
+ */
+[data-reveal] {
+  transition:
+    opacity var(--duration-slow) var(--ease-out-soft) var(--reveal-delay, 0ms),
+    transform var(--duration-slow) var(--ease-out-soft) var(--reveal-delay, 0ms);
+}
+[data-reveal="hidden"] {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

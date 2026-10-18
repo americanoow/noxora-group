@@ -6,14 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:typed": "eslint --config eslint.typed.config.mjs .",
+    "lint:rules": "node scripts/verify-quality-rules.mjs ./eslint-rules/index.cjs",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "check": "npm run lint && npm run typecheck && npm run lint:typed && npm run lint:rules && npm run test:e2e"
   },
   "dependencies": {
+    "lucide-react": "^1.59.0",
     "next": "16.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
