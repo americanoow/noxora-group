@@ -33,4 +33,4 @@ Variáveis de ambiente (`.env.example`): `NEXT_PUBLIC_SITE_URL` (obrigatória em
 
 ## Próxima entrega
 
-Escolha da direção criativa (D6, em `docs/CREATIVE-DIRECTION.md`). Depois, Fase 3A: protótipo de alta fidelidade do Header, do Hero e de um serviço ilustrado. Critério observável: o protótipo aprovado visualmente por você, com o menu mobile alcançável por inteiro em telas baixas (568×320 e 667×375).
+Portão 3B: validação visual da Fase 3A pelo responsável (hero, header e a ilustração de APIs e integrações), com a escolha tipográfica (D7). Depois, a Fase 4: as quatro ilustrações de serviço e a demonstração interativa.

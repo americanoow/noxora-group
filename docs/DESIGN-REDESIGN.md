@@ -1,6 +1,6 @@
 # Redesign premium da Noxora: diagnóstico e plano
 
-> **Aviso (18/10/2026):** a direção visual está em revisão. A proposta visual deste documento (seções 2.2 a 2.6) e as fases 3 a 7 serão substituídas por `docs/REDESIGN-PLAN.md`, `docs/CREATIVE-DIRECTION.md` e `docs/ILLUSTRATION-SYSTEM.md` **depois que você escolher a direção**. A Fase 2 e as decisões D1 a D5 continuam valendo. Até a aprovação, este plano não é alterado.
+> **Aviso (18/10/2026):** a direção visual foi aprovada com ajustes. A proposta visual deste documento (seções 2.2 a 2.6) e as fases 3 a 7 foram **substituídas** por `docs/REDESIGN-PLAN.md`, `docs/CREATIVE-DIRECTION.md` e `docs/ILLUSTRATION-SYSTEM.md`. Este plano permanece como histórico das fases 1 e 2 e das decisões D1 a D5.
 
 Status: **plano aprovado em 17/10/2026, em execução.** Fase 2 concluída (ver `docs/reviews/2026-10-17-redesign-fase-2.md`).
 

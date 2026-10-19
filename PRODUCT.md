@@ -69,7 +69,7 @@ Next.js 16.4.2 (App Router), TypeScript estrito, Tailwind CSS 4, sem persistênc
 
 ## Próxima entrega
 
-Escolha da direção criativa do redesign (três propostas em `docs/CREATIVE-DIRECTION.md`). Em seguida, o protótipo de alta fidelidade do Header, do Hero (headline "Tecnologia que resolve problemas reais.") e de um serviço ilustrado, com a correção do menu mobile em telas baixas.
+Portão 3B: validação visual da Fase 3A pelo responsável (hero, header e a ilustração de APIs e integrações), com a escolha tipográfica (D7). Depois, a Fase 4: as quatro ilustrações de serviço e a demonstração interativa.
 
 ## Manutenção
 

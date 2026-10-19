@@ -26,6 +26,7 @@ O build de produção (`npm run build`) exige `NEXT_PUBLIC_SITE_URL`; os testes 
 Cobrem comportamento visível e regressões, não repetem o código:
 
 - **e2e (`desktop` e `mobile`):** estrutura e SEO (h1 único, `lang`, regiões nomeadas, metadados, robots, sitemap, origem pública), canais de contato sem links fictícios, portfólio vazio sem cases, navegação por teclado, menu mobile, tokens do design system, texto mínimo de 14 px, foco sem alterar o raio e comportamento do `Reveal` (com movimento reduzido e sem JavaScript).
+- **Fase 3A (`prototype-3a.spec.ts`):** hero (texto aprovado, composição decorativa, cubo com prioridade alta, nada invisível com movimento reduzido nem durante os atrasos), header transparente e com superfície ao rolar, menu mobile alcançável em 568×320, 667×375 e 390×844 (F04), ausência de rolagem horizontal de 320 a 1440 px, fichas do hero dentro da viewport de 1024 a 1920 px, e a ilustração de APIs e integrações (legenda curta, rótulo conceitual, sem nomes de empresas nem números de resultado, botão Repetir, estado final, movimento reduzido e sem JavaScript).
 - **unit:** `resolveSiteUrl` (desenvolvimento, produção, vazio, inválido, protocolo não web, normalização).
 
 **Não existem:** auditoria automatizada de acessibilidade (axe), medição de Core Web Vitals, teste com leitor de tela real, teste em Safari/Firefox (os dois projetos usam Chromium), teste de formulário (ainda não existe). Não declare conformidade WCAG integral nem aprovação de Core Web Vitals sem esses dados.
@@ -47,6 +48,23 @@ Instalação e descoberta não provam execução: a coluna "Evidência" só regi
 ### Lint tipado
 
 Duas regras (`no-floating-promises`, `no-misused-promises`) com severidade `error`, em `eslint.typed.config.mjs`, sobre `src/`. Medido neste runner (Windows, Node 24): 0 problemas em 43 arquivos varridos (as regras tipadas valem para os 28 de `src/`), 8,5 s dentro do processo (cerca de 16 s com `npx`) e pico de 664 MB. Como não havia violações, a severidade começou em `error`. Provado reprovando: uma promessa solta e um callback assíncrono onde se esperava `void` produzem 2 erros e saída 1; um arquivo de 360 linhas produz erro de `quality/max-lines`.
+
+### Desempenho e acessibilidade automatizada (Fase 3A, laboratório)
+
+Medido em 18/10/2026 no build de produção local (`next start`), antes (commit `fb65d08`) e depois da Fase 3A. Três execuções por perfil, mediana; CDP com cache desligado; celular com CPU 4× e rede de 9 Mbps e 40 ms. **Laboratório, não dados de campo:** Core Web Vitals reais continuam sem medição.
+
+| Métrica | Antes | Depois |
+| --- | --- | --- |
+| LCP celular (script CDP) | 512 ms | 564 ms |
+| LCP desktop (script CDP) | 108 ms | 200 ms |
+| LCP celular (trace do DevTools, CPU 4× e Fast 4G) | 1.551 ms (atraso de renderização 952 ms) | 943 ms (390 ms) |
+| CLS | 0,00 | 0,00 |
+| JS / CSS / documento / fontes | 143,2 / 7,3 / 10,8 / 46,4 KB | 143,9 / 9,3 / 15,4 / 46,4 KB |
+| Imagem do cubo (elemento de LCP) | 57,7 KB no celular, 46,4 KB no desktop | 46,4 KB nos dois |
+
+Leitura honesta: o LCP do script subiu de 50 a 90 ms (ainda longe de 2,5 s) e o do trace do DevTools caiu. Os dois usam metodologias diferentes e não devem ser somados. O `preload` do cubo recuperou o celular (636 → 548 ms antes do ajuste final); a causa dos ~90 ms restantes no desktop **não foi isolada** (hipóteses não testadas: rasterização dos gradientes de luz, início das animações). Metas do `ILLUSTRATION-SYSTEM.md` atendidas: imagem ≤ 150 KB, JS adicional ≤ 15 KB, CLS 0.
+
+Lighthouse mobile (Chrome DevTools MCP, auditoria automatizada): Acessibilidade 100, Boas práticas 100, SEO 100, 54 auditorias aprovadas e 0 falhas. Isso **não** equivale a conformidade WCAG completa.
 
 ## Revisão após implementação ou correções
 

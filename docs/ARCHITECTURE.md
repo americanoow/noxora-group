@@ -15,9 +15,10 @@ src/
 │   ├── page.tsx         Composição das seções + JSON-LD (Organization)
 │   ├── icon.png, apple-icon.png, opengraph-image.tsx, robots.ts, sitemap.ts
 ├── components/
-│   ├── layout/          Header (server), MobileNav (client), Footer
+│   ├── illustrations/   hero/HeroStage (palco do cubo em camadas), api/ApiIntegrationFigure
+│   ├── layout/          Header (server), HeaderShell e MobileNav (client), Footer
 │   ├── sections/        Hero, Services, Benefits, Portfolio, ProjectCard, Contact
-│   └── ui/              Container, Button/ButtonLink, Card, Badge, Reveal (client), SectionHeader, Wordmark
+│   └── ui/              Container, Button/ButtonLink, Card, Badge, Facet, RailDivider, Reveal e PlayFigure (client), SectionHeader, Wordmark
 ├── content/             Textos e dados tipados (site, serviços, benefícios, projetos, contato)
 ├── lib/                 site-url.ts (origem pública validada), whatsapp.ts (link do canal quando configurado)
 └── styles/globals.css   Design system: tokens (@theme), base e utilitários
@@ -37,7 +38,7 @@ Seções da página: Hero, Soluções, Como ajudamos, Projetos e Contato. **Nave
 
 ## Fronteiras e fluxo
 
-Server Components por padrão; componentes client só onde há estado ou API do navegador: `MobileNav` e `Reveal`. Dados e textos dos canais vêm de `src/content/` (lidos no build); a configuração do ambiente é lida em módulos de servidor e nunca chega ao cliente via `NEXT_PUBLIC_*`, exceto a URL pública do site, que é pública por natureza.
+Server Components por padrão; componentes client só onde há estado ou API do navegador: `MobileNav`, `HeaderShell` (estado de rolagem), `Reveal` e `PlayFigure` (animação ao entrar na tela). Dados e textos dos canais vêm de `src/content/` (lidos no build); a configuração do ambiente é lida em módulos de servidor e nunca chega ao cliente via `NEXT_PUBLIC_*`, exceto a URL pública do site, que é pública por natureza.
 
 Interface e design system: `docs/design.md`; os valores ficam em `src/styles/globals.css`.
 
@@ -49,7 +50,7 @@ Interface e design system: `docs/design.md`; os valores ficam em `src/styles/glo
 - **Configuração dos canais.** `CONTACT_EMAIL` ativa o link `mailto:` quando contém um endereço válido. `WHATSAPP_NUMBER` ativa o WhatsApp quando contém um número válido. Ambos são lidos no build; os cartões pendentes continuam visíveis quando a configuração está ausente ou inválida. Os canais funcionam sem JavaScript. O endereço de e-mail e o telefone não foram inventados.
 - **URL do site.** `lib/site-url.ts` valida `NEXT_PUBLIC_SITE_URL`: em desenvolvimento, ausente cai em `http://localhost:3000`; **em produção, ausente, vazia ou inválida interrompe o build** com mensagem clara. Isso impede esquecer a variável (ausente, vazia ou inválida); **não** impede um valor `localhost` escolhido de propósito, então confira o domínio definitivo na publicação.
 - **Movimento sem biblioteca.** `Reveal` (client, ~1 KB) usa `IntersectionObserver`. O HTML do servidor é totalmente visível; só depois da hidratação o que está abaixo da dobra é escondido, e nunca com `prefers-reduced-motion: reduce`. Sem JavaScript nada fica oculto. Não há animação infinita.
-- **Hero.** Imagem do cubo (`public/images/noxora-icon.png`, PNG com fundo transparente) servida por `next/image`. É uma imagem, não um modelo 3D; WebGL foi avaliado e descartado (ver plano).
+- **Hero.** Palco em camadas (L0 luz, L1 trilhos atrás, L2 o cubo, L3 trilhos e fichas à frente) com a imagem do cubo (`public/images/noxora-icon.png`, PNG transparente) servida por `next/image` com `preload`, `loading="eager"` e `fetchPriority="high"` (decisão por medição: o `preload` recuperou o LCP no celular). O reflexo reaproveita o mesmo arquivo. É uma imagem, não um modelo 3D; WebGL foi avaliado e descartado. A entrada animada nunca esconde texto nem o cubo.
 - **Fontes** via `next/font` (Manrope nos textos e Space Grotesk nos títulos), auto-hospedadas e com `display: swap`.
 - **Qualidade.** Perfil leve do toolkit para Next: presets oficiais do Next + `quality/max-lines` (350). Perfil tipado separado (`lint:typed`) para `no-floating-promises` e `no-misused-promises`. Detalhes em `docs/quality.md`.
 - **Arquivos de agentes fora do build.** `.agents/`, `.claude/`, `.codex/` e `.backups/` ficam fora do `tsconfig` e do ESLint; contêm instruções e scripts de terceiros que não fazem parte da aplicação.

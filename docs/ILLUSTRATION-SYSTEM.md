@@ -1,6 +1,6 @@
 # Sistema de ilustração e interação
 
-Status: **proposta, escrita para a Direção A ("Estúdio de Luz")**, recomendada em `docs/CREATIVE-DIRECTION.md`. Se você escolher B ou C, mudam os itens marcados **[A]**; a estrutura (geometria, camadas, acessibilidade, orçamento) permanece. Nada foi implementado. Data: 18/10/2026.
+Status: **aprovado em 18/10/2026; Fase 3A implementada (hero e APIs e integrações).** Escrito para a Direção A ("Estúdio de Luz")**, recomendada em `docs/CREATIVE-DIRECTION.md`. Se você escolher B ou C, mudam os itens marcados **[A]**; a estrutura (geometria, camadas, acessibilidade, orçamento) permanece. Nada foi implementado. Data: 18/10/2026.
 
 Objetivo: que hero, serviços e demonstrações pareçam parte de **um** sistema, não uma coleção de efeitos.
 

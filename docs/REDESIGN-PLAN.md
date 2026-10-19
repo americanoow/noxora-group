@@ -1,6 +1,18 @@
 # Plano revisado do redesign
 
-Status: **proposta, aguardando a sua escolha de direção (D6) e demais decisões.** Nada foi implementado. Data: 18/10/2026.
+Status: **aprovado com ajustes em 18/10/2026. Fase 3A implementada; aguarda a validação visual do responsável (portão 3B).**
+
+**Decisões do responsável (18/10/2026):**
+
+- **D6:** Direção **A** como principal, com os diagramas técnicos e as demonstrações da **B** e, da **C**, apenas a assinatura (trilhos cromados, pequenos detalhes líquidos, transições).
+- **D7:** testar as duas tipografias e comparar. **Feito** (`docs/reviews/assets/fase-3a/tipografia-comparacao.png`); a escolha segue **pendente**.
+- **D8:** APIs e integrações primeiro. **Implementado.**
+- **D9:** prata e gelo; âmbar só como reflexo discreto (usado em um único ponto: a luz da ficha "Fluxo ativo").
+- **D10:** PNG original preservado, derivados só quando necessário. **Não foram necessários**: a imagem chega com 46 KB e o reflexo reaproveita o mesmo arquivo.
+- **D11:** CSS e SVG; sem Motion até haver necessidade medida.
+- **Requisitos adicionais:** cada serviço com ilustração própria e tecnicamente coerente; interfaces demonstrativas; diagramas interativos; componentes exclusivos; **textos mais curtos e mais gráfico do que texto** (pedido durante a Fase 3A).
+
+Durante a fase o responsável pediu para manter a introdução original e depois retirou o pedido; o hero cinematográfico foi mantido. A introdução original continua no commit `fb65d08` e o experimento anterior à retratação na branch `proto/hero-estudio-de-luz`, se ainda existir.
 Depende de: `docs/CREATIVE-DIRECTION.md` (as três direções e a recomendação) e `docs/ILLUSTRATION-SYSTEM.md` (linguagem de ilustração). Escrito para a **Direção A**; os itens que dependem da escolha estão marcados.
 
 ## 1. Relação com o plano anterior (`docs/DESIGN-REDESIGN.md`)
@@ -80,7 +92,7 @@ Cada fase termina com: `npm run check`, relatório curto em `docs/reviews/`, rev
 
 | Fase | Entrega | Portão |
 | --- | --- | --- |
-| **3A. Protótipo de alta fidelidade** | **Header** (estado rolado e F04), **Hero** (nova composição, derivados do cubo, `fetchPriority`, `src/content/hero.ts`) e **um serviço ilustrado** (APIs e integrações, D8) em página de prova | Você valida o visual |
+| **3A. Protótipo de alta fidelidade** ✅ | **Header** (estado rolado e F04), **Hero** (nova composição, derivados do cubo, `fetchPriority`, `src/content/hero.ts`) e **um serviço ilustrado** (APIs e integrações, D8) em página de prova | Você valida o visual |
 | **3B. Validação visual** | Capturas desktop e mobile (incluindo 568×320 e 667×375), medição de LCP, CLS e peso com `lighthouse_audit`, verificação de movimento reduzido e sem JavaScript, revisão com `web-design-guidelines` | **Aprovação do protótipo** antes de seguir |
 | **4. Serviços e demonstrações** | As quatro ilustrações de serviço, a seção de soluções reorganizada e a demonstração interativa "Tecnologia aplicada ao seu negócio." | Revisão independente |
 | **5. Demais seções** | Como ajudamos (editorial), Projetos (estrutura premium e estado vazio), Contato com formulário depois dos canais (validação, estado de envio, erro, proteção básica), Footer | Revisão independente, com revisão de segurança do formulário (`differential-review`) |
@@ -128,6 +140,6 @@ Um ou mais commits por fase (código e documentação separados), na branch atua
 - **Desempenho:** dentro do orçamento; LCP, CLS e peso medidos e registrados (sem declarar aprovação de Core Web Vitals sem dados).
 - **Processo:** relatório e revisão independente por fase, commits com checagens verdes, nenhuma publicação sem autorização.
 
-## 11. Decisões pendentes (detalhe em `CREATIVE-DIRECTION.md`, seção 7)
+## 11. Decisões (detalhe em `CREATIVE-DIRECTION.md`, seção 7; resolvidas em 18/10/2026, exceto D7)
 
 - **D6** direção (recomendada: A); **D7** serifa no título do hero (recomendado: testar no protótipo); **D8** serviço do protótipo (recomendado: APIs e integrações); **D9** luz colorida (recomendado: prata e gelo, âmbar raro); **D10** novos ângulos do cubo ou derivados do PNG atual (recomendado: derivados); **D11** Motion (recomendado: só se medido).

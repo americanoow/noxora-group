@@ -58,7 +58,9 @@ Site institucional (landing page) da Noxora, empresa de três profissionais de t
 
 Fonte da verdade: `src/styles/globals.css` (tokens) e `docs/design.md`.
 
-- Use os tokens; não crie cores, raios ou durações avulsos. Fundo #000. Brilho metálico só no cubo, no destaque do hero e em filetes de cards.
+- Use os tokens; não crie cores, raios ou durações avulsos. Fundo #000. Luz e brilho têm finalidade narrativa: no máximo **um foco de luz por tela**; texto nunca sobre o pico de luz nem sobre o vidro do cubo (use ficha opaca); luz decorativa nunca carrega informação. Sem neon nem glassmorphism como estilo de container; vidro só como material em ilustrações, sem `backdrop-filter` nelas.
+- Ilustrações: decorativas com `aria-hidden` (o significado vai no texto ao lado); rótulo visível "Demonstração conceitual" quando simulam um sistema; estado final estático no HTML; animação de uma passada que **nunca esconde texto nem o elemento de LCP**; com movimento reduzido nada se move e os atrasos são zerados. Dados fictícios genéricos, sem nome de empresa nem número de resultado.
+- Menos texto, mais gráfico: legendas de uma linha; a informação principal vai na ilustração.
 - Nenhum texto abaixo de 14 px. Borda de controle interativo usa `control`, nunca `line` (WCAG 1.4.11).
 - Animação em CSS ou `Reveal`; sem animação infinita, parallax ou scroll hijacking; respeitar `prefers-reduced-motion`.
 - Acessibilidade WCAG 2.2 AA: rótulos, foco visível, navegação por teclado.
