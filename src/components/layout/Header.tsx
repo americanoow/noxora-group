@@ -2,12 +2,13 @@ import { navItems } from "@/content/site";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { HeaderShell } from "./HeaderShell";
 import { MobileNav } from "./MobileNav";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-ink/80 backdrop-blur-md">
-      <Container className="flex h-16 items-center justify-between gap-6 sm:h-18">
+    <HeaderShell>
+      <Container className="flex h-(--header-h) items-center justify-between gap-6">
         <a
           href="#inicio"
           className="-mx-1 px-1 py-2"
@@ -38,6 +39,6 @@ export function Header() {
           <MobileNav items={navItems} />
         </div>
       </Container>
-    </header>
+    </HeaderShell>
   );
 }

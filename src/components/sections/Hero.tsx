@@ -1,5 +1,6 @@
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { hero } from "@/content/hero";
+import { HeroStage } from "@/components/illustrations/hero/HeroStage";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 
@@ -8,52 +9,51 @@ export function Hero() {
     <section
       id="inicio"
       aria-labelledby="hero-title"
-      className="relative overflow-hidden"
+      className="relative isolate overflow-hidden"
     >
-      <Container className="grid items-center gap-12 pt-14 pb-20 sm:pt-20 lg:grid-cols-[1.15fr_1fr] lg:gap-8 lg:pt-28 lg:pb-32">
-        <div className="relative z-10">
-          <p className="text-sm font-medium tracking-[0.14em] text-muted uppercase">
-            Sites · Sistemas · Integrações · Automações
+      {/* L0: luz-chave do alto à esquerda do palco. Decorativa; nunca sob o texto. */}
+      <div
+        aria-hidden="true"
+        className="hero-light pointer-events-none absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,black_55%,transparent)]"
+        style={{
+          backgroundImage: [
+            "conic-gradient(from 158deg at 66% -8%, transparent 0deg, rgb(143 180 255 / 0.05) 6deg, rgb(200 214 255 / 0.15) 21deg, rgb(255 255 255 / 0.2) 27deg, rgb(200 214 255 / 0.11) 35deg, transparent 54deg)",
+            "radial-gradient(46% 42% at 70% 52%, rgb(143 180 255 / 0.1), transparent 70%)",
+          ].join(","),
+        }}
+      />
+
+      <Container className="grid items-center gap-8 pt-24 pb-16 sm:pt-28 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-4 lg:pt-32 lg:pb-24">
+        <div className="relative z-10 text-center lg:text-left">
+          <p className="text-sm font-medium tracking-[0.1em] text-muted uppercase sm:tracking-[0.14em]">
+            {hero.eyebrow}
           </p>
 
           <h1
             id="hero-title"
-            className="mt-6 font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.05em] text-fg sm:text-6xl lg:text-[4rem]"
+            className="mt-5 font-display text-h1 font-semibold text-fg"
           >
-            Seu negócio evolui.{" "}
-            <span className="chrome-text block">
-              A tecnologia acompanha.
-            </span>
+            {hero.headlineLead}{" "}
+            <span className="chrome-text">{hero.headlineAccent}</span>
           </h1>
 
-          <p className="mt-7 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-            Criamos sites, sistemas personalizados, integrações e automações
-            que conectam a sua operação e acompanham o crescimento da empresa,
-            do primeiro contato do cliente ao processo interno.
+          <p className="mx-auto mt-6 max-w-md text-body-lg text-muted lg:mx-0">
+            {hero.description}
           </p>
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
             <ButtonLink href="#contato" size="lg">
-              Conversar sobre um projeto
+              {hero.primaryCta}
               <ArrowRight aria-hidden="true" className="size-4" />
             </ButtonLink>
             <ButtonLink href="#solucoes" variant="secondary" size="lg">
-              Explorar soluções
+              {hero.secondaryCta}
             </ButtonLink>
           </div>
         </div>
 
-        {/* PNG com fundo transparente: assenta direto sobre o preto AMOLED. */}
-        <div className="mx-auto w-full max-w-[24rem] sm:max-w-md lg:max-w-none">
-          <Image
-            src="/images/noxora-icon.png"
-            alt="Tecla de vidro translúcido com a marca Noxora gravada na face superior"
-            width={1283}
-            height={1226}
-            priority
-            sizes="(min-width: 1024px) 520px, (min-width: 640px) 448px, 90vw"
-            className="h-auto w-full"
-          />
+        <div className="mx-auto w-[78%] max-w-[26rem] max-lg:order-first lg:mx-0 lg:ml-auto lg:w-full lg:max-w-none xl:w-[125%] xl:-mr-[22%]">
+          <HeroStage />
         </div>
       </Container>
     </section>

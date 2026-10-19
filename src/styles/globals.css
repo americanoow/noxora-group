@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 /*
- * Design system Noxora.
+ * Design system Noxora: "Liquid Engineering" (direção A, "Estúdio de Luz").
  *
- * Princípio: "vidro sobre preto". A página é quase toda silenciosa (preto,
- * texto, filetes). O brilho metálico aparece só no cubo, no destaque do hero e
- * nos filetes de alguns cards. Se tudo brilha, nada brilha.
+ * Princípio: luz e brilho têm finalidade narrativa. No máximo um foco de luz
+ * por tela; texto nunca sobre o pico de luz; luz decorativa nunca carrega
+ * informação. Cromo e prata assinam a marca; gelo e âmbar são só reflexo.
  *
- * Contrastes (calculados, WCAG): fg sobre ink 19,3:1; muted sobre ink 8,2:1 e
- * sobre surface-2 7,4:1; control sobre surface 4,1:1 e sobre surface-2 3,9:1.
- * `line` (1,4:1) é decorativo: nunca use para delimitar um controle.
+ * Contrastes (calculados, WCAG): fg sobre ink 19,3:1; muted sobre ink 8,2:1,
+ * sobre surface-2 7,4:1 e sobre graphite-3 5,9:1; control sobre surface 4,1:1.
+ * `line` (1,4:1) é decorativo: nunca use para delimitar um controle. Sobre
+ * grafite use `control-strong` (5,4 / 5,0 / 4,4:1 sobre graphite-1/2/3).
+ * graphite-3 é o teto: acima de #2e2e34 o `control` falha em 3:1.
  */
 @theme {
   /* Superfícies */
@@ -17,10 +19,18 @@
   --color-surface: #0a0a0a;
   --color-surface-2: #111111;
   --color-surface-3: #171717;
+  --color-graphite-1: #141416;
+  --color-graphite-2: #1c1c20;
+  --color-graphite-3: #26262b;
 
   /* Bordas: `line` é decorativa; `control` delimita elementos interativos (≥ 3:1). */
   --color-line: #27272a;
   --color-control: #71717a;
+  --color-control-strong: #8a8a93;
+
+  /* Luz: reflexos, nunca preenchimento nem cor de marca. */
+  --color-light-ice: #8fb4ff;
+  --color-light-amber: #f5c88a;
 
   /* Texto */
   --color-fg: #f5f5f7;
@@ -62,6 +72,7 @@
   /* Sombras: só duas, sem brilho colorido. */
   --shadow-ring: inset 0 0 0 1px rgb(255 255 255 / 0.04);
   --shadow-lift: 0 12px 32px -12px rgb(0 0 0 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.05);
+  --shadow-float: 0 18px 40px -14px rgb(0 0 0 / 0.95), 0 2px 0 0 rgb(255 255 255 / 0.04) inset;
 
   /* Movimento: três durações e uma curva. */
   --duration-fast: 150ms;
@@ -84,6 +95,17 @@
 }
 
 @layer base {
+  :root {
+    /* Borda cromada: brilha no canto superior esquerdo e no inferior direito. */
+    --gradient-chrome-edge: linear-gradient(
+      135deg,
+      rgb(255 255 255 / 0.85),
+      rgb(199 204 211 / 0.22) 34%,
+      rgb(255 255 255 / 0.08) 62%,
+      rgb(170 177 186 / 0.6)
+    );
+  }
+
   html {
     /* Compensa o header fixo em âncoras e ao mover o foco (WCAG 2.4.11). */
     scroll-padding-top: 6rem;
@@ -158,6 +180,82 @@
   }
 }
 
+/* Keyframes das animações de uma passada. Só transform, opacity e stroke-dashoffset. */
+@keyframes stage-in {
+  from { transform: translate3d(0, 10px, 0) scale(0.97); }
+  to { transform: none; }
+}
+@keyframes light-on {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes chip-in {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes pulse-run {
+  from { stroke-dashoffset: 0.12; }
+  to { stroke-dashoffset: -1; }
+}
+@keyframes ring-pulse {
+  0% { opacity: 0; transform: scale(0.92); }
+  30% { opacity: 0.7; }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+@layer components {
+  /*
+   * Faceta: moldura com o canto superior direito chanfrado (herdado da tecla
+   * de vidro) e borda cromada em degradê. O conteúdo vai em .facet-inner.
+   * --f define o tamanho do corte.
+   */
+  .facet {
+    --f: 28px;
+    padding: 1px;
+    background: var(--gradient-chrome-edge);
+    border-radius: var(--radius-lg);
+    clip-path: polygon(0 0, calc(100% - var(--f)) 0, 100% var(--f), 100% 100%, 0 100%);
+  }
+  .facet-inner {
+    height: 100%;
+    background: var(--facet-bg, var(--color-surface));
+    border-radius: calc(var(--radius-lg) - 1px);
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--f) + 1px) 0,
+      100% calc(var(--f) - 1px),
+      100% 100%,
+      0 100%
+    );
+  }
+
+  /* Hero: entrada orquestrada, uma passada. O cubo e o texto nunca começam invisíveis (LCP). */
+  .hero-stage { animation: stage-in 900ms var(--ease-out-soft) both; }
+  .hero-light { animation: light-on 1200ms ease-out both; }
+  .hero-chip { animation: chip-in 700ms var(--ease-out-soft) both; animation-delay: var(--d, 600ms); }
+  .hero-rail { stroke-dasharray: 1; animation: draw 1100ms var(--ease-out-soft) both; animation-delay: var(--d, 300ms); }
+  .hero-bead { stroke-dasharray: 0.1 1; stroke-dashoffset: 1; opacity: 0; animation: pulse-run 1500ms ease-in-out both, bead-visible 1500ms linear both; animation-delay: var(--d, 1300ms); }
+
+  /* Ilustrações animadas ao entrar na tela (ui/PlayFigure.tsx). Estado final = estado padrão. */
+  .nx-link { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .nx-pulse { stroke-dasharray: 0.12 1; stroke-dashoffset: 1; opacity: 0; }
+  .nx-ring { opacity: 0; }
+  [data-play="armed"] .nx-link { stroke-dashoffset: 1; }
+  [data-play="armed"] .nx-node { opacity: 0; }
+  [data-play="playing"] .nx-link { animation: draw 700ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
+  [data-play="playing"] .nx-pulse { animation: pulse-run 900ms ease-in-out both, bead-visible 900ms linear both; animation-delay: calc(var(--d, 0ms) + 750ms); }
+  [data-play="playing"] .nx-node { animation: chip-in 500ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
+  [data-play="playing"] .nx-ring { animation: ring-pulse 1100ms ease-out both; animation-delay: 700ms; }
+}
+
+@keyframes bead-visible {
+  from, to { opacity: 1; }
+}
+
 /*
  * Reveal (ui/Reveal.tsx): o conteúdo é visível por padrão. O atributo só existe
  * depois da hidratação, para elementos fora da tela e sem preferência de
@@ -178,8 +276,10 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 }

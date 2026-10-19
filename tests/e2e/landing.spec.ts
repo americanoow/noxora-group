@@ -8,11 +8,11 @@ test.describe("estrutura e SEO", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toContainText(
-      "Seu negócio evolui. A tecnologia acompanha.",
+      "Tecnologia que resolve problemas reais.",
     );
 
     for (const name of [
-      "Tecnologia aplicada ao que move a sua empresa.",
+      "Soluções sob medida para cada etapa do seu negócio.",
       "Problemas reais, soluções sob medida.",
       "Vamos conversar sobre o seu projeto.",
     ]) {
@@ -47,13 +47,13 @@ test.describe("estrutura e SEO", () => {
 test.describe("hero", () => {
   test("CTAs levam às seções certas", async ({ page }) => {
     await page.goto("/");
-    const hero = page.getByRole("region", { name: /Seu negócio evolui/ });
+    const hero = page.getByRole("region", { name: /Tecnologia que resolve/ });
 
     await expect(
       hero.getByRole("link", { name: "Conversar sobre um projeto" }),
     ).toHaveAttribute("href", "#contato");
     await expect(
-      hero.getByRole("link", { name: "Explorar soluções" }),
+      hero.getByRole("link", { name: "Conhecer nossas soluções" }),
     ).toHaveAttribute("href", "#solucoes");
   });
 });

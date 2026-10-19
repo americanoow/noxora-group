@@ -74,7 +74,7 @@ test.describe("tokens do design system", () => {
     await page.goto("/");
 
     const cta = page
-      .getByRole("region", { name: /Seu negócio evolui/ })
+      .getByRole("region", { name: /Tecnologia que resolve/ })
       .getByRole("link", { name: "Conversar sobre um projeto" });
     const radius = () =>
       cta.evaluate((element) => getComputedStyle(element).borderRadius);

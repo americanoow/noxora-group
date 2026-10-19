@@ -62,7 +62,7 @@ export function MobileNav({ items }: { items: readonly NavItem[] }) {
         id={panelId}
         aria-label="Principal"
         hidden={!open}
-        className="absolute inset-x-0 top-full border-b border-line bg-ink px-5 pt-2 pb-6"
+        className="absolute inset-x-0 top-full max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain border-b border-line bg-ink px-5 pt-2 pb-6"
       >
         <ul className="flex flex-col">
           {items.map((item) => (
