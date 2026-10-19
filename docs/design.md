@@ -23,7 +23,7 @@ Fonte da verdade dos valores: `src/styles/globals.css` (`@theme`). Este document
 
 - HTML semântico, navegação por teclado completa e foco visível sem alterar o raio do elemento (anel branco de 2 px, offset de 3 px). Foco nunca fica coberto pelo header fixo (`scroll-padding-top`).
 - Rótulos em todos os controles e campos; erro de validação ao lado do campo e anunciado; operações assíncronas mostram progresso e resultado. Nunca exibir sucesso sem confirmação real.
-- Movimento: CSS ou `Reveal`; sem animação infinita, parallax, efeitos de mouse que atrapalhem ou scroll hijacking. `prefers-reduced-motion: reduce` elimina deslocamento e animação de entrada. Sem JavaScript, nenhum conteúdo fica oculto.
+- Movimento: CSS ou `Reveal`. Loops permitidos por decisão do responsável (19/10/2026), com pausa longa entre ciclos, só enquanto visíveis e só com JavaScript (`<html data-motion="on">`); `MotionToggle` no rodapé pausa tudo (WCAG 2.2.2) e `prefers-reduced-motion` desliga os loops. Sem parallax, scroll hijacking nem efeitos de mouse que atrapalhem. `prefers-reduced-motion: reduce` elimina deslocamento, animação de entrada e loops. Sem JavaScript, nenhum conteúdo fica oculto e nada anima em loop.
 - Links externos abrem em nova aba com `rel="noopener noreferrer"` e aviso acessível.
 
 ## Layout e revisão

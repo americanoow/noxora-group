@@ -17,13 +17,13 @@ const H = 480;
 
 type NodeId = (typeof apiDemo.nodes)[number]["id"];
 
-const nodes: Record<NodeId, { x: number; y: number; icon: LucideIcon; link: string }> = {
-  site: { x: 110, y: 90, icon: Globe, link: "M138 90 H280 Q296 90 296 106 V184" },
-  loja: { x: 530, y: 90, icon: ShoppingCart, link: "M502 90 H360 Q344 90 344 106 V184" },
-  erp: { x: 70, y: 224, icon: Database, link: "M98 224 H264" },
-  crm: { x: 570, y: 224, icon: Users, link: "M542 224 H376" },
-  pagamentos: { x: 150, y: 400, icon: CreditCard, link: "M178 400 H280 Q296 400 296 384 V296" },
-  estoque: { x: 490, y: 400, icon: Package, link: "M462 400 H360 Q344 400 344 384 V296" },
+const nodes: Record<NodeId, { x: number; y: number; icon: LucideIcon; link: string; out: string }> = {
+  site: { x: 110, y: 90, icon: Globe, link: "M138 90 H280 Q296 90 296 106 V184", out: "M296 184 V106 Q296 90 280 90 H138" },
+  loja: { x: 530, y: 90, icon: ShoppingCart, link: "M502 90 H360 Q344 90 344 106 V184", out: "M344 184 V106 Q344 90 360 90 H502" },
+  erp: { x: 70, y: 224, icon: Database, link: "M98 224 H264", out: "M264 224 H98" },
+  crm: { x: 570, y: 224, icon: Users, link: "M542 224 H376", out: "M376 224 H542" },
+  pagamentos: { x: 150, y: 400, icon: CreditCard, link: "M178 400 H280 Q296 400 296 384 V296", out: "M296 296 V384 Q296 400 280 400 H178" },
+  estoque: { x: 490, y: 400, icon: Package, link: "M462 400 H360 Q344 400 344 384 V296", out: "M344 296 V384 Q344 400 360 400 H462" },
 };
 
 const pos = (x: number, y: number) => ({
@@ -32,6 +32,10 @@ const pos = (x: number, y: number) => ({
 });
 
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
+
+// Sequência: sistemas de origem enviam o sinal à API (1,0 s), a API reage (1,8 s)
+// e responde aos demais sistemas (1,9 s), cada um respondendo ao receber (2,8 s).
+const sources: readonly NodeId[] = ["site", "loja"];
 
 /**
  * APIs e integrações: sistemas trocando informações por uma API central.
@@ -66,14 +70,14 @@ export function ApiIntegrationFigure() {
               style={delay(index * 90)}
             />
             <path
-              d={nodes[node.id].link}
+              d={sources.includes(node.id) ? nodes[node.id].link : nodes[node.id].out}
               pathLength="1"
               fill="none"
               stroke="#e8f0ff"
               strokeWidth="5"
               strokeLinecap="round"
               className="nx-pulse"
-              style={delay(index * 140)}
+              style={delay(sources.includes(node.id) ? 250 : 1150)}
             />
           </g>
         ))}
@@ -93,6 +97,9 @@ export function ApiIntegrationFigure() {
                 <Icon className="size-5 @sm:size-6" strokeWidth={1.5} />
               </div>
             </div>
+            {sources.includes(node.id) ? null : (
+              <div className="nx-respond absolute -inset-2 rounded-xl border border-light-ice/50" style={delay(2800)} />
+            )}
             <span className="absolute top-full left-1/2 mt-1.5 hidden -translate-x-1/2 text-sm whitespace-nowrap text-muted @sm:block">
               {node.label}
             </span>
@@ -118,7 +125,7 @@ export function ApiIntegrationFigure() {
       {/* Resposta da API */}
       <div
         className="nx-node absolute z-10 hidden items-center gap-2 rounded-md @sm:flex border border-white/15 bg-surface px-2.5 py-1 text-sm font-medium whitespace-nowrap text-fg shadow-float"
-        style={{ ...pos(404, 170), ...delay(700) }}
+        style={{ ...pos(404, 170), ...delay(2800) }}
       >
         <span className="size-1.5 rounded-full bg-light-ice shadow-[0_0_8px_2px_rgb(143_180_255/0.5)]" />
         {apiDemo.status}

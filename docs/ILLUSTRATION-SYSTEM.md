@@ -72,8 +72,23 @@ Cinco níveis de empilhamento, do fundo para a frente:
 ## 8. Movimento
 
 - **Entrada** em uma passada (hero ~1 s no total; peças de serviço ~600 ms): luz acende, objeto entra (fade e escala 0,96→1), trilhos se desenham (`stroke-dashoffset`), fichas entram em sequência de 80–120 ms.
-- **Sem animação infinita.** Diagramas rodam **uma vez** ao entrar na tela e repetem só por interação (hover, foco ou botão "repetir"). Fora da tela, a animação não roda.
+- **Loops com pausa.** Os diagramas tocam ao entrar na tela e **recomeçam a cada ciclo** (`loopMs`, com pausa antes de repetir) enquanto estiverem visíveis; o botão "Repetir" reinicia na hora. Os reflexos (cubo, trilho) são CSS infinito com pausa longa (9 s e 12 s). Tudo só existe com JavaScript e sem pausa (`<html data-motion="on">`); o botão "Pausar animações" do rodapé (`MotionToggle`) para tudo (WCAG 2.2.2) e o movimento reduzido desliga os loops. Se a figura nunca atingir a faixa de visibilidade, toca em 4 s. Decisão do responsável em 19/10/2026 (antes: uma passada).
 - **Só `transform` e `opacity`**; sem layout em animação.
+  - Exceção consciente: o reflexo sobre o cubo (`sheen-loop`) anima `mask-position`, que não roda no compositor. São 1,6 s a cada 9 s, em uma imagem; não toca layout.
+
+### Catálogo de animações (19/10/2026)
+
+Todas recomeçam em loop enquanto visíveis (ver Movimento), terminam no estado que o HTML já traz e ficam estáticas com movimento reduzido, sem JavaScript ou pausadas. Nenhuma esconde texto nem o LCP. Impressão mostra tudo no estado final.
+
+| Onde | O que acontece | Gatilho |
+|---|---|---|
+| Hero e selo do Contato | Faixa de luz prata atravessa o cubo (a mesma imagem, mascarada; só toca o vidro) | Carga (após 1,9 s) / ao entrar na tela |
+| Soluções, APIs | Sinal vai do sistema à API; a API reage; responde aos outros sistemas, que respondem ao receber | Ao entrar na tela, com "Repetir" |
+| Soluções, Websites e Sistemas | Moldura, painel e controles se encaixam em camadas | Ao entrar na tela |
+| Soluções, Automação | Documento chega, passa pela regra e termina organizado no destino | Ao entrar na tela, com "Repetir" |
+| Como ajudamos | Blocos dispersos e girados se alinham, se ligam e formam o núcleo "Solução Noxora" | Ao entrar na tela |
+| Divisores | Reflexo curto percorre o trilho cromado | Ao entrar na tela |
+| Projetos | O projeto fora de foco esmaece e se desloca discretamente; altura estável | Troca de projeto |
 - **Movimento reduzido:** estado final estático, sem deslocamento. **Sem JavaScript:** estado final visível; nada fica oculto à espera de script.
 - **Sem efeitos de mouse que atrapalhem** (nada de parallax pelo cursor nem tilt no hero).
 
@@ -133,7 +148,7 @@ Um SVG vertical fixo atrás do conteúdo (ou por seção), com um ponto de luz e
 - [ ] Decorativa com `aria-hidden`, ou informativa com `title` e `desc`.
 - [ ] Rótulo "Demonstração conceitual" quando simula um sistema; nenhum nome, logo ou resultado inventado.
 - [ ] Dentro do orçamento de peso; sem layout shift.
-- [ ] Movimento reduzido sem deslocamento; nenhuma animação infinita.
+- [ ] Movimento reduzido sem deslocamento; loops desligados (sem `data-motion`, sem botão de pausa).
 - [ ] Mesma direção de luz, mesmas espessuras e materiais do sistema.
 
 ## 12. O que muda em B ou C

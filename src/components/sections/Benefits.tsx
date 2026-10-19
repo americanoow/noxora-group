@@ -3,7 +3,7 @@ import { benefits, type Benefit } from "@/content/benefits";
 import { BeforeAfter } from "@/components/illustrations/benefits/BeforeAfter";
 import { Container } from "@/components/ui/Container";
 import { RailDivider } from "@/components/ui/RailDivider";
-import { Reveal } from "@/components/ui/Reveal";
+import { PlayFigure } from "@/components/ui/PlayFigure";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const icons: Record<Benefit["id"], LucideIcon> = {
@@ -33,9 +33,10 @@ export function Benefits() {
           title="Menos atrito na operação. Mais espaço para crescer."
         />
 
-        <Reveal className="mt-10">
+        {/* Os blocos soltos se alinham e se ligam uma vez ao entrar na tela. */}
+        <PlayFigure replayLabel={null} loopMs={8000} className="mt-10">
           <BeforeAfter />
-        </Reveal>
+        </PlayFigure>
 
         <ul className="mt-8 flex flex-wrap justify-center gap-3">
           {benefits.map((benefit) => {

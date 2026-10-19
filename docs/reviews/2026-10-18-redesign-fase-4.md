@@ -99,3 +99,18 @@ A seção Projetos virou uma vitrine de prévias visuais em carrossel manual. N�
 - **Teste instável corrigido:** o teste "contatos lado a lado" media a caixa durante a animação de entrada e falhava sob carga; passou a esperar as animações terminarem (10 de 10 execuções).
 - Capturas: `docs/reviews/assets/fase-4/projetos-{desktop,mobile}-{1,2,3}.png`.
 - **Revisão independente (revisor do Claude; o Codex não executa neste ambiente):** sem achados críticos. Corrigidos: barra de controles estourava a largura em 360 px com 4 ou mais projetos (`flex-wrap` + teste a 360 px com 5 projetos); atalhos do navegador (Alt+Seta, Ctrl+Home) eram interceptados; dois testes podiam agir antes da hidratação; a rota dinâmica de fixtures devolvia 200 com corpo de 404 em caminhos inválidos, então virou quatro páginas estáticas (verificado em build sem `NOXORA_FIXTURES`: `/fixtures/projetos/0`, `2`, `3` e `abc` respondem 404). O 404 sem a variável foi checado à mão; nenhum teste automático o cobre, porque o build de teste sempre liga a variável. Aceitos como estão: o leitor de tela anuncia posições intermediárias ao saltar vários projetos de uma vez; cores avulsas nos mockups decorativos.
+
+### Quarto ajuste (19/10/2026): animações
+
+Sete animações pedidas mais uma extra (reflexo no cubo do selo do Contato), todas de uma passada, com estado final por padrão e estáticas com movimento reduzido ou sem JavaScript; catálogo em `docs/ILLUSTRATION-SYSTEM.md`. As soluções Websites, Sistemas e Automação ganharam miniaturas animadas no lugar dos ícones. "Troca suave de projetos" esmaece e desloca o projeto fora de foco sem alterar a altura.
+
+- **Desvios do pedido:** a "logo" foi tratada como o cubo (hero e selo do Contato); o texto "NOXORA." do cabeçalho não foi animado. O reflexo do cubo usa `mask-position` (fora do compositor), documentado como exceção.
+- **Correções feitas no caminho:** overflow em 320 px causado pelas novas miniaturas (`grid-cols-1`); nós da automação apertados em telas estreitas.
+- **Testes:** `animations.spec.ts`. Descoberto na escrita: figuras abaixo da dobra em viewport baixa (720 px) só tocam quando ficam bem visíveis; os testes rolam até a figura.
+- **Limitação:** timing e aparência foram verificados por valores calculados e capturas pontuais, não por vídeo; Safari e aparelhos reais não foram testados (máscara e `cqw` em especial).
+
+### Quinto ajuste (19/10/2026): animações em loop
+
+Por pedido do responsável as animações passaram a recomeçar em loop, o que **muda a regra anterior** ("sem animação infinita"); `AGENTS.md`, `docs/design.md` e `docs/ILLUSTRATION-SYSTEM.md` foram atualizados. Para manter WCAG 2.2.2 e o estado final seguro: loops só com JavaScript e sem pausa (`<html data-motion>`), botão "Pausar animações" no rodapé, movimento reduzido sem loops, figuras só em loop enquanto visíveis (pausa longa entre ciclos), reflexos CSS a cada 9 s (cubo) e 12 s (trilho).
+
+Achados da revisão independente tratados: estado "armado" só abaixo da dobra com rede de segurança de 4 s e regra de impressão (nada escondido); transição do carrossel nas propriedades certas (`translate`, `scale`); testes frágeis (seletor da API restrito ao cartão, só a figura centralizada, espera de hidratação). Não tratado: custo de repintura de `mask-position` no reflexo do cubo (documentado; medir antes de mudar). A pausa fica no rodapé, não no cabeçalho.

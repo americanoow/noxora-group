@@ -82,6 +82,18 @@ export function HeroStage() {
           className="absolute top-0 left-0 z-20 h-auto w-full"
         />
 
+        {/* Luz percorrendo o cubo: o mesmo arquivo, mais claro e mascarado por uma faixa que
+            atravessa uma vez, depois da entrada. Só toca o vidro; título e botões já estão visíveis. */}
+        <Image
+          src={CUBE.src}
+          alt=""
+          width={CUBE.width}
+          height={CUBE.height}
+          fetchPriority="low"
+          sizes="(min-width: 1024px) 620px, 78vw"
+          className="cube-sheen hero-sheen pointer-events-none absolute top-0 left-0 z-[25] h-auto w-full"
+        />
+
         {/* Reflexo no piso: o mesmo arquivo, espelhado e esmaecido. A caixa corta o
             reflexo no fim do palco para que ele nunca fique sob o texto. */}
         <div className="absolute inset-x-0 top-[88%] bottom-0 z-[15] overflow-hidden">

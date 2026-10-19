@@ -63,7 +63,7 @@ Fonte da verdade: `src/styles/globals.css` (tokens) e `docs/design.md`.
 - Ilustrações: decorativas com `aria-hidden` (o significado vai no texto ao lado); rótulo visível "Demonstração conceitual" quando simulam um sistema; estado final estático no HTML; animação de uma passada que **nunca esconde texto nem o elemento de LCP**; com movimento reduzido nada se move e os atrasos são zerados. Dados fictícios genéricos, sem nome de empresa nem número de resultado.
 - Menos texto, mais gráfico: legendas de uma linha; a informação principal vai na ilustração.
 - Nenhum texto abaixo de 14 px. Borda de controle interativo usa `control`, nunca `line` (WCAG 1.4.11).
-- Animação em CSS ou `Reveal`; sem animação infinita, parallax ou scroll hijacking; respeitar `prefers-reduced-motion`.
+- Animação em CSS ou `Reveal`; Loops permitidos por decisão do responsável (19/10/2026), com pausa longa entre ciclos, só enquanto visíveis e só com JavaScript (`<html data-motion="on">`); `MotionToggle` no rodapé pausa tudo (WCAG 2.2.2) e `prefers-reduced-motion` desliga os loops. Sem parallax, scroll hijacking nem efeitos de mouse que atrapalhem.
 - Acessibilidade WCAG 2.2 AA: rótulos, foco visível, navegação por teclado.
 
 ## Ferramentas e estilo

@@ -79,7 +79,8 @@ export function ProjectCarousel({ titles, children }: { titles: readonly string[
             role="group"
             aria-roledescription="projeto"
             aria-label={`${index + 1} de ${slides.length}: ${titles[index]}`}
-            className="w-full shrink-0 snap-center"
+            data-active={ready ? index === active : undefined}
+            className="w-full shrink-0 snap-center transition-[opacity,translate,scale] duration-(--duration-slow) ease-out-soft data-[active=false]:translate-y-2 data-[active=false]:scale-[0.98] data-[active=false]:opacity-30"
           >
             {slide}
           </div>

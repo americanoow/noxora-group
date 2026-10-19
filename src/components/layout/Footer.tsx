@@ -1,5 +1,6 @@
 import { navItems, site } from "@/content/site";
 import { Container } from "@/components/ui/Container";
+import { MotionToggle } from "@/components/ui/MotionToggle";
 import { Wordmark } from "@/components/ui/Wordmark";
 
 export function Footer() {
@@ -26,7 +27,10 @@ export function Footer() {
         </nav>
       </Container>
       <Container>
-        <p className="mt-10 text-sm text-muted">{site.name}. Todos os direitos reservados.</p>
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+          <p className="text-sm text-muted">{site.name}. Todos os direitos reservados.</p>
+          <MotionToggle />
+        </div>
       </Container>
     </footer>
   );

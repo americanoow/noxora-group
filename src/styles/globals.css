@@ -211,6 +211,40 @@
   100% { opacity: 0; transform: scale(1.4); }
 }
 
+@keyframes layer-in {
+  from { opacity: 0; transform: translate3d(var(--lx, 0px), var(--ly, 12px), 0) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes align-in {
+  from {
+    opacity: 0.45;
+    transform: translate3d(calc(var(--dx, 0) * 0.25cqw), calc(var(--dy, 0) * 0.25cqw), 0) rotate(var(--r, 0deg));
+  }
+  to { opacity: 1; transform: none; }
+}
+/* Um documento percorre origem, regra e destino (distâncias em cqw da figura). */
+@keyframes doc-run {
+  0% { opacity: 0; transform: translate3d(-12cqw, 0, 0) scale(0.9); }
+  12% { opacity: 1; transform: none; }
+  35% { opacity: 1; transform: none; }
+  55% { opacity: 1; transform: translate3d(34cqw, 0, 0); }
+  65% { opacity: 1; transform: translate3d(34cqw, 0, 0) scale(0.92); }
+  88% { opacity: 1; transform: translate3d(68cqw, 0, 0) scale(0.92); }
+  100% { opacity: 0; transform: translate3d(68cqw, 0, 0) scale(0.8); }
+}
+/* Reflexo prata sobre o cubo: uma faixa de luz atravessa a máscara (1,6 s a cada 9 s). */
+@keyframes sheen-loop {
+  0% { opacity: 0; -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  2%, 16% { opacity: 1; }
+  18%, 100% { opacity: 0; -webkit-mask-position: 0% 0; mask-position: 0% 0; }
+}
+/* Reflexo no trilho cromado (1,8 s a cada 12 s). */
+@keyframes rail-loop {
+  0% { opacity: 0; transform: translate3d(-100%, 0, 0); }
+  3%, 12% { opacity: 1; }
+  15%, 100% { opacity: 0; transform: translate3d(480%, 0, 0); }
+}
+
 @layer components {
   /*
    * Faceta: moldura com o canto superior direito chanfrado (herdado da tecla
@@ -241,6 +275,21 @@
   .hero-stage { animation: stage-in 900ms var(--ease-out-soft) both; }
   .hero-light { animation: light-on 1200ms ease-out both; }
   .hero-rail { stroke-dasharray: 1; animation: draw 1100ms var(--ease-out-soft) both; animation-delay: var(--d, 300ms); }
+  /* Luz percorrendo o cubo: uma passada, depois da entrada. A imagem é o próprio cubo (mesmo arquivo), então a luz só toca o vidro. */
+  .cube-sheen {
+    opacity: 0;
+    filter: brightness(2.6) saturate(0.3);
+    -webkit-mask-image: linear-gradient(105deg, transparent 43%, #000 50%, transparent 57%);
+    mask-image: linear-gradient(105deg, transparent 43%, #000 50%, transparent 57%);
+    -webkit-mask-size: 300% 100%;
+    mask-size: 300% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+  /* Os loops só existem com JavaScript e sem pausa: <html data-motion="on"> (ui/MotionToggle.tsx). */
+  [data-motion="on"] .hero-sheen { animation: sheen-loop 9000ms ease-in-out 1900ms infinite; }
+  /* Selo do contato: o mesmo reflexo, depois que o cubo entra na tela. */
+  [data-motion="on"] [data-sweep="play"] .seal-sheen { animation: sheen-loop 9000ms ease-in-out 300ms infinite; }
   .hero-bead { stroke-dasharray: 0.1 1; stroke-dashoffset: 1; opacity: 0; animation: pulse-run 1500ms ease-in-out both, bead-visible 1500ms linear both; animation-delay: var(--d, 1300ms); }
 
   /* Ilustrações animadas ao entrar na tela (ui/PlayFigure.tsx). Estado final = estado padrão. */
@@ -252,7 +301,35 @@
   [data-play="playing"] .nx-link { animation: draw 700ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
   [data-play="playing"] .nx-pulse { animation: pulse-run 900ms ease-in-out both, bead-visible 900ms linear both; animation-delay: calc(var(--d, 0ms) + 750ms); }
   [data-play="playing"] .nx-node { animation: chip-in 500ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
-  [data-play="playing"] .nx-ring { animation: ring-pulse 1100ms ease-out both; animation-delay: 700ms; }
+  [data-play="playing"] .nx-ring { animation: ring-pulse 1100ms ease-out both; animation-delay: 1800ms; }
+
+  /* Camadas que se encaixam (Websites e Sistemas). */
+  [data-play="armed"] .nx-layer { opacity: 0; }
+  [data-play="playing"] .nx-layer { animation: layer-in 550ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
+
+  /* Do disperso ao organizado (Como ajudamos). */
+  .nx-respond { opacity: 0; }
+  [data-play="armed"] .nx-align { opacity: 0.45; transform: translate3d(calc(var(--dx, 0) * 0.25cqw), calc(var(--dy, 0) * 0.25cqw), 0) rotate(var(--r, 0deg)); }
+  [data-play="armed"] .nx-label { opacity: 0; }
+  [data-play="playing"] .nx-align { animation: align-in 1000ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
+  [data-play="playing"] .nx-label { animation: light-on 500ms ease-out both; animation-delay: var(--d, 0ms); }
+  [data-play="playing"] .nx-respond { animation: ring-pulse 1000ms ease-out both; animation-delay: var(--d, 2800ms); }
+
+  /* Automação: documento, regra, destino organizado. */
+  .nx-doc { opacity: 0; }
+  [data-play="armed"] .nx-done { opacity: 0; }
+  [data-play="playing"] .nx-doc { animation: doc-run 3000ms ease-in-out both; }
+  [data-play="playing"] .nx-done { animation: light-on 400ms ease-out both; animation-delay: 2600ms; }
+
+  /* Trilho cromado: um reflexo curto ao entrar na tela (ui/RailDivider.tsx). */
+  .rail-sheen { opacity: 0; transform: translate3d(-100%, 0, 0); }
+  [data-motion="on"] [data-sweep="play"] .rail-sheen { animation: rail-loop 12000ms ease-in-out infinite; }
+
+  /* Impressão e captura de página: nada fica escondido por um estado de animação. */
+  @media print {
+    [data-play] * { animation: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important; }
+    .nx-doc, .nx-respond, .nx-pulse, .nx-ring { opacity: 0 !important; }
+  }
 }
 
 @keyframes bead-visible {

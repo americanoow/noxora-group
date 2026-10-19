@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Facet } from "@/components/ui/Facet";
 import { RailDivider } from "@/components/ui/RailDivider";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { SweepOnView } from "@/components/ui/SweepOnView";
 import { ContactForm } from "./ContactForm";
 
 const icons = { email: Mail, whatsapp: MessageCircle, instagram: Camera };
@@ -38,14 +39,26 @@ export function Contact() {
             eyebrow={contactSection.eyebrow}
             title={contactSection.title}
           />
-          <Image
-            src="/images/noxora-icon.png"
-            alt=""
-            width={1283}
-            height={1226}
-            sizes="144px"
-            className="h-auto w-28 shrink-0 drop-shadow-[0_18px_30px_rgb(0_0_0/0.8)] sm:w-36"
-          />
+          <SweepOnView className="relative w-28 shrink-0 sm:w-36">
+            <Image
+              src="/images/noxora-icon.png"
+              alt=""
+              width={1283}
+              height={1226}
+              sizes="144px"
+              className="h-auto w-full drop-shadow-[0_18px_30px_rgb(0_0_0/0.8)]"
+            />
+            {/* O cubo pega a luz uma vez ao entrar na tela (mesma ideia do hero). */}
+            <Image
+              src="/images/noxora-icon.png"
+              alt=""
+              width={1283}
+              height={1226}
+              sizes="144px"
+              aria-hidden="true"
+              className="cube-sheen seal-sheen pointer-events-none absolute inset-0 h-auto w-full"
+            />
+          </SweepOnView>
         </div>
 
         <ul className="mt-10 grid gap-4 md:grid-cols-3">

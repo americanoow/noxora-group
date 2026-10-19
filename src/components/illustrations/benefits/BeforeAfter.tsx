@@ -27,11 +27,27 @@ const at = (x: number, y: number): CSSProperties => ({
 });
 
 /** Ícone centrado no ponto, com o nome logo abaixo (o texto nunca gira). */
-function Node({ x, y, name, children }: { x: number; y: number; name: string; children: ReactNode }) {
+function Node({
+  x,
+  y,
+  name,
+  labelDelay,
+  children,
+}: {
+  x: number;
+  y: number;
+  name: string;
+  /** Só no painel animado: o nome aparece quando o bloco já se alinhou (ms). */
+  labelDelay?: number;
+  children: ReactNode;
+}) {
   return (
     <div className="absolute size-12 -translate-x-1/2 -translate-y-1/2 sm:size-14" style={at(x, y)}>
       {children}
-      <span className="absolute top-full left-1/2 mt-1.5 -translate-x-1/2 text-sm font-medium whitespace-nowrap text-fg">
+      <span
+        className={`absolute top-full left-1/2 mt-1.5 -translate-x-1/2 text-sm font-medium whitespace-nowrap text-fg ${labelDelay === undefined ? "" : "nx-label"}`}
+        style={labelDelay === undefined ? undefined : ({ "--d": `${labelDelay}ms` } as CSSProperties)}
+      >
         {name}
       </span>
     </div>
@@ -44,7 +60,7 @@ function Panel({ title, note, children }: { title: string; note: string; childre
       <h3 className="px-4 pt-4 font-display text-base font-semibold text-fg sm:px-5 sm:text-lg">
         {title}
       </h3>
-      <div className="relative aspect-[400/260] w-full">{children}</div>
+      <div className="@container relative aspect-[400/260] w-full">{children}</div>
       <div className="px-4 pb-4 text-center text-sm text-muted sm:px-5 sm:text-base">{note}</div>
     </div>
   );
@@ -95,20 +111,47 @@ function Order() {
     { x: 336, y: 176 },
   ];
   const links = ["M90 56 Q200 56 200 116", "M310 56 Q200 56 200 116", "M90 176 Q200 176 200 116", "M310 176 Q200 176 200 116"];
+  // Onde cada bloco começa (em unidades do desenho) antes de se alinhar: dispersos e girados.
+  const scattered = [
+    { dx: 52, dy: 46, r: "-12deg" },
+    { dx: -72, dy: 54, r: "14deg" },
+    { dx: 84, dy: -42, r: "8deg" },
+    { dx: -62, dy: -48, r: "-10deg" },
+  ];
   return (
     <Facet size="lg" innerClassName="bg-graphite-2" className="mx-auto w-full max-w-lg lg:max-w-none">
       <div className="bg-[radial-gradient(60%_50%_at_50%_50%,rgb(143_180_255/0.14),transparent_72%)]">
         <Panel title={beforeAfter.after.title} note={beforeAfter.after.note}>
           <svg aria-hidden="true" viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 h-full w-full" focusable="false">
-            {links.map((d) => (
-              <path key={d} d={d} fill="none" stroke="rgb(212 216 222 / 0.6)" strokeWidth="2.5" strokeLinecap="round" />
+            {links.map((d, index) => (
+              <path
+                key={d}
+                d={d}
+                pathLength="1"
+                fill="none"
+                stroke="rgb(212 216 222 / 0.6)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                className="nx-link"
+                style={{ "--d": `${850 + index * 90}ms` } as CSSProperties}
+              />
             ))}
           </svg>
           {beforeAfter.tools.map((name, index) => {
             const Icon = icons[index];
             return (
-              <Node key={name} x={spots[index].x} y={spots[index].y} name={name}>
-                <div aria-hidden="true" className="facet size-full [--f:12px]">
+              <Node key={name} x={spots[index].x} y={spots[index].y} name={name} labelDelay={900}>
+                <div
+                  aria-hidden="true"
+                  className="nx-align facet size-full [--f:12px]"
+                  style={
+                    {
+                      "--dx": scattered[index].dx,
+                      "--dy": scattered[index].dy,
+                      "--r": scattered[index].r,
+                    } as CSSProperties
+                  }
+                >
                   <div className="facet-inner grid size-full place-items-center bg-graphite-3 text-chrome">
                     <Icon className="size-5 sm:size-6" strokeWidth={1.5} />
                   </div>
@@ -116,7 +159,10 @@ function Order() {
               </Node>
             );
           })}
-          <div className="absolute -translate-x-1/2 -translate-y-1/2" style={at(200, 116)}>
+          <div
+            className="nx-node absolute -translate-x-1/2 -translate-y-1/2"
+            style={{ ...at(200, 116), "--d": "1100ms" } as CSSProperties}
+          >
             <div className="facet [--f:16px]">
               <div className="facet-inner flex w-24 flex-col items-center gap-1.5 bg-ink px-2 py-3 text-center text-light-ice shadow-[0_0_30px_4px_rgb(143_180_255/0.3)] sm:w-36 sm:px-3">
                 <Layers aria-hidden="true" className="size-6 sm:size-7" strokeWidth={1.5} />
