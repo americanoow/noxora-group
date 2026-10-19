@@ -83,3 +83,7 @@ O responsável pediu três mudanças, feitas sobre a Fase 4:
 3. **Contato:** três peças de canal lado a lado (empilham no celular) e o formulário abaixo. A seção ficou mais alta no desktop (a mudança priorizou os contatos, não a altura); no celular ficou menor.
 
 Verificação: `npm run check` com 143 testes passando e 7 pulados de propósito. A revisão do Codex não pôde ser feita nesta rodada (o terminal dele falhou com `helper_unknown_error` antes de ler o diff); foi usado um revisor independente do Claude no lugar.
+
+### Segundo ajuste (19/10/2026): nomes dentro do gráfico
+
+O gráfico de Como ajudamos passou a rotular cada ícone (Planilhas, E-mails, Mensagens, Pedidos), com títulos "Hoje: processos desconectados" e "Com a Noxora: operação integrada", frases de rodapé e o núcleo "Solução Noxora" (sob medida, sem sugerir um produto único). Nomes e frases são texto real; ícones e traços têm `aria-hidden`; o bloco deixou de ser `role="img"` e virou um grupo nomeado. Capturas em `docs/reviews/assets/fase-4/como-ajudamos-*.png` (1440, 768, 390 e 320 px): sem rótulos sobrepostos, sem texto abaixo de 14 px e sem rolagem horizontal.

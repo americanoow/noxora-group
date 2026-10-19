@@ -10,12 +10,25 @@ test.describe("Como ajudamos", () => {
     await page.goto("/");
     const section = benefits(page);
 
-    // O gráfico é uma imagem para leitores de tela, com descrição do antes e do depois.
-    const graphic = section.getByRole("img", {
-      name: /De ferramentas soltas a uma operação conectada/,
+    // O gráfico é um grupo nomeado; os nomes e as frases são texto real, não só ícones.
+    const graphic = section.getByRole("group", {
+      name: "De processos desconectados a uma operação integrada",
     });
     await expect(graphic).toBeVisible();
-    await expect(graphic).toHaveAccessibleName(/Antes:.*Depois:/);
+    await expect(graphic.getByRole("heading", { level: 3 })).toHaveText([
+      "Hoje: processos desconectados",
+      "Com a Noxora: operação integrada",
+    ]);
+    for (const name of ["Planilhas", "E-mails", "Mensagens", "Pedidos"]) {
+      const labels = graphic.getByText(name, { exact: true });
+      await expect(labels).toHaveCount(2);
+      for (const label of await labels.all()) await expect(label).toBeVisible();
+    }
+    await expect(graphic.getByText("Solução Noxora")).toBeVisible();
+    await expect(graphic.getByText("Informações espalhadas. Tarefas repetitivas.")).toBeVisible();
+    await expect(graphic.getByText("Informações conectadas. Processos automatizados.")).toBeVisible();
+    // Ícones e traços são decorativos.
+    await expect(graphic.locator("svg:not([aria-hidden='true'])")).toHaveCount(0);
 
     await expect(section.getByRole("listitem")).toHaveText([
       "Menos trabalho manual",
@@ -26,15 +39,14 @@ test.describe("Como ajudamos", () => {
     ]);
   });
 
-  test("é curto: não há parágrafos nem cartões com texto corrido", async ({ page }) => {
+  test("é curto: não há parágrafos corridos", async ({ page }) => {
     await page.goto("/");
     const section = benefits(page);
 
     // O único <p> é o rótulo "Como ajudamos" acima do título; não há texto corrido.
     await expect(section.locator("p")).toHaveCount(1);
-    await expect(section.getByRole("heading", { level: 3 })).toHaveCount(0);
     const words = (await section.innerText()).split(/\s+/).filter(Boolean).length;
-    expect(words).toBeLessThanOrEqual(35);
+    expect(words).toBeLessThanOrEqual(60);
   });
 
   test("é compacto (cabe em menos altura que a versão anterior)", async ({ page, isMobile }) => {

@@ -14,9 +14,16 @@ export const benefits: readonly Benefit[] = [
 ];
 
 export const beforeAfter = {
-  label: "De ferramentas soltas a uma operação conectada",
-  before: "Hoje",
-  after: "Com a Noxora",
-  description:
-    "Antes: planilhas, papel, e-mail e mensagens soltos e desorganizados. Depois: tudo conectado em um só fluxo.",
+  label: "De processos desconectados a uma operação integrada",
+  before: {
+    title: "Hoje: processos desconectados",
+    note: "Informações espalhadas. Tarefas repetitivas.",
+  },
+  after: {
+    title: "Com a Noxora: operação integrada",
+    note: "Informações conectadas. Processos automatizados.",
+    core: "Solução Noxora",
+  },
+  /** Os mesmos quatro pontos do dia a dia nos dois painéis. */
+  tools: ["Planilhas", "E-mails", "Mensagens", "Pedidos"],
 } as const;
