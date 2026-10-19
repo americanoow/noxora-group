@@ -211,6 +211,15 @@
   100% { opacity: 0; transform: scale(1.4); }
 }
 
+/* Vitrine de projetos: o projeto que fica ativo traz a prévia e o texto em sequência. */
+@keyframes pj-in {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pj-preview-in {
+  from { opacity: 0; transform: translate3d(0, 8px, 0) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
 @keyframes layer-in {
   from { opacity: 0; transform: translate3d(var(--lx, 0px), var(--ly, 12px), 0) scale(0.96); }
   to { opacity: 1; transform: none; }
@@ -302,6 +311,10 @@
   [data-play="playing"] .nx-pulse { animation: pulse-run 900ms ease-in-out both, bead-visible 900ms linear both; animation-delay: calc(var(--d, 0ms) + 750ms); }
   [data-play="playing"] .nx-node { animation: chip-in 500ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
   [data-play="playing"] .nx-ring { animation: ring-pulse 1100ms ease-out both; animation-delay: 1800ms; }
+
+  /* Projetos: só depois da hidratação (data-active) e sem esconder nada antes disso. */
+  [data-active="true"] .pj-preview { animation: pj-preview-in 700ms var(--ease-out-soft) both; }
+  [data-active="true"] .pj-reveal { animation: pj-in 600ms var(--ease-out-soft) both; animation-delay: calc(180ms + var(--i, 0) * 70ms); }
 
   /* Camadas que se encaixam (Websites e Sistemas). */
   [data-play="armed"] .nx-layer { opacity: 0; }

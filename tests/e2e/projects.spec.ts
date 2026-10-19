@@ -108,6 +108,46 @@ test.describe("vitrine de projetos", () => {
     await expect(position(page)).toHaveText("Projeto 2 de 3");
   });
 
+  test("o próximo projeto aparece de lado, sinalizando que há mais", async ({ page }) => {
+    await expect(position(page)).toBeVisible(); // hidratou
+    const { sliderRight, nextLeft, nextRight } = await scroller(page).evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      const next = (el.children[1] as HTMLElement).getBoundingClientRect();
+      return { sliderRight: box.right, nextLeft: next.left, nextRight: next.right };
+    });
+    expect(nextLeft).toBeLessThan(sliderRight - 12); // um pedaço visível
+    expect(nextRight).toBeGreaterThan(sliderRight); // e continua cortado
+  });
+
+  test("o mouse arrasta para trocar de projeto", async ({ page, isMobile }) => {
+    test.skip(isMobile, "No celular o arrasto é o toque nativo.");
+    await expect(position(page)).toBeVisible(); // hidratou
+    await scroller(page).scrollIntoViewIfNeeded();
+    const box = (await scroller(page).boundingBox())!;
+    const y = box.y + 80;
+    await page.mouse.move(box.x + box.width * 0.7, y);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.4, y, { steps: 8 });
+    await page.mouse.up();
+    await expect(position(page)).toHaveText("Projeto 2 de 3");
+    // Arrasto curto volta ao mesmo projeto.
+    await page.mouse.move(box.x + box.width * 0.5, y);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.5 + 20, y, { steps: 4 });
+    await page.mouse.up();
+    await expect(position(page)).toHaveText("Projeto 2 de 3");
+  });
+
+  test("o conteúdo do projeto ativo entra em sequência e termina visível", async ({ page }) => {
+    await expect(position(page)).toBeVisible(); // hidratou
+    const reveal = carousel(page).getByRole("group", { name: /^1 de 3/ }).locator(".pj-reveal");
+    await expect(reveal).toHaveCount(4);
+    await expect.poll(() => reveal.evaluateAll((els) => els.every((el) => getComputedStyle(el).opacity === "1"))).toBe(true);
+    const delays = await reveal.evaluateAll((els) => els.map((el) => parseFloat(getComputedStyle(el).animationDelay)));
+    expect(delays).toEqual([...delays].sort((x, y) => x - y)); // um depois do outro
+    expect(new Set(delays).size).toBe(delays.length);
+  });
+
   test("a página não ganha rolagem horizontal", async ({ page }) => {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow).toBeLessThanOrEqual(0);
@@ -119,11 +159,15 @@ test.describe("movimento reduzido", () => {
 
   test("a troca de projeto é instantânea", async ({ page }) => {
     await page.goto("/");
-    await carousel(page).getByRole("button", { name: "Próximo projeto" }).click();
-    // Sem animação, a posição já está assentada logo após o clique.
-    const settled = await scroller(page).evaluate(
-      (el) => Math.abs(el.scrollLeft - (el.children[1] as HTMLElement).offsetLeft) < 2,
-    );
+    await expect(position(page)).toBeVisible(); // hidratou
+    // Clica e olha dois quadros depois, dentro da página (não depende da carga da máquina):
+    // sem animação a rolagem já chegou; a suave ainda estaria a caminho.
+    const settled = await scroller(page).evaluate(async (el) => {
+      const next = el.parentElement!.querySelector<HTMLButtonElement>("button[aria-label='Próximo projeto']")!;
+      next.click();
+      for (let i = 0; i < 4; i++) await new Promise((resolve) => requestAnimationFrame(resolve));
+      return el.scrollLeft >= (el.children[1] as HTMLElement).offsetLeft * 0.9;
+    });
     expect(settled).toBe(true);
   });
 });

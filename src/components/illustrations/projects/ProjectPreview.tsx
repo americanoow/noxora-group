@@ -175,7 +175,7 @@ export function ProjectPreview({ project }: { project: Project }) {
     <div
       aria-hidden="true"
       data-preview=""
-      className="relative grid aspect-[4/3] w-full place-items-center overflow-hidden rounded-xl bg-ink sm:aspect-[16/11] px-[5%] select-none"
+      className="relative grid aspect-[4/3] w-full place-items-center overflow-hidden rounded-xl bg-ink sm:aspect-[16/11] lg:aspect-[4/3] px-[5%] select-none"
     >
       <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_40%,rgb(143_180_255/0.14),transparent_72%)]" />
       <div className="relative grid w-full place-items-center">
