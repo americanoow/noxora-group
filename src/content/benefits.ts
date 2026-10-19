@@ -1,39 +1,15 @@
 export type Benefit = {
-  id: string;
+  id: "manual" | "integrar" | "digitalizar" | "produtos" | "experiencia";
   title: string;
-  description: string;
+  /** Uma linha: a ilustração carrega o resto da mensagem. */
+  line: string;
 };
 
 // Sem números ou percentuais: só entram aqui resultados que possamos comprovar.
 export const benefits: readonly Benefit[] = [
-  {
-    id: "manual",
-    title: "Reduzir trabalhos manuais",
-    description:
-      "Rotinas repetitivas passam a rodar de forma automática, com menos chance de erro e mais tempo para a equipe.",
-  },
-  {
-    id: "integrar",
-    title: "Integrar operações",
-    description:
-      "Vendas, financeiro e atendimento compartilham as mesmas informações, sem planilhas paralelas.",
-  },
-  {
-    id: "digitalizar",
-    title: "Digitalizar processos",
-    description:
-      "Processos em papel, e-mail ou mensagens viram fluxos digitais rastreáveis e fáceis de acompanhar.",
-  },
-  {
-    id: "produtos",
-    title: "Criar produtos digitais",
-    description:
-      "Ideias viram plataformas e aplicações prontas para clientes, parceiros ou novos modelos de receita.",
-  },
-  {
-    id: "experiencia",
-    title: "Melhorar a experiência dos clientes",
-    description:
-      "Canais mais rápidos, claros e acessíveis em cada ponto de contato com a sua empresa.",
-  },
+  { id: "manual", title: "Reduzir trabalhos manuais", line: "Menos planilhas e retrabalho." },
+  { id: "integrar", title: "Integrar operações", line: "Vendas, financeiro e atendimento no mesmo fluxo." },
+  { id: "digitalizar", title: "Digitalizar processos", line: "Do papel ao processo rastreável." },
+  { id: "produtos", title: "Criar produtos digitais", line: "Da ideia à plataforma pronta." },
+  { id: "experiencia", title: "Melhorar a experiência dos clientes", line: "Canais claros e acessíveis." },
 ];

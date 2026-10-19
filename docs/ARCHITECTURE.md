@@ -15,12 +15,12 @@ src/
 │   ├── page.tsx         Composição das seções + JSON-LD (Organization)
 │   ├── icon.png, apple-icon.png, opengraph-image.tsx, robots.ts, sitemap.ts
 ├── components/
-│   ├── illustrations/   hero/HeroStage (palco do cubo em camadas), api/ApiIntegrationFigure
+│   ├── illustrations/   hero/HeroStage (palco do cubo), api/ApiIntegrationFigure, benefits/BenefitScenes, projects/ProjectStage
 │   ├── layout/          Header (server), HeaderShell e MobileNav (client), Footer
-│   ├── sections/        Hero, Services, Benefits, Portfolio, ProjectCard, Contact
+│   ├── sections/        Hero, Services, Benefits, Portfolio, ProjectCard, Contact, ContactForm (client)
 │   └── ui/              Container, Button/ButtonLink, Card, Badge, Facet, RailDivider, Reveal e PlayFigure (client), SectionHeader, Wordmark
 ├── content/             Textos e dados tipados (site, serviços, benefícios, projetos, contato)
-├── lib/                 site-url.ts (origem pública validada), whatsapp.ts (link do canal quando configurado)
+├── lib/                 site-url.ts (origem pública validada), contact.ts (validação), contact-action.ts (Server Action), whatsapp.ts (link do canal quando configurado)
 └── styles/globals.css   Design system: tokens (@theme), base e utilitários
 tests/
 ├── e2e/                 Playwright, projetos desktop e mobile
@@ -34,11 +34,11 @@ graphify-out/            Grafo de código gerado (ignorado pelo Git; regenerar q
 docs/                    Documentação (ver índice em README.md); prompts/ e reviews/
 ```
 
-Seções da página: Hero, Soluções, Como ajudamos, Projetos e Contato. **Navegação:** Soluções, Projetos e Contato. A seção Sobre e os perfis dos sócios foram removidos e seguem adiados. O formulário de contato **não existe hoje**; volta na Fase 5 do redesign, depois dos canais.
+Seções da página: Hero, Soluções, Como ajudamos, Projetos e Contato. **Navegação:** Soluções, Projetos e Contato. A seção Sobre e os perfis dos sócios foram removidos e seguem adiados. O formulário de contato vem depois dos canais, na seção Contato.
 
 ## Fronteiras e fluxo
 
-Server Components por padrão; componentes client só onde há estado ou API do navegador: `MobileNav`, `HeaderShell` (estado de rolagem), `Reveal` e `PlayFigure` (animação ao entrar na tela). Dados e textos dos canais vêm de `src/content/` (lidos no build); a configuração do ambiente é lida em módulos de servidor e nunca chega ao cliente via `NEXT_PUBLIC_*`, exceto a URL pública do site, que é pública por natureza.
+Server Components por padrão; componentes client só onde há estado ou API do navegador: `MobileNav`, `HeaderShell` (estado de rolagem), `Reveal`, `PlayFigure` (animação ao entrar na tela) e `ContactForm` (validação e estado de envio). Dados e textos dos canais vêm de `src/content/` (lidos no build); a configuração do ambiente é lida em módulos de servidor e nunca chega ao cliente via `NEXT_PUBLIC_*`, exceto a URL pública do site, que é pública por natureza.
 
 Interface e design system: `docs/design.md`; os valores ficam em `src/styles/globals.css`.
 
@@ -48,6 +48,7 @@ Interface e design system: `docs/design.md`; os valores ficam em `src/styles/glo
 - **Portfólio sem cases fictícios.** `projects` começa vazio e a seção mostra um estado vazio honesto. Para publicar um projeto, adicione um item em `src/content/projects.ts` e as imagens em `public/projects/`.
 - **Contato direto, por três cartões:** e-mail, WhatsApp e Instagram. O Instagram usa o perfil `@noxoragroup`, com abertura em nova aba e aviso acessível. E-mail e telefone ainda não definidos aparecem como pendentes, sem links fictícios.
 - **Configuração dos canais.** `CONTACT_EMAIL` ativa o link `mailto:` quando contém um endereço válido. `WHATSAPP_NUMBER` ativa o WhatsApp quando contém um número válido. Ambos são lidos no build; os cartões pendentes continuam visíveis quando a configuração está ausente ou inválida. Os canais funcionam sem JavaScript. O endereço de e-mail e o telefone não foram inventados.
+- **Formulário de contato.** `lib/contact.ts` valida igual no cliente e no servidor; `lib/contact-action.ts` é a Server Action. Com JavaScript, valida antes de enviar, foca o primeiro campo inválido, mostra "Enviando…" e **intercepta o envio** por um envoltório que trata queda de rede (sem ele, a rejeição desmontaria o formulário e o rascunho se perderia); sem JavaScript vale a Server Action direta, exigida pelo envio nativo; sem JavaScript, a action valida e a página volta com o erro **e os valores digitados** (F03). A entrega é um POST JSON para `CONTACT_WEBHOOK_URL` (só servidor, lida em tempo de execução, nunca `NEXT_PUBLIC_*`), com tempo limite (padrão 8 s). **Sucesso só depois de HTTP 2xx do destino**; sem destino, "indisponível"; falha de entrega, erro com os valores preservados. Campo isca (honeypot) descarta robôs sem entregar. Logs trazem só o tipo do erro: nunca a URL, o e-mail ou a mensagem. **Sem limite de frequência** (pendência registrada em `docs/quality.md`). Bordas dos campos usam `control` (contraste ≥ 3:1).
 - **URL do site.** `lib/site-url.ts` valida `NEXT_PUBLIC_SITE_URL`: em desenvolvimento, ausente cai em `http://localhost:3000`; **em produção, ausente, vazia ou inválida interrompe o build** com mensagem clara. Isso impede esquecer a variável (ausente, vazia ou inválida); **não** impede um valor `localhost` escolhido de propósito, então confira o domínio definitivo na publicação.
 - **Movimento sem biblioteca.** `Reveal` (client, ~1 KB) usa `IntersectionObserver`. O HTML do servidor é totalmente visível; só depois da hidratação o que está abaixo da dobra é escondido, e nunca com `prefers-reduced-motion: reduce`. Sem JavaScript nada fica oculto. Não há animação infinita.
 - **Hero.** Palco em camadas (L0 luz, L1 trilhos atrás, L2 o cubo, L3 trilhos e fichas à frente) com a imagem do cubo (`public/images/noxora-icon.png`, PNG transparente) servida por `next/image` com `preload`, `loading="eager"` e `fetchPriority="high"` (decisão por medição: o `preload` recuperou o LCP no celular). O reflexo reaproveita o mesmo arquivo. É uma imagem, não um modelo 3D; WebGL foi avaliado e descartado. A entrada animada nunca esconde texto nem o cubo.
@@ -65,6 +66,8 @@ Ver `.env.example`. Todas são lidas **no build**; alterá-las exige novo build.
 | `NEXT_PUBLIC_SITE_URL` | Obrigatória em produção (ver acima) |
 | `CONTACT_EMAIL` | Habilita o canal de e-mail |
 | `WHATSAPP_NUMBER` | Habilita o canal de WhatsApp (somente dígitos, com DDI e DDD) |
+| `CONTACT_WEBHOOK_URL` | Destino do formulário. **Lida em tempo de execução, só no servidor.** Sem ela o formulário avisa que está indisponível |
+| `CONTACT_WEBHOOK_TIMEOUT_MS` | Opcional: tempo limite da entrega (padrão 8000) |
 
 Para rodar `npm run build` localmente, copie `.env.example` para `.env.local` (a URL de exemplo já aponta para localhost).
 

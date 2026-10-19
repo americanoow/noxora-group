@@ -28,6 +28,10 @@
   --color-control: #71717a;
   --color-control-strong: #8a8a93;
 
+  /* Painel claro de contraste (18,1:1 com o texto #09090b). Máximo um por tela. */
+  --color-paper: #f4f4f5;
+  --color-paper-ink: #09090b;
+
   /* Luz: reflexos, nunca preenchimento nem cor de marca. */
   --color-light-ice: #8fb4ff;
   --color-light-amber: #f5c88a;

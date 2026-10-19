@@ -3,9 +3,7 @@ import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 export const contactSection = {
   eyebrow: "Contato",
-  title: "Vamos conversar sobre o seu projeto.",
-  description:
-    "Uma ideia, um desafio ou uma nova possibilidade. Escolha o melhor canal para falar com a Noxora.",
+  title: "Seu próximo projeto começa com uma conversa.",
   comingSoon: "Em breve",
   newTab: "(abre em nova aba)",
 } as const;
@@ -33,9 +31,7 @@ export function getContactChannels(): readonly ContactChannel[] {
       id: "email",
       label: "E-mail",
       value: email ?? "Endereço em definição",
-      description: email
-        ? "Conte sua ideia ou envie os detalhes do seu projeto."
-        : "Nosso endereço de contato será divulgado em breve.",
+      description: email ? "Envie os detalhes do projeto." : "",
       href: email ? `mailto:${email}` : null,
       action: "Enviar e-mail",
       external: false,
@@ -44,9 +40,7 @@ export function getContactChannels(): readonly ContactChannel[] {
       id: "whatsapp",
       label: "WhatsApp",
       value: whatsappUrl ? "Converse com a Noxora" : "Número em definição",
-      description: whatsappUrl
-        ? "Um canal direto para começar a conversa sobre o seu projeto."
-        : "Em breve, mais um jeito de conversar com a nossa equipe.",
+      description: whatsappUrl ? "Conversa direta com a equipe." : "",
       href: whatsappUrl,
       action: "Abrir WhatsApp",
       external: true,
@@ -55,7 +49,7 @@ export function getContactChannels(): readonly ContactChannel[] {
       id: "instagram",
       label: "Instagram",
       value: "@noxoragroup",
-      description: "Acompanhe as novidades e fale com a gente pelo direct.",
+      description: "Novidades e mensagens diretas.",
       href: "https://www.instagram.com/noxoragroup/",
       action: "Abrir Instagram",
       external: true,

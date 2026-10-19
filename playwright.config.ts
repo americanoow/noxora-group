@@ -37,6 +37,7 @@ export default defineConfig({
       NEXT_PUBLIC_SITE_URL: `http://localhost:${PORT}`,
       CONTACT_EMAIL: "",
       WHATSAPP_NUMBER: "",
+      CONTACT_WEBHOOK_URL: "",
     },
   },
 });

@@ -31,7 +31,7 @@ Fonte da verdade dos valores: `src/styles/globals.css` (`@theme`). Este document
 - Mobile-first. Larguras de referência para revisão: 320, 390, 768, 1024 e 1440 px; telas baixas: 568×320 e 667×375.
 - Estados existentes: portfólio vazio (aviso honesto), canal de contato pendente ("Em breve"), menu mobile aberto.
 - Estados da Fase 3A: header transparente no topo e com superfície ao rolar; menu mobile com rolagem interna em telas baixas; ilustração animada, estática (sem JavaScript ou movimento reduzido) e repetida pelo botão.
-- Estados planejados (Fase 5): formulário com campo inválido, enviando, erro e sucesso.
+- Estados da Fase 4: formulário com campo inválido (erro ao lado do campo, foco no primeiro), enviando, erro de entrega, indisponível e sucesso; seção Projetos sem cases (estado gráfico honesto); Como ajudamos com cinco cenas, sem coluna fixa.
 - Revisões concluídas: capturas em desktop e celular nas fases 2 e 3A; Lighthouse mobile da Fase 3A (acessibilidade, boas práticas e SEO 100, auditoria automatizada); LCP e CLS medidos em laboratório (ver `docs/quality.md`). **Não existe** auditoria axe, dado de campo de Core Web Vitals nem teste com leitor de tela real.
 - Antes de concluir mudanças de interface: use a skill `web-design-guidelines`; para prosa, `writing-guidelines`.
 

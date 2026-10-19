@@ -50,6 +50,7 @@ Site institucional (landing page) da Noxora, empresa de três profissionais de t
 - Textos e dados editáveis ficam em `src/content/`, não dentro dos componentes.
 - Não publicar cases, depoimentos ou números que não sejam reais e comprovados. Demonstrações conceituais devem ser identificadas como tal.
 - Segredos (ex.: `CONTACT_WEBHOOK_URL`) só em código de servidor; nunca em `NEXT_PUBLIC_*` nem em componentes client.
+- Formulário de contato: `CONTACT_WEBHOOK_URL` só no servidor; sucesso só depois de HTTP 2xx do destino; sem destino, avisar que está indisponível; nunca registrar em log a URL, o e-mail ou a mensagem; valores digitados voltam em qualquer falha.
 - Escopo atual: menu Soluções, Projetos e Contato. A seção Sobre está adiada por decisão do responsável.
 - `NEXT_PUBLIC_SITE_URL` é obrigatória e válida em build de produção. O build não bloqueia `localhost`: antes de publicar, confira que a URL é o domínio definitivo (canonical, sitemap e Open Graph saem dela).
 - Deploy e qualquer publicação exigem autorização específica. As skills de deploy da Vercel foram removidas do projeto (hospedagem ainda não escolhida). Se forem reinstaladas, **nunca** as execute sem pedido explícito: scripts de deploy empacotam o projeto (inclusive pastas locais como `.backups/`) e o enviam a um serviço externo. Mesmo que uma skill diga para prosseguir sem confirmar (`git add .`, `commit`, `push`, `vercel link`), exija autorização do usuário. Nunca leia `.env` em busca de tokens.

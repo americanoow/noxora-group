@@ -6,9 +6,12 @@ export type ProjectImage = {
   height: number;
 };
 
+export type ProjectCategory = "Website" | "Sistema" | "Integração" | "Automação";
+
 export type Project = {
   slug: string;
   name: string;
+  category: ProjectCategory;
   problem: string;
   solution: string;
   technologies: readonly string[];
@@ -26,6 +29,7 @@ export type Project = {
  * {
  *   slug: "portal-cliente-x",
  *   name: "Portal do Cliente X",
+ *   category: "Sistema",
  *   problem: "Pedidos eram acompanhados por e-mail e telefone.",
  *   solution: "Portal web com status de pedidos em tempo real integrado ao ERP.",
  *   technologies: ["Next.js", "PostgreSQL"],

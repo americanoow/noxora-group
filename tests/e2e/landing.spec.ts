@@ -14,7 +14,7 @@ test.describe("estrutura e SEO", () => {
     for (const name of [
       "Soluções sob medida para cada etapa do seu negócio.",
       "Problemas reais, soluções sob medida.",
-      "Vamos conversar sobre o seu projeto.",
+      "Seu próximo projeto começa com uma conversa.",
     ]) {
       await expect(page.getByRole("region", { name })).toBeVisible();
     }
@@ -40,7 +40,7 @@ test.describe("estrutura e SEO", () => {
       name: "Problemas reais, soluções sob medida.",
     });
     await expect(portfolio.getByRole("article")).toHaveCount(0);
-    await expect(portfolio).toContainText("Estamos preparando os estudos de caso");
+    await expect(portfolio).toContainText("Casos reais em breve");
   });
 });
 

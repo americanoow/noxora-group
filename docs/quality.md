@@ -27,9 +27,10 @@ Cobrem comportamento visível e regressões, não repetem o código:
 
 - **e2e (`desktop` e `mobile`):** estrutura e SEO (h1 único, `lang`, regiões nomeadas, metadados, robots, sitemap, origem pública), canais de contato sem links fictícios, portfólio vazio sem cases, navegação por teclado, menu mobile, tokens do design system, texto mínimo de 14 px, foco sem alterar o raio e comportamento do `Reveal` (com movimento reduzido e sem JavaScript).
 - **Fase 3A (`prototype-3a.spec.ts`):** hero (texto aprovado, composição decorativa, cubo com prioridade alta, nada invisível com movimento reduzido nem durante os atrasos), header transparente e com superfície ao rolar, menu mobile alcançável em 568×320, 667×375 e 390×844 (F04), ausência de rolagem horizontal de 320 a 1440 px, fichas do hero dentro da viewport de 1024 a 1920 px, e a ilustração de APIs e integrações (legenda curta, rótulo conceitual, sem nomes de empresas nem números de resultado, botão Repetir, estado final, movimento reduzido e sem JavaScript).
-- **unit:** `resolveSiteUrl` (desenvolvimento, produção, vazio, inválido, protocolo não web, normalização).
+- **Fase 4:** `phase-4.spec.ts` (cinco benefícios com cena decorativa, ausência de `sticky`, nenhum número de resultado, Projetos sem cases e com o fluxo Problema → Solução → Tecnologias, alternância de superfícies, sem rolagem horizontal de 320 a 1440 px) e `contact.spec.ts` (canais sem links fictícios, formulário: rótulos, contraste da borda ≥ 3:1, validação, foco no primeiro inválido, valores preservados com e sem JavaScript, campo isca fora da árvore de acessibilidade).
+- **unit:** `contact.spec.ts` (validação, e a Server Action contra um destino HTTP local: inválido, indisponível, honeypot, sucesso só com 2xx e payload exato, HTTP 500, destino inalcançável, redirecionamento não seguido, tempo esgotado e teto do tempo, sem vazamento de URL, host, e-mail ou mensagem no log) e `resolveSiteUrl` (desenvolvimento, produção, vazio, inválido, protocolo não web, normalização).
 
-**Não existem:** auditoria automatizada de acessibilidade (axe), medição de Core Web Vitals, teste com leitor de tela real, teste em Safari/Firefox (os dois projetos usam Chromium), teste de formulário (ainda não existe). Não declare conformidade WCAG integral nem aprovação de Core Web Vitals sem esses dados.
+**Não existem:** auditoria automatizada de acessibilidade (axe), medição de Core Web Vitals, teste com leitor de tela real, teste em Safari/Firefox (os dois projetos usam Chromium), teste de envio real para um destino de produção (o caminho de sucesso foi provado com destino de teste). Não declare conformidade WCAG integral nem aprovação de Core Web Vitals sem esses dados.
 
 ### Capacidades adotadas e o que cada uma provou (17/10/2026)
 
@@ -65,6 +66,10 @@ Medido em 18/10/2026 no build de produção local (`next start`), antes (commit 
 Leitura honesta: o LCP do script subiu de 50 a 90 ms (ainda longe de 2,5 s) e o do trace do DevTools caiu. Os dois usam metodologias diferentes e não devem ser somados. O `preload` do cubo recuperou o celular (636 → 548 ms antes do ajuste final); a causa dos ~90 ms restantes no desktop **não foi isolada** (hipóteses não testadas: rasterização dos gradientes de luz, início das animações). Metas do `ILLUSTRATION-SYSTEM.md` atendidas: imagem ≤ 150 KB, JS adicional ≤ 15 KB, CLS 0.
 
 Lighthouse mobile (Chrome DevTools MCP, auditoria automatizada): Acessibilidade 100, Boas práticas 100, SEO 100, 54 auditorias aprovadas e 0 falhas. Isso **não** equivale a conformidade WCAG completa.
+
+**Fase 4 (mesmo método, 18/10/2026):** LCP celular, script CDP: 776 / 624 / 692 ms em três rodadas de três execuções (variação de 596 a 976 ms; Fase 3A: 564 ms). LCP desktop: 240 / 248 / 260 ms (Fase 3A: 200 ms). Trace do DevTools no celular: **1.024 ms**, CLS 0,00 (Fase 3A: 943 ms; baseline original: 1.551 ms). JS 146,7 KB (+2,8 KB, o formulário e a Server Action), CSS 10,4 KB, documento 22,9 KB, imagem do hero 46 KB. Lighthouse mobile: Acessibilidade, Boas práticas e SEO em 100, 58 auditorias aprovadas e 0 falhas.
+
+Um **CLS de 0,026** apareceu em uma das execuções desktop da primeira rodada e **não se reproduziu** em duas rodadas completas nem em 14 execuções extras com registro das fontes do deslocamento; a causa não foi identificada. O LCP do script oscila bastante entre execuções (centenas de ms), então diferenças menores que ~150 ms entre fases não são conclusivas.
 
 ## Revisão após implementação ou correções
 
