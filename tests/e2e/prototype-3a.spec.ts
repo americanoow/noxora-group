@@ -21,16 +21,20 @@ test.describe("hero (Fase 3A)", () => {
     ).toHaveAttribute("href", "#solucoes");
   });
 
-  test("a composição é decorativa, exceto a legenda conceitual", async ({ page }) => {
+  test("a composição é decorativa e não tem as caixinhas de exemplo", async ({ page }) => {
     await page.goto("/");
     const region = hero(page);
 
-    await expect(region.getByText("Ilustração conceitual")).toBeVisible();
-    // Imagens do palco têm alt vazio; fichas e trilhos ficam sob aria-hidden.
+    // Imagens do palco têm alt vazio; trilhos ficam sob aria-hidden.
     for (const image of await region.locator("img").all()) {
       await expect(image).toHaveAttribute("alt", "");
     }
     await expect(region.locator('[aria-hidden="true"] svg').first()).toBeAttached();
+    // Pedido do responsável: nada de fichas "API · 200 OK", "Pedido 0001 aprovado" ou "Fluxo ativo".
+    for (const label of ["API · 200 OK", "Pedido 0001 aprovado", "Fluxo ativo", "Ilustração conceitual"]) {
+      await expect(region.getByText(label)).toHaveCount(0);
+    }
+    await expect(region.locator(".hero-chip")).toHaveCount(0);
   });
 
   test("o cubo (LCP) carrega com prioridade alta e sem lazy", async ({ page }) => {
@@ -41,7 +45,7 @@ test.describe("hero (Fase 3A)", () => {
     await expect(cube).not.toHaveAttribute("loading", "lazy");
   });
 
-  test("com movimento reduzido nada fica invisível, nem durante os atrasos", async ({
+  test("com movimento reduzido os trilhos já aparecem completos, sem esperar os atrasos", async ({
     browser,
   }) => {
     const context = await browser.newContext({
@@ -52,18 +56,15 @@ test.describe("hero (Fase 3A)", () => {
     try {
       await page.goto("/");
       await page.waitForTimeout(400); // antes do maior atraso de entrada (≈ 1,2 s)
-      await expect(hero(page).locator(".hero-chip")).toHaveCount(3);
+      await expect(hero(page).locator(".hero-rail")).not.toHaveCount(0);
       // Leitura única e imediata: `toHaveCSS` repete por 5 s e esconderia o atraso.
-      const state = await page.evaluate(() => ({
-        chips: [...document.querySelectorAll(".hero-chip")].map(
-          (el) => getComputedStyle(el).opacity,
-        ),
-        rails: [...document.querySelectorAll(".hero-rail")].map((el) =>
+      const state = await page.evaluate(() =>
+        [...document.querySelectorAll(".hero-rail")].map((el) =>
           parseFloat(getComputedStyle(el).strokeDashoffset),
         ),
-      }));
-      expect(state.chips).toEqual(["1", "1", "1"]);
-      for (const offset of state.rails) expect(offset).toBe(0);
+      );
+      for (const offset of state) expect(offset).toBe(0);
+      await expect(hero(page).locator("img").first()).toBeVisible();
     } finally {
       await context.close();
     }
@@ -112,16 +113,19 @@ test.describe("menu mobile em telas baixas (F04)", () => {
   }
 });
 
-test.describe("fichas do hero dentro da viewport", () => {
+test.describe("hero dentro da viewport", () => {
   for (const width of [1024, 1100, 1280, 1440, 1920]) {
-    test(`nenhuma ficha é cortada em ${width}px`, async ({ page }) => {
+    test(`texto e botões ficam inteiros em ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto("/");
-      await page.waitForTimeout(2500); // fim das animações de entrada
+      await page.waitForTimeout(500);
 
-      for (const chip of await hero(page).locator(".hero-chip").all()) {
-        if (!(await chip.isVisible())) continue;
-        const box = await chip.boundingBox();
+      for (const locator of [
+        hero(page).getByRole("heading", { level: 1 }),
+        hero(page).getByRole("link", { name: "Conversar sobre um projeto" }),
+        hero(page).getByRole("link", { name: "Conhecer nossas soluções" }),
+      ]) {
+        const box = await locator.boundingBox();
         expect(box).not.toBeNull();
         expect(box!.x).toBeGreaterThanOrEqual(0);
         expect(box!.x + box!.width).toBeLessThanOrEqual(width);

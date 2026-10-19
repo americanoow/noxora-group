@@ -35,6 +35,25 @@ test.describe("canais de contato", () => {
   });
 });
 
+test.describe("composição do contato", () => {
+  test("os três contatos ficam lado a lado e o formulário vem embaixo", async ({ page, isMobile }) => {
+    test.skip(isMobile, "No celular as peças empilham.");
+    await page.goto("/#contato");
+    const tiles = section(page).getByRole("listitem");
+    await expect(tiles).toHaveCount(3);
+
+    const boxes = await Promise.all((await tiles.all()).map((tile) => tile.boundingBox()));
+    const tops = boxes.map((box) => Math.round(box!.y));
+    expect(Math.max(...tops) - Math.min(...tops)).toBeLessThanOrEqual(2);
+    expect(boxes[0]!.x).toBeLessThan(boxes[1]!.x);
+    expect(boxes[1]!.x).toBeLessThan(boxes[2]!.x);
+
+    const bottom = Math.max(...boxes.map((box) => box!.y + box!.height));
+    const formBox = await form(page).boundingBox();
+    expect(formBox!.y).toBeGreaterThanOrEqual(bottom);
+  });
+});
+
 test.describe("formulário de contato", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/#contato");

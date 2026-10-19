@@ -1,15 +1,22 @@
 export type Benefit = {
   id: "manual" | "integrar" | "digitalizar" | "produtos" | "experiencia";
+  /** Rótulo curto: o gráfico "antes e depois" carrega a mensagem. */
   title: string;
-  /** Uma linha: a ilustração carrega o resto da mensagem. */
-  line: string;
 };
 
 // Sem números ou percentuais: só entram aqui resultados que possamos comprovar.
 export const benefits: readonly Benefit[] = [
-  { id: "manual", title: "Reduzir trabalhos manuais", line: "Menos planilhas e retrabalho." },
-  { id: "integrar", title: "Integrar operações", line: "Vendas, financeiro e atendimento no mesmo fluxo." },
-  { id: "digitalizar", title: "Digitalizar processos", line: "Do papel ao processo rastreável." },
-  { id: "produtos", title: "Criar produtos digitais", line: "Da ideia à plataforma pronta." },
-  { id: "experiencia", title: "Melhorar a experiência dos clientes", line: "Canais claros e acessíveis." },
+  { id: "manual", title: "Menos trabalho manual" },
+  { id: "integrar", title: "Operações integradas" },
+  { id: "digitalizar", title: "Processos digitais" },
+  { id: "produtos", title: "Produtos digitais" },
+  { id: "experiencia", title: "Clientes bem atendidos" },
 ];
+
+export const beforeAfter = {
+  label: "De ferramentas soltas a uma operação conectada",
+  before: "Hoje",
+  after: "Com a Noxora",
+  description:
+    "Antes: planilhas, papel, e-mail e mensagens soltos e desorganizados. Depois: tudo conectado em um só fluxo.",
+} as const;

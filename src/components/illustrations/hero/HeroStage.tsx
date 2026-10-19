@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { hero } from "@/content/hero";
 
 const CUBE = { src: "/images/noxora-icon.png", width: 1283, height: 1226 } as const;
 
@@ -7,22 +6,10 @@ const CUBE = { src: "/images/noxora-icon.png", width: 1283, height: 1226 } as co
 const W = 1283;
 const H = 1330;
 
-const chipPosition = {
-  api: "left-[1%] top-[13%]",
-  pedido: "left-[60%] top-[55%] max-sm:left-[26%] max-sm:top-[89%]",
-  fluxo: "left-[3%] top-[72%] max-sm:hidden",
-} as const;
-
-const chipDot = {
-  api: "bg-light-ice shadow-[0_0_10px_2px_rgb(143_180_255/0.5)]",
-  pedido: "bg-light-ice shadow-[0_0_10px_2px_rgb(143_180_255/0.5)]",
-  fluxo: "bg-light-amber shadow-[0_0_8px_1px_rgb(245_200_138/0.4)]",
-} as const;
-
 /**
  * Palco do hero, em camadas (ver docs/ILLUSTRATION-SYSTEM.md):
- *   L1 trilhos atrás do cubo, L2 o cubo, L3 trilhos e fichas à frente.
- * Tudo é decorativo (aria-hidden); só a legenda "Ilustração conceitual" é lida.
+ *   L1 trilhos atrás do cubo, L2 o cubo, L3 trilhos à frente.
+ * Tudo é decorativo (aria-hidden).
  * O cubo é a imagem da marca, sem modelo 3D: a profundidade vem da oclusão,
  * da luz e do reflexo no piso (o mesmo arquivo, espelhado e esmaecido).
  */
@@ -109,7 +96,7 @@ export function HeroStage() {
           />
         </div>
 
-        {/* L3: trilhos e fichas à frente do cubo */}
+        {/* L3: trilho à frente do cubo */}
         <svg
           viewBox={`0 0 ${W} ${H}`}
           className="absolute inset-0 z-30 h-full w-full overflow-visible"
@@ -126,20 +113,7 @@ export function HeroStage() {
             style={{ "--d": "900ms" } as React.CSSProperties}
           />
         </svg>
-
-        {hero.chips.map((chip, index) => (
-          <div
-            key={chip.id}
-            className={`hero-chip absolute z-40 flex items-center gap-2.5 rounded-lg border border-white/20 bg-black/80 px-3.5 py-2 text-sm font-medium whitespace-nowrap text-fg shadow-float ${chipPosition[chip.id]}`}
-            style={{ "--d": `${900 + index * 140}ms` } as React.CSSProperties}
-          >
-            <span className={`size-2 rounded-full ${chipDot[chip.id]}`} />
-            {chip.label}
-          </div>
-        ))}
       </div>
-
-      <p className="mt-2 text-center text-sm text-muted">{hero.conceptLabel}</p>
     </div>
   );
 }

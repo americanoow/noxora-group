@@ -6,22 +6,42 @@ const projects = (page: Page) =>
   page.getByRole("region", { name: "Problemas reais, soluções sob medida." });
 
 test.describe("Como ajudamos", () => {
-  test("mostra os cinco benefícios, cada um com cena e uma linha de texto", async ({ page }) => {
+  test("mostra o antes e depois em um gráfico e cinco rótulos curtos", async ({ page }) => {
     await page.goto("/");
     const section = benefits(page);
 
-    for (const title of [
-      "Reduzir trabalhos manuais",
-      "Integrar operações",
-      "Digitalizar processos",
-      "Criar produtos digitais",
-      "Melhorar a experiência dos clientes",
-    ]) {
-      await expect(section.getByRole("heading", { name: title })).toBeAttached();
-    }
-    await expect(section.getByRole("listitem")).toHaveCount(5);
-    // As cenas são decorativas: o significado vai no texto.
-    await expect(section.locator('[aria-hidden="true"].aspect-\\[4\\/3\\], [aria-hidden="true"].aspect-\\[16\\/9\\]')).toHaveCount(5);
+    // O gráfico é uma imagem para leitores de tela, com descrição do antes e do depois.
+    const graphic = section.getByRole("img", {
+      name: /De ferramentas soltas a uma operação conectada/,
+    });
+    await expect(graphic).toBeVisible();
+    await expect(graphic).toHaveAccessibleName(/Antes:.*Depois:/);
+
+    await expect(section.getByRole("listitem")).toHaveText([
+      "Menos trabalho manual",
+      "Operações integradas",
+      "Processos digitais",
+      "Produtos digitais",
+      "Clientes bem atendidos",
+    ]);
+  });
+
+  test("é curto: não há parágrafos nem cartões com texto corrido", async ({ page }) => {
+    await page.goto("/");
+    const section = benefits(page);
+
+    // O único <p> é o rótulo "Como ajudamos" acima do título; não há texto corrido.
+    await expect(section.locator("p")).toHaveCount(1);
+    await expect(section.getByRole("heading", { level: 3 })).toHaveCount(0);
+    const words = (await section.innerText()).split(/\s+/).filter(Boolean).length;
+    expect(words).toBeLessThanOrEqual(35);
+  });
+
+  test("é compacto (cabe em menos altura que a versão anterior)", async ({ page, isMobile }) => {
+    await page.goto("/");
+    const height = await page.locator("#beneficios").evaluate((el) => el.getBoundingClientRect().height);
+    // Antes: 1213 px no desktop e 2068 px no celular.
+    expect(height).toBeLessThan(isMobile ? 1500 : 1000);
   });
 
   test("não usa rolagem presa (sticky) nem rola só um dos lados", async ({ page }) => {

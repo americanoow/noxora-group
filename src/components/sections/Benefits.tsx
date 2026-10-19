@@ -1,69 +1,23 @@
-import type { ReactNode } from "react";
+import { FileCheck, Link2, Smartphone, Smile, Zap, type LucideIcon } from "lucide-react";
 import { benefits, type Benefit } from "@/content/benefits";
-import {
-  DigitalizeScene,
-  ExperienceScene,
-  IntegrateScene,
-  ManualScene,
-  ProductScene,
-} from "@/components/illustrations/benefits/BenefitScenes";
+import { BeforeAfter } from "@/components/illustrations/benefits/BeforeAfter";
 import { Container } from "@/components/ui/Container";
-import { Facet } from "@/components/ui/Facet";
 import { RailDivider } from "@/components/ui/RailDivider";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
-const scenes: Record<Benefit["id"], ReactNode> = {
-  manual: <ManualScene />,
-  integrar: <IntegrateScene />,
-  digitalizar: <DigitalizeScene />,
-  produtos: <ProductScene />,
-  experiencia: <ExperienceScene />,
+const icons: Record<Benefit["id"], LucideIcon> = {
+  manual: Zap,
+  integrar: Link2,
+  digitalizar: FileCheck,
+  produtos: Smartphone,
+  experiencia: Smile,
 };
 
 /**
- * Cada benefício tem molduras e tamanhos próprios para quebrar a repetição:
- * faceta, painel solto sobre luz, grafite e contorno simples.
+ * "Como ajudamos", curto e óbvio: um gráfico antes e depois e cinco rótulos.
+ * Os serviços em si ficam em "Soluções"; aqui só o resultado para o negócio.
  */
-const layout: Record<Benefit["id"], { span: string; frame: "facet" | "light" | "graphite" | "outline" | "facet-sm" }> = {
-  manual: { span: "lg:col-span-5", frame: "facet" },
-  integrar: { span: "lg:col-span-7", frame: "light" },
-  digitalizar: { span: "lg:col-span-4", frame: "graphite" },
-  produtos: { span: "lg:col-span-4", frame: "facet-sm" },
-  experiencia: { span: "lg:col-span-4", frame: "outline" },
-};
-
-function Tile({ benefit, index }: { benefit: Benefit; index: number }) {
-  const { frame } = layout[benefit.id];
-  const content = (
-    <div className="flex h-full flex-col gap-4 p-5 sm:p-6">
-      {scenes[benefit.id]}
-      <div>
-        <h3 className="font-display text-h3 font-semibold text-fg">{benefit.title}</h3>
-        <p className="mt-1 text-muted">{benefit.line}</p>
-      </div>
-    </div>
-  );
-
-  if (frame === "facet") {
-    return <Facet innerClassName="bg-surface" className="h-full">{content}</Facet>;
-  }
-  if (frame === "facet-sm") {
-    return <Facet size="sm" innerClassName="bg-graphite-1" className="h-full">{content}</Facet>;
-  }
-  const classes = {
-    light:
-      "h-full rounded-2xl bg-[radial-gradient(70%_80%_at_70%_0%,rgb(143_180_255/0.12),transparent_70%)]",
-    graphite: "h-full rounded-2xl border border-line bg-graphite-2",
-    outline: "h-full rounded-2xl border border-line bg-surface",
-  }[frame];
-  return (
-    <div className={classes} data-index={index}>
-      {content}
-    </div>
-  );
-}
-
 export function Benefits() {
   return (
     <section
@@ -79,14 +33,23 @@ export function Benefits() {
           title="Menos atrito na operação. Mais espaço para crescer."
         />
 
-        <ul className="mt-12 grid gap-5 lg:grid-cols-12">
-          {benefits.map((benefit, index) => (
-            <li key={benefit.id} className={layout[benefit.id].span}>
-              <Reveal className="h-full" delay={index * 70}>
-                <Tile benefit={benefit} index={index} />
-              </Reveal>
-            </li>
-          ))}
+        <Reveal className="mt-10">
+          <BeforeAfter />
+        </Reveal>
+
+        <ul className="mt-8 flex flex-wrap justify-center gap-3">
+          {benefits.map((benefit) => {
+            const Icon = icons[benefit.id];
+            return (
+              <li
+                key={benefit.id}
+                className="inline-flex items-center gap-2.5 rounded-full border border-line bg-graphite-1 px-4 py-2.5 text-sm font-medium text-fg sm:text-base"
+              >
+                <Icon aria-hidden="true" className="size-5 text-light-ice" strokeWidth={1.75} />
+                {benefit.title}
+              </li>
+            );
+          })}
         </ul>
       </Container>
     </section>

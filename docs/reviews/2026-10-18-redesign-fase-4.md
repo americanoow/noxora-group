@@ -73,3 +73,13 @@ Mutações temporárias, revertidas depois: chamar a Server Action sem o envolt�
 1. **Ilustrações restantes e demonstração interativa:** o responsável aprovou a aba Soluções como está. Se quiser que Websites, Sistemas e Automações também ganhem ilustração própria, e a demonstração interativa, isso é a próxima fase; confirme antes.
 2. **Confiança do cliente:** hoje ela vem da qualidade visual e do rigor (acessibilidade, desempenho). Uma faixa "Como trabalhamos" (por exemplo, entender, desenhar, construir, evoluir) reforçaria a credibilidade, mas **afirma como a Noxora trabalha**: preciso que o responsável confirme o processo real antes de eu escrever. Nada disso foi inventado.
 3. **Destino do formulário:** definir onde as mensagens chegam (e-mail, planilha, CRM) e configurar `CONTACT_WEBHOOK_URL` no ambiente do servidor; definir limite de frequência no host.
+
+## Adendo (19/10/2026): ajuste pedido após a revisão visual
+
+O responsável pediu três mudanças, feitas sobre a Fase 4:
+
+1. **Hero:** removidas as fichas "API · 200 OK", "Pedido 0001 aprovado" e "Fluxo ativo". O palco ficou só com luz, trilhos e cubo.
+2. **Como ajudamos:** as cinco cenas deram lugar a um único gráfico antes/depois (quatro ferramentas soltas → as mesmas quatro ligadas por um núcleo) e cinco rótulos curtos. Sem parágrafos, sem números. Altura da seção: 875 px no desktop e 1.162 px no celular (antes 1.213 e 2.068 px).
+3. **Contato:** três peças de canal lado a lado (empilham no celular) e o formulário abaixo. A seção ficou mais alta no desktop (a mudança priorizou os contatos, não a altura); no celular ficou menor.
+
+Verificação: `npm run check` com 143 testes passando e 7 pulados de propósito. A revisão do Codex não pôde ser feita nesta rodada (o terminal dele falhou com `helper_unknown_error` antes de ler o diff); foi usado um revisor independente do Claude no lugar.

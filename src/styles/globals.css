@@ -240,7 +240,6 @@
   /* Hero: entrada orquestrada, uma passada. O cubo e o texto nunca começam invisíveis (LCP). */
   .hero-stage { animation: stage-in 900ms var(--ease-out-soft) both; }
   .hero-light { animation: light-on 1200ms ease-out both; }
-  .hero-chip { animation: chip-in 700ms var(--ease-out-soft) both; animation-delay: var(--d, 600ms); }
   .hero-rail { stroke-dasharray: 1; animation: draw 1100ms var(--ease-out-soft) both; animation-delay: var(--d, 300ms); }
   .hero-bead { stroke-dasharray: 0.1 1; stroke-dashoffset: 1; opacity: 0; animation: pulse-run 1500ms ease-in-out both, bead-visible 1500ms linear both; animation-delay: var(--d, 1300ms); }
 

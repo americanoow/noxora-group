@@ -48,7 +48,7 @@ Cinco níveis de empilhamento, do fundo para a frente:
 | L0 | Luz de fundo (gradientes) e textura de grão |
 | L1 | Trilhos e linhas **atrás** do objeto principal |
 | L2 | Objeto principal (cubo ou janela de produto) |
-| L3 | Trilhos e fichas **à frente** do objeto (a oclusão cria a profundidade) |
+| L3 | Trilho **à frente** do objeto (a oclusão cria a profundidade) |
 | L4 | Sobreposições de interface (rótulos, indicadores) |
 
 **Sombras:** `ring` e `lift` já existentes, mais `float` (sombra preta profunda e curta) para fichas flutuantes. **Textura:** um tile de grão de 64×64 px (≤ 3 KB) a 4–6% de opacidade, só em planos grandes.
@@ -99,8 +99,8 @@ Camadas (L0 a L4), composição em grade de 12 colunas: texto nas colunas 1–6;
 - **L0:** cone de luz do alto à esquerda (gradiente cônico, ≤ 0,3) e piso reflexivo (elipse em degradê + **reflexo espelhado esmaecido do mesmo PNG**, sem baixar outro arquivo).
 - **L1:** dois trilhos cromados finos (SVG) atrás do cubo.
 - **L2:** o cubo (PNG transparente já existente).
-- **L3:** os trilhos saem à frente do cubo e ligam **três fichas de vidro conceituais** em alturas diferentes (ex.: "API · 200 OK", "Pedido 0001 aprovado", "Fluxo ativo"), todas rotuladas como demonstração.
-- **Celular:** cubo acima do texto, a 80% da largura, cortado pela borda inferior da seção; fichas reduzidas a duas; textos centralizados; botões em largura total.
+- **L3:** um trilho passa à frente do cubo. As fichas de texto ("API · 200 OK" etc.) foram removidas a pedido do responsável: o hero não traz rótulos sobre a ilustração.
+- **Celular:** cubo acima do texto, a 80% da largura, cortado pela borda inferior da seção; textos centralizados; botões em largura total.
 - **Sem JavaScript e sem animação:** composição completa e estática. **LCP:** a imagem do cubo; o `h1` não depende de script.
 
 ### Serviços (quatro peças, pilha de 2 a 3 planos com faceta)
