@@ -87,3 +87,15 @@ Verificação: `npm run check` com 143 testes passando e 7 pulados de propósito
 ### Segundo ajuste (19/10/2026): nomes dentro do gráfico
 
 O gráfico de Como ajudamos passou a rotular cada ícone (Planilhas, E-mails, Mensagens, Pedidos), com títulos "Hoje: processos desconectados" e "Com a Noxora: operação integrada", frases de rodapé e o núcleo "Solução Noxora" (sob medida, sem sugerir um produto único). Nomes e frases são texto real; ícones e traços têm `aria-hidden`; o bloco deixou de ser `role="img"` e virou um grupo nomeado. Capturas em `docs/reviews/assets/fase-4/como-ajudamos-*.png` (1440, 768, 390 e 320 px): sem rótulos sobrepostos, sem texto abaixo de 14 px e sem rolagem horizontal.
+
+### Terceiro ajuste (19/10/2026): vitrine de Projetos
+
+A seção Projetos virou uma vitrine de prévias visuais em carrossel manual. Não havia projeto real nem captura de tela no repositório (`public/projects/` vazio), então entraram **três demonstrações conceituais** (website comercial, sistema de gestão, automação de processos), cada uma com mockup desenhado em código, sem texto, nome, número ou resultado, e com o rótulo visível "Demonstração conceitual". Título da seção: "Veja como transformamos problemas em soluções." (o anterior, "Problemas reais...", sugeria casos reais).
+
+- **Modelo:** `Project` em `src/content/projects.ts` (`kind: "real" | "concept"`, `image` ou `mockup`, `demoUrl`, `caseStudyUrl`). Projeto real entra no início da lista.
+- **Quantidade:** 0 = aviso "Casos reais em breve"; 1 = destaque sem controles; 2 ou mais = carrossel. Testado por páginas de apoio `/fixtures/projetos/{0,1,2,5}`, ativas só com `NOXORA_FIXTURES=1` (404 nos demais builds).
+- **Carrossel:** rolagem nativa com `scroll-snap` (swipe, teclado, leitor de tela), setas, pontos (alvo de 32 px), indicador "Projeto N de M", sem autoplay, sem loop, movimento reduzido instantâneo, controles só com JavaScript.
+- **Removidos:** `ProjectCard` e `ProjectStage` (ilustração genérica).
+- **Teste instável corrigido:** o teste "contatos lado a lado" media a caixa durante a animação de entrada e falhava sob carga; passou a esperar as animações terminarem (10 de 10 execuções).
+- Capturas: `docs/reviews/assets/fase-4/projetos-{desktop,mobile}-{1,2,3}.png`.
+- **Revisão independente (revisor do Claude; o Codex não executa neste ambiente):** sem achados críticos. Corrigidos: barra de controles estourava a largura em 360 px com 4 ou mais projetos (`flex-wrap` + teste a 360 px com 5 projetos); atalhos do navegador (Alt+Seta, Ctrl+Home) eram interceptados; dois testes podiam agir antes da hidratação; a rota dinâmica de fixtures devolvia 200 com corpo de 404 em caminhos inválidos, então virou quatro páginas estáticas (verificado em build sem `NOXORA_FIXTURES`: `/fixtures/projetos/0`, `2`, `3` e `abc` respondem 404). O 404 sem a variável foi checado à mão; nenhum teste automático o cobre, porque o build de teste sempre liga a variável. Aceitos como estão: o leitor de tela anuncia posições intermediárias ao saltar vários projetos de uma vez; cores avulsas nos mockups decorativos.

@@ -16,7 +16,7 @@ Decisores de negócios de diferentes portes, de diferentes idades e níveis de f
 
 1. **Entender a proposta:** o visitante lê o hero e entende o que a Noxora faz.
 2. **Conhecer as soluções e os benefícios:** cada solução explica o benefício comercial, não só a tecnologia.
-3. **Ver projetos:** a seção mostra trabalhos reais configurados em `src/content/projects.ts`; sem cases reais, mostra um aviso honesto.
+3. **Ver projetos:** a seção é uma vitrine configurada em `src/content/projects.ts`: projetos reais autorizados e, enquanto não houver, demonstrações conceituais rotuladas. Sem nenhum item, mostra um aviso honesto.
 4. **Entrar em contato:** três canais (e-mail, WhatsApp, Instagram `@noxoragroup`). Canal ainda não definido aparece como "em definição", sem link fictício. Depois dos canais há um **formulário** com validação, estado de envio e erro; só confirma o envio depois que o destino confirma, e sem destino configurado avisa que está indisponível.
 
 ## MVP
@@ -54,7 +54,7 @@ Next.js 16.4.2 (App Router), TypeScript estrito, Tailwind CSS 4, sem persistênc
 | Destino do formulário (webhook) | não definido | o formulário avisa que o envio está indisponível e nunca simula sucesso |
 | Símbolo circular "N" | arquivo não fornecido | wordmark em texto permanece |
 | Integrantes da equipe | não fornecidos | seção Sobre adiada |
-| Projetos reais autorizados | nenhum informado | seção Projetos mostra aviso |
+| Projetos reais autorizados | nenhum informado | seção Projetos mostra três demonstrações conceituais rotuladas |
 | Política de privacidade (LGPD) | inexistente | necessária antes de coletar dados por formulário |
 | `docs/BRAND.md` e `docs/ROADMAP.md` | vazios | critérios de marca e roadmap ainda não registrados |
 

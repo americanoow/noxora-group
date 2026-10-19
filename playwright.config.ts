@@ -38,6 +38,8 @@ export default defineConfig({
       CONTACT_EMAIL: "",
       WHATSAPP_NUMBER: "",
       CONTACT_WEBHOOK_URL: "",
+      // Liga as páginas de apoio dos testes (/fixtures/...); fora daqui elas respondem 404.
+      NOXORA_FIXTURES: "1",
     },
   },
 });

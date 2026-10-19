@@ -2,8 +2,6 @@ import { expect, test, type Page } from "@playwright/test";
 
 const benefits = (page: Page) =>
   page.getByRole("region", { name: "Menos atrito na operação. Mais espaço para crescer." });
-const projects = (page: Page) =>
-  page.getByRole("region", { name: "Problemas reais, soluções sob medida." });
 
 test.describe("Como ajudamos", () => {
   test("mostra o antes e depois em um gráfico e cinco rótulos curtos", async ({ page }) => {
@@ -71,32 +69,6 @@ test.describe("Como ajudamos", () => {
     const text = await page.locator("#beneficios").innerText();
     expect(text).not.toMatch(/\d+\s?%/);
     expect(text).not.toMatch(/\b\d+\s?x\b/i);
-  });
-});
-
-test.describe("Projetos", () => {
-  test("sem cases reais, mostra um estado gráfico honesto e não inventa projetos", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    const section = projects(page);
-
-    await expect(section.getByRole("article")).toHaveCount(0);
-    await expect(section.getByText("Casos reais em breve")).toBeVisible();
-    await expect(
-      section.getByRole("list", { name: "Como cada projeto será apresentado" }).getByRole("listitem"),
-    ).toHaveText(["Problema", "Solução", "Tecnologias"]);
-    await expect(section.getByRole("link", { name: "Pedir uma apresentação" })).toHaveAttribute(
-      "href",
-      "#contato",
-    );
-  });
-
-  test("a composição de janelas é decorativa e sem texto legível", async ({ page }) => {
-    await page.goto("/");
-    const stage = projects(page).locator('[aria-hidden="true"]').first();
-    await expect(stage).toBeAttached();
-    expect((await stage.innerText()).trim()).toBe("");
   });
 });
 

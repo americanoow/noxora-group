@@ -41,6 +41,8 @@ test.describe("composição do contato", () => {
     await page.goto("/#contato");
     const tiles = section(page).getByRole("listitem");
     await expect(tiles).toHaveCount(3);
+    // Mede só depois da animação de entrada, que desloca as caixas.
+    await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => null))));
 
     const boxes = await Promise.all((await tiles.all()).map((tile) => tile.boundingBox()));
     const tops = boxes.map((box) => Math.round(box!.y));

@@ -13,7 +13,7 @@ test.describe("estrutura e SEO", () => {
 
     for (const name of [
       "Soluções sob medida para cada etapa do seu negócio.",
-      "Problemas reais, soluções sob medida.",
+      "Veja como transformamos problemas em soluções.",
       "Seu próximo projeto começa com uma conversa.",
     ]) {
       await expect(page.getByRole("region", { name })).toBeVisible();
@@ -32,15 +32,6 @@ test.describe("estrutura e SEO", () => {
 
     expect((await request.get("/robots.txt")).ok()).toBe(true);
     expect((await request.get("/sitemap.xml")).ok()).toBe(true);
-  });
-
-  test("portfólio vazio não exibe cases fictícios", async ({ page }) => {
-    await page.goto("/");
-    const portfolio = page.getByRole("region", {
-      name: "Problemas reais, soluções sob medida.",
-    });
-    await expect(portfolio.getByRole("article")).toHaveCount(0);
-    await expect(portfolio).toContainText("Casos reais em breve");
   });
 });
 
