@@ -87,6 +87,7 @@ Todas recomeçam em loop enquanto visíveis (ver Movimento), terminam no estado 
 | Soluções, Websites e Sistemas | Moldura, painel e controles se encaixam em camadas | Ao entrar na tela |
 | Soluções, Automação | Documento chega, passa pela regra e termina organizado no destino | Ao entrar na tela, com "Repetir" |
 | Como ajudamos | Blocos dispersos e girados se alinham, se ligam e formam o núcleo "Solução Noxora" | Ao entrar na tela |
+| Nome "NOXORA." do cabeçalho | As letras sobem em sequência na carga (uma vez); em loop, um brilho percorre as letras (0,9 s a cada 10 s) e termina no ponto, em azul-gelo | Carga / loop |
 | Divisores | Reflexo curto percorre o trilho cromado | Ao entrar na tela |
 | Projetos | O projeto fora de foco esmaece e se desloca discretamente; altura estável | Troca de projeto |
 - **Movimento reduzido:** estado final estático, sem deslocamento. **Sem JavaScript:** estado final visível; nada fica oculto à espera de script.

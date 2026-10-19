@@ -190,6 +190,37 @@ test.describe("animações", () => {
     await page.waitForFunction(`(${opacity})("${doc}") > 0.9`, null, { timeout: 20000, polling: 30 });
   });
 
+  test("o nome NOXORA. no topo: letras sobem em sequência e um brilho as percorre em loop", async ({ page }) => {
+    await page.goto("/");
+    const header = page.getByRole("banner");
+    // Texto real para leitores de tela; as letras separadas são decorativas.
+    await expect(header.getByRole("link", { name: "Noxora, voltar ao início" })).toBeVisible();
+    const letters = header.locator(".wm-letter");
+    await expect(letters).toHaveCount(7);
+    await expect(header.locator(".wm[aria-hidden='true']")).toHaveCount(1);
+
+    // Entrada: uma vez, com atrasos crescentes; termina com tudo visível.
+    const delays = await letters.evaluateAll((els) => els.map((el) => parseFloat(getComputedStyle(el).animationDelay)));
+    expect(delays).toEqual([...delays].sort((x, y) => x - y));
+    expect(new Set(delays).size).toBe(7);
+    await expect.poll(() => letters.evaluateAll((els) => els.every((el) => getComputedStyle(el).opacity === "1"))).toBe(true);
+
+    // Brilho: loop com pausa longa, que passa por todas as letras (o ponto vai ao azul-gelo).
+    await loopsOn(page);
+    const glint = await header.locator(".wm-glint").evaluateAll((els) =>
+      els.map((el) => {
+        const a = el.getAnimations().find((x) => (x as CSSAnimation).animationName.startsWith("wm-glint"))!;
+        const t = a.effect!.getTiming();
+        return { name: (a as CSSAnimation).animationName, iterations: t.iterations, duration: t.duration, delay: t.delay };
+      }),
+    );
+    expect(glint).toHaveLength(7);
+    expect(glint.every((g) => g.iterations === Infinity && g.duration === 10000)).toBe(true);
+    expect(glint.at(-1)!.name).toBe("wm-glint-dot");
+    const glintDelays = glint.map((g) => Number(g.delay));
+    expect(glintDelays).toEqual([...glintDelays].sort((x, y) => x - y));
+  });
+
   test("o botão de pausa para todos os loops e retoma", async ({ page }) => {
     await page.goto("/");
     await loopsOn(page);

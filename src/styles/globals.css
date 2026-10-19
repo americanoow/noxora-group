@@ -220,6 +220,19 @@
   from { opacity: 0; transform: translate3d(0, 8px, 0) scale(0.97); }
   to { opacity: 1; transform: none; }
 }
+/* Wordmark: as letras sobem uma a uma; depois um brilho as percorre (0,9 s a cada 10 s). */
+@keyframes wm-in {
+  from { opacity: 0; transform: translate3d(0, 0.45em, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes wm-glint {
+  0%, 9%, 100% { color: inherit; text-shadow: none; }
+  4.5% { color: #fff; text-shadow: 0 0 14px rgb(143 180 255 / 0.7); }
+}
+@keyframes wm-glint-dot {
+  0%, 9%, 100% { color: inherit; text-shadow: none; }
+  4.5% { color: var(--color-light-ice); text-shadow: 0 0 16px rgb(143 180 255 / 0.9); }
+}
 @keyframes layer-in {
   from { opacity: 0; transform: translate3d(var(--lx, 0px), var(--ly, 12px), 0) scale(0.96); }
   to { opacity: 1; transform: none; }
@@ -311,6 +324,11 @@
   [data-play="playing"] .nx-pulse { animation: pulse-run 900ms ease-in-out both, bead-visible 900ms linear both; animation-delay: calc(var(--d, 0ms) + 750ms); }
   [data-play="playing"] .nx-node { animation: chip-in 500ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
   [data-play="playing"] .nx-ring { animation: ring-pulse 1100ms ease-out both; animation-delay: 1800ms; }
+
+  /* Wordmark do cabeçalho. A entrada roda uma vez; o brilho em loop só com os loops ligados. */
+  .wm-letter { animation: wm-in 600ms var(--ease-out-soft) both; animation-delay: calc(var(--i) * 70ms + 150ms); }
+  [data-motion="on"] .wm-glint { animation: wm-glint 10s linear infinite; animation-delay: calc(3200ms + var(--i) * 110ms); }
+  [data-motion="on"] .wm-dot { animation-name: wm-glint-dot; }
 
   /* Projetos: só depois da hidratação (data-active) e sem esconder nada antes disso. */
   [data-active="true"] .pj-preview { animation: pj-preview-in 700ms var(--ease-out-soft) both; }

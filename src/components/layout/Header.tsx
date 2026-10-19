@@ -14,7 +14,7 @@ export function Header() {
           className="-mx-1 px-1 py-2"
           aria-label="Noxora, voltar ao início"
         >
-          <Wordmark />
+          <Wordmark animated />
         </a>
 
         <nav aria-label="Principal" className="hidden md:block">
