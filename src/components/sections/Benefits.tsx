@@ -44,7 +44,7 @@ export function Benefits() {
             return (
               <li
                 key={benefit.id}
-                className="inline-flex items-center gap-2.5 rounded-full border border-line bg-graphite-1 px-4 py-2.5 text-sm font-medium text-fg sm:text-base"
+                className="motion-benefit inline-flex items-center gap-2.5 rounded-full border border-line bg-graphite-1 px-4 py-2.5 text-sm font-medium text-fg sm:text-base"
               >
                 <Icon aria-hidden="true" className="size-5 text-light-ice" strokeWidth={1.75} />
                 {benefit.title}

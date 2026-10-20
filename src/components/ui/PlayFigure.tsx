@@ -2,9 +2,7 @@
 
 import { RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-
-// Ciclo em loop só com os loops ligados (<html data-motion="on">, ver MotionToggle).
-const loopsOn = () => document.documentElement.dataset.motion === "on";
+import { useMotionEnabled } from "./useMotionEnabled";
 
 type Phase = "static" | "armed" | "playing";
 
@@ -33,7 +31,7 @@ export function PlayFigure({
   replayLabel?: string | null;
   /** Nome acessível do botão quando o texto visível é curto. */
   replayAriaLabel?: string;
-  /** Duração de um ciclo, com a pausa antes de recomeçar. Sem loop (movimento reduzido ou pausado), toca uma vez. */
+  /** Duração de um ciclo, com a pausa antes de recomeçar. Pausado ou reduzido, fica estático. */
   loopMs?: number;
   /** Conteúdo fixo à direita da linha de controles (ex.: rótulo de demonstração). */
   aside?: ReactNode;
@@ -43,11 +41,12 @@ export function PlayFigure({
   const [phase, setPhase] = useState<Phase>("static");
   const [canPlay, setCanPlay] = useState(false);
   const [visible, setVisible] = useState(false);
+  const enabled = useMotionEnabled();
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!enabled) return;
 
     let safety = 0;
     // Disparado depois da hidratação, para só então armar a animação.
@@ -77,7 +76,7 @@ export function PlayFigure({
       window.clearTimeout(safety);
       observer.disconnect();
     };
-  }, []);
+  }, [enabled]);
 
   const replay = useCallback(() => {
     setPhase("armed");
@@ -87,19 +86,14 @@ export function PlayFigure({
 
   // Loop: com a figura à vista, recomeça a cada ciclo; pausado, espera a retomada.
   useEffect(() => {
-    if (phase !== "playing" || !visible) return;
-    let id = 0;
-    const next = () => {
-      if (loopsOn()) replay();
-      else id = window.setTimeout(next, 1000);
-    };
-    id = window.setTimeout(next, loopMs);
+    if (phase !== "playing" || !visible || !enabled) return;
+    const id = window.setTimeout(replay, loopMs);
     return () => window.clearTimeout(id);
-  }, [phase, visible, loopMs, replay]);
+  }, [phase, visible, loopMs, replay, enabled]);
 
   return (
     <div className={className}>
-      <div ref={ref} data-play={phase === "static" ? undefined : phase}>
+      <div ref={ref} data-play={!enabled || phase === "static" ? undefined : phase} data-in-view={visible}>
         {children}
       </div>
       {replayLabel !== null || aside ? (
@@ -109,7 +103,7 @@ export function PlayFigure({
             <button
               type="button"
               onClick={replay}
-              hidden={!canPlay}
+              hidden={!canPlay || !enabled}
               aria-label={replayAriaLabel}
               className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm whitespace-nowrap text-muted transition-colors hover:text-fg"
             >

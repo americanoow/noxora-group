@@ -1,0 +1,109 @@
+/* Respostas à interação. Sem JS ou com movimento pausado, o layout é estático. */
+@keyframes cube-drift {
+  0%, 24%, 100% { transform: translate3d(0, 0, 0); }
+  12% { transform: translate3d(0, -8px, 0); }
+}
+
+@keyframes content-settle {
+  from { transform: translate3d(0, 10px, 0); }
+  to { transform: none; }
+}
+
+@keyframes menu-open {
+  from { transform: translate3d(0, -8px, 0); }
+  to { transform: none; }
+}
+
+@layer components {
+  .motion-nav {
+    position: relative;
+  }
+  .motion-nav::after {
+    content: "";
+    position: absolute;
+    inset-inline: 1rem;
+    bottom: 0.4rem;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .motion-nav-footer::after { inset-inline: 0; bottom: -0.25rem; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-motion="on"][data-motion-active="true"] .motion-button,
+    [data-motion="on"][data-motion-active="true"] .motion-card,
+    [data-motion="on"][data-motion-active="true"] .motion-channel {
+      transition: translate var(--duration-base) var(--ease-out-soft),
+        scale var(--duration-fast) var(--ease-out-soft),
+        background-color var(--duration-base) var(--ease-out-soft),
+        border-color var(--duration-base) var(--ease-out-soft);
+    }
+    [data-motion="on"][data-motion-active="true"] :is(.motion-button, .motion-channel) > svg,
+    [data-motion="on"][data-motion-active="true"] .motion-channel svg,
+    [data-motion="on"][data-motion-active="true"] .motion-card .motion-figure,
+    [data-motion="on"][data-motion-active="true"] .motion-benefit svg,
+    [data-motion="on"][data-motion-active="true"] .motion-nav::after {
+      transition: transform var(--duration-base) var(--ease-out-soft);
+    }
+    [data-motion="on"][data-motion-active="true"] .motion-button:focus-visible,
+    [data-motion="on"][data-motion-active="true"] .motion-channel:focus-visible {
+      translate: 0 -3px;
+    }
+    [data-motion="on"][data-motion-active="true"] .motion-button:active:not(:disabled):not([aria-disabled="true"]) {
+      translate: 0 0;
+      scale: 0.97;
+    }
+    [data-motion="on"][data-motion-active="true"] .motion-nav:focus-visible::after {
+      transform: scaleX(1);
+    }
+    [data-motion="on"] .motion-stage[data-sweep="play"] .hero-object {
+      animation: cube-drift calc(var(--duration-slow) * 15) ease-in-out infinite;
+    }
+    [data-motion="on"] .hero-copy {
+      animation: content-settle var(--duration-slow) var(--ease-out-soft) both;
+    }
+    [data-motion="on"] .motion-menu:not([hidden]) {
+      animation: menu-open var(--duration-base) var(--ease-out-soft) both;
+    }
+    [data-motion="on"] [data-in-view="false"] * {
+      animation-play-state: paused !important;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      [data-motion="on"][data-motion-active="true"] .motion-button:hover:not(:disabled):not([aria-disabled="true"]),
+      [data-motion="on"][data-motion-active="true"] .motion-channel:hover,
+      [data-motion="on"][data-motion-active="true"] .motion-card:hover {
+        translate: 0 -4px;
+      }
+      [data-motion="on"][data-motion-active="true"] .motion-button:hover:not(:disabled):not([aria-disabled="true"]) > svg {
+        transform: translateX(3px);
+      }
+      [data-motion="on"][data-motion-active="true"] .motion-card:hover .motion-figure {
+        transform: translateY(-4px);
+      }
+      [data-motion="on"][data-motion-active="true"] .motion-benefit:hover svg {
+        transform: rotate(-12deg);
+      }
+      [data-motion="on"][data-motion-active="true"] .motion-channel:hover svg {
+        transform: translate(2px, -2px);
+      }
+      [data-motion="on"][data-motion-active="true"] .motion-nav:hover::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+}
+
+/* Pausa também entradas e transições; mantém as transformações estáticas das ilustrações. */
+html[data-motion="paused"] *,
+html[data-motion="paused"] *::before,
+html[data-motion="paused"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+html[data-motion="paused"] { scroll-behavior: auto; }
+html[data-motion-active="false"] *,
+html[data-motion-active="false"] *::before,
+html[data-motion-active="false"] *::after { animation-play-state: paused !important; }

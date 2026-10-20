@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { ArrowUpRight, Lightbulb, Target } from "lucide-react";
-import type { Project } from "@/content/projects";
+import { projectLabels, type Project } from "@/content/projects";
 import { ProjectPreview } from "@/components/illustrations/projects/ProjectPreview";
 import { Badge } from "@/components/ui/Badge";
 import { Facet } from "@/components/ui/Facet";
@@ -28,7 +28,7 @@ export function ProjectSlide({ project }: { project: Project }) {
             <Badge variant="solid">{project.category}</Badge>
             {concept ? (
               <Badge className="border-light-ice/40 text-light-ice">Demonstração conceitual</Badge>
-            ) : null}
+            ) : <Badge>{projectLabels.real}</Badge>}
           </div>
 
           <div className="pj-reveal" style={step(1)}>
@@ -42,7 +42,7 @@ export function ProjectSlide({ project }: { project: Project }) {
             <div className="flex items-start gap-3">
               <dt className="mt-0.5 shrink-0">
                 <Target aria-hidden="true" className="size-5 text-chrome" strokeWidth={1.75} />
-                <span className="sr-only">Problema</span>
+                <span className="sr-only">{concept ? "Problema" : projectLabels.goal}</span>
               </dt>
               <dd className="text-fg">{project.problem}</dd>
             </div>
@@ -55,13 +55,13 @@ export function ProjectSlide({ project }: { project: Project }) {
             </div>
           </dl>
 
-          <ul className="pj-reveal flex flex-wrap gap-2" aria-label="Tecnologias" style={step(3)}>
+          {project.technologies.length > 0 ? <ul className="pj-reveal flex flex-wrap gap-2" aria-label="Tecnologias" style={step(3)}>
             {project.technologies.map((technology) => (
               <li key={technology}>
                 <Badge>{technology}</Badge>
               </li>
             ))}
-          </ul>
+          </ul> : null}
 
           {project.demoUrl || project.caseStudyUrl ? (
             <div className="pj-reveal flex flex-wrap gap-x-6 gap-y-2" style={step(4)}>
@@ -72,7 +72,7 @@ export function ProjectSlide({ project }: { project: Project }) {
                   rel="noopener noreferrer"
                   className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-fg underline-offset-4 hover:underline"
                 >
-                  Ver demonstração
+                  {concept ? "Ver demonstração" : projectLabels.visit}
                   <span className="sr-only"> de {project.title} (abre em nova aba)</span>
                   <ArrowUpRight aria-hidden="true" className="size-4" />
                 </a>

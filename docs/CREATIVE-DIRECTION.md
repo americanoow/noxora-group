@@ -1,6 +1,6 @@
 # Direção criativa: Noxora, "Liquid Engineering"
 
-Status: **aprovada em 18/10/2026 com ajustes (D6 a D11 respondidas, ver `docs/REDESIGN-PLAN.md`).** Fase 3A implementada; relatório em `docs/reviews/2026-10-18-redesign-fase-3a.md`.
+Status: **aprovada em 18/10/2026 com ajustes (D6 a D11 respondidas).** Fase 3A implementada;
 Documentos irmãos: `docs/ILLUSTRATION-SYSTEM.md` (linguagem de ilustração e interação) e `docs/REDESIGN-PLAN.md` (plano revisado).
 
 ## 1. Por que mudar

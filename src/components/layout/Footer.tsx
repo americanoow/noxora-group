@@ -18,7 +18,7 @@ export function Footer() {
           <ul className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
             {navItems.map((item) => (
               <li key={item.href}>
-                <a href={item.href} className="text-muted hover:text-fg">
+                <a href={item.href} className="motion-nav motion-nav-footer text-muted hover:text-fg">
                   {item.label}
                 </a>
               </li>

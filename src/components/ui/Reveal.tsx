@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { useMotionEnabled } from "./useMotionEnabled";
 
 /**
  * Revela o conteúdo com fade e deslocamento de 12 px ao entrar na viewport.
@@ -21,11 +22,12 @@ export function Reveal({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const enabled = useMotionEnabled();
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!enabled) return;
 
     // Já visível ao carregar: não anima, para não piscar nem atrasar o LCP.
     const { top, bottom } = element.getBoundingClientRect();
@@ -47,7 +49,7 @@ export function Reveal({
       observer.disconnect();
       delete element.dataset.reveal;
     };
-  }, []);
+  }, [enabled]);
 
   const style = delay
     ? ({ "--reveal-delay": `${delay}ms` } as CSSProperties)

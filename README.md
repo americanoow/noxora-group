@@ -27,9 +27,7 @@ Variáveis de ambiente (`.env.example`): `NEXT_PUBLIC_SITE_URL` (obrigatória em
 - [Estrutura e decisões técnicas](docs/ARCHITECTURE.md)
 - [Design e acessibilidade](docs/design.md)
 - [Verificações de qualidade](docs/quality.md)
-- [Instruções para agentes](AGENTS.md)
-- [Setup do toolkit e evidências](docs/setup.md)
-- Redesign: [plano atual](docs/DESIGN-REDESIGN.md); [nova direção criativa](docs/CREATIVE-DIRECTION.md) (proposta, aguardando escolha), [sistema de ilustração](docs/ILLUSTRATION-SYSTEM.md) e [plano revisado](docs/REDESIGN-PLAN.md); [relatórios de revisão](docs/reviews/)
+- Redesign: [nova direção criativa](docs/CREATIVE-DIRECTION.md) e [sistema de ilustração](docs/ILLUSTRATION-SYSTEM.md)
 
 ## Próxima entrega
 

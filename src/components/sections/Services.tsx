@@ -48,7 +48,7 @@ export function Services() {
               aria-labelledby="solucao-api"
               size="lg"
               innerClassName="bg-surface"
-              className="lg:col-span-7"
+              className="motion-card lg:col-span-7"
             >
               <div className="p-5 sm:p-8">
                 <PlayFigure
@@ -75,9 +75,9 @@ export function Services() {
             {others.map((service) => (
               <li
                 key={service.id}
-                className="flex items-start gap-4 rounded-lg border border-line bg-graphite-2 p-4"
+                className="motion-card flex items-start gap-4 rounded-lg border border-line bg-graphite-2 p-4"
               >
-                <div className="w-28 shrink-0 sm:w-40">{figures[service.id]}</div>
+                <div className="motion-figure w-28 shrink-0 sm:w-40">{figures[service.id]}</div>
                 <div className="min-w-0 pt-1">
                   <h3 className="font-display text-h3 font-semibold text-fg">
                     {service.title}

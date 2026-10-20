@@ -42,7 +42,7 @@ export function ProjectCarousel({ titles, children }: { titles: readonly string[
     const el = scroller.current;
     const slide = el?.children[Math.max(0, Math.min(last, index))] as HTMLElement | undefined;
     if (!el || !slide) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.dataset.motion !== "on";
     el.scrollTo({ left: slide.offsetLeft, behavior: reduced ? "auto" : "smooth" });
   }, [last]);
 
@@ -105,7 +105,7 @@ export function ProjectCarousel({ titles, children }: { titles: readonly string[
   };
 
   const arrow =
-    "grid size-12 place-items-center rounded-full border border-control bg-surface-2 text-fg transition-[background-color,border-color,opacity] duration-(--duration-base) hover:border-fg/70 hover:bg-surface-3 aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:border-control aria-disabled:hover:bg-surface-2";
+    "motion-button grid size-12 place-items-center rounded-full border border-control bg-surface-2 text-fg transition-[background-color,border-color,opacity] duration-(--duration-base) hover:border-fg/70 hover:bg-surface-3 aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:border-control aria-disabled:hover:bg-surface-2";
 
   return (
     <div role="region" aria-roledescription="carrossel" aria-label="Projetos" className="mt-10">

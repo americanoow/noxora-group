@@ -4,16 +4,18 @@ const section = (page: Page) =>
   page.getByRole("region", { name: "Seu próximo projeto começa com uma conversa." });
 const form = (page: Page) => page.getByRole("form", { name: "Envie uma mensagem" });
 
-// O servidor de teste não define e-mail, WhatsApp nem destino do formulário.
+// O servidor usa o e-mail padrão, sem WhatsApp nem destino do formulário.
 test.describe("canais de contato", () => {
-  test("mostra os pendentes sem links fictícios e disponibiliza o Instagram", async ({ page }) => {
+  test("mostra o e-mail da Noxora, o WhatsApp pendente e o Instagram", async ({ page }) => {
     await page.goto("/#contato");
     const contact = section(page);
 
-    await expect(contact.getByText("Endereço em definição")).toBeVisible();
+    const email = contact.getByRole("link", { name: /Enviar e-mail/ });
+    await expect(email).toContainText("groupnoxora@gmail.com");
+    await expect(email).toHaveAttribute("href", "mailto:groupnoxora@gmail.com");
     await expect(contact.getByText("Número em definição")).toBeVisible();
-    await expect(contact.getByText("Em breve")).toHaveCount(2);
-    await expect(contact.locator('a[href^="mailto:"], a[href^="https://wa.me/"]')).toHaveCount(0);
+    await expect(contact.getByText("Em breve")).toHaveCount(1);
+    await expect(contact.locator('a[href^="https://wa.me/"]')).toHaveCount(0);
 
     const instagram = contact.getByRole("link", { name: /Instagram/ });
     await expect(instagram).toContainText("@noxoragroup");
@@ -28,7 +30,7 @@ test.describe("canais de contato", () => {
       const page = await context.newPage();
       await page.goto("/#contato");
       await expect(page.getByRole("link", { name: /Instagram/ })).toBeVisible();
-      await expect(page.getByText("Endereço em definição")).toBeVisible();
+      await expect(page.getByRole("link", { name: /Enviar e-mail/ })).toHaveAttribute("href", "mailto:groupnoxora@gmail.com");
     } finally {
       await context.close();
     }
@@ -41,7 +43,9 @@ test.describe("composição do contato", () => {
     await page.goto("/#contato");
     const tiles = section(page).getByRole("listitem");
     await expect(tiles).toHaveCount(3);
-    // Mede só depois da animação de entrada, que desloca as caixas.
+    // Mede só depois da animação de entrada, que desloca as caixas: primeiro nada fica
+    // "escondido" esperando a vez, depois as transições em curso terminam.
+    await page.waitForFunction(() => document.querySelectorAll("#contato [data-reveal='hidden']").length === 0);
     await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect!.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => null))));
 
     const boxes = await Promise.all((await tiles.all()).map((tile) => tile.boundingBox()));

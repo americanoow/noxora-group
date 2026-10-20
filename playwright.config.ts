@@ -27,7 +27,7 @@ export default defineConfig({
     { name: "unit", testMatch: "unit/**/*.spec.ts" },
   ],
   webServer: {
-    // Build de produção com os canais ainda pendentes, como no lançamento atual.
+    // Build de produção com e-mail padrão e WhatsApp ainda pendente.
     command: `npm run build && npm run start -- -p ${PORT}`,
     url: `http://localhost:${PORT}`,
     timeout: 240_000,

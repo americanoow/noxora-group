@@ -35,10 +35,10 @@ export type Project = {
  * Vitrine da seção "Projetos".
  *
  * Projetos reais (`kind: "real"`) só entram com autorização do cliente e, de
- * preferência, com captura de tela em `public/projects/`. As três demonstrações
- * abaixo são conceituais: mostram o tipo de solução que a Noxora desenvolve e
- * não são trabalhos entregues. Não há clientes, números nem resultados.
- * Quando houver projetos reais, adicione-os no início da lista.
+ * preferência, com captura de tela em `public/projects/`. Os três websites
+ * têm autoria confirmada pelo responsável em 19/10/2026. A vitrine exibe
+ * somente esses trabalhos construídos. Nenhum resultado comercial
+ * ou tecnologia é atribuído aos projetos reais sem confirmação.
  *
  * Exemplo de projeto real:
  * {
@@ -56,36 +56,45 @@ export type Project = {
  */
 export const projects: readonly Project[] = [
   {
-    id: "website-comercial",
-    title: "Website comercial",
+    id: "bazar-oliveira",
+    title: "Bazar Oliveira",
     category: "Website",
-    kind: "concept",
-    description: "Um site que apresenta a empresa e leva o visitante ao contato.",
-    problem: "Clientes não encontram a empresa ou não entendem o que ela faz.",
-    solution: "Site rápido, claro e pronto para o celular, com chamadas diretas para o WhatsApp.",
-    technologies: ["Next.js", "React", "Tailwind CSS"],
-    mockup: "website",
+    kind: "real",
+    description: "Website de loja de materiais de construção, com catálogo e pedidos pelo WhatsApp.",
+    problem: "Apresentar os materiais e facilitar a escolha dos produtos para retirada na loja.",
+    solution: "Catálogo por categorias, busca de produtos e carrinho com envio do pedido pelo WhatsApp.",
+    technologies: [],
+    image: { src: "/projects/bazar-oliveira.webp", alt: "Site Bazar Oliveira com categorias e catálogo de materiais de construção.", width: 1440, height: 900 },
+    demoUrl: "https://bazar-oliveira-page.vercel.app/",
   },
   {
-    id: "sistema-de-gestao",
-    title: "Sistema de gestão",
-    category: "Sistema",
-    kind: "concept",
-    description: "Um painel para acompanhar pedidos, clientes e tarefas em um só lugar.",
-    problem: "As informações ficam em planilhas e conversas, difíceis de acompanhar.",
-    solution: "Painel web com cadastros, status e relatórios simples, acessível de qualquer lugar.",
-    technologies: ["Next.js", "TypeScript", "PostgreSQL"],
-    mockup: "system",
+    id: "clinica-multidisciplinar",
+    title: "Clínica Multidisciplinar",
+    category: "Website",
+    kind: "real",
+    description: "Website de apresentação para clínica multidisciplinar.",
+    problem: "Organizar a apresentação da clínica, das especialidades e dos canais de atendimento.",
+    solution: "Página com especialidades, informações da clínica e acesso aos canais de contato.",
+    technologies: [],
+    image: { src: "/projects/clinica-multidisciplinar.webp", alt: "Página inicial da Clínica Multidisciplinar, com apresentação e imagem de um consultório.", width: 1440, height: 900 },
+    demoUrl: "https://clinica-site-rose.vercel.app/",
   },
   {
-    id: "automacao-de-processos",
-    title: "Automação de processos",
-    category: "Automação",
-    kind: "concept",
-    description: "Tarefas repetitivas passam a acontecer sozinhas.",
-    problem: "A equipe copia os mesmos dados de um lugar para outro todos os dias.",
-    solution: "As ferramentas conversam entre si: o pedido chega, é registrado e o cliente é avisado.",
-    technologies: ["APIs", "Webhooks", "Node.js"],
-    mockup: "automation",
+    id: "peb-estudio",
+    title: "PeB Estúdio Fotográfico",
+    category: "Website",
+    kind: "real",
+    description: "Website para estúdio fotográfico, com portfólio de ensaios newborn.",
+    problem: "Apresentar o trabalho do estúdio e ajudar o visitante a conhecer os ensaios disponíveis.",
+    solution: "Galeria de fotografias, apresentação dos pacotes e contato direto pelo WhatsApp.",
+    technologies: [],
+    image: { src: "/projects/peb-estudio.webp", alt: "Site PeB Estúdio Fotográfico com apresentação de ensaios e fotografia newborn.", width: 1440, height: 900 },
+    demoUrl: "https://pebestudiofotografico.vercel.app/",
   },
 ];
+
+export const projectLabels = {
+  real: "Projeto Noxora",
+  goal: "Objetivo",
+  visit: "Visitar site",
+};

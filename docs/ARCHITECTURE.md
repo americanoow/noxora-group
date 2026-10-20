@@ -18,20 +18,16 @@ src/
 │   ├── illustrations/   hero/HeroStage (palco do cubo), api/ApiIntegrationFigure, benefits/BeforeAfter, projects/ProjectPreview (mockups de website, painel e fluxo)
 │   ├── layout/          Header (server), HeaderShell e MobileNav (client), Footer
 │   ├── sections/        Hero, Services, Benefits, Portfolio, ProjectSlide, ProjectCarousel (client), Contact, ContactForm (client)
-│   └── ui/              Container, Button/ButtonLink, Card, Badge, Facet, RailDivider, Reveal e PlayFigure (client), SectionHeader, Wordmark
+│   └── ui/              Container, Button/ButtonLink, Card, Badge, Facet, RailDivider, Reveal, PlayFigure, SweepOnView, MotionToggle, useMotionEnabled, SectionHeader, Wordmark
 ├── content/             Textos e dados tipados (site, serviços, benefícios, projetos, contato)
 ├── lib/                 site-url.ts (origem pública validada), contact.ts (validação), contact-action.ts (Server Action), whatsapp.ts (link do canal quando configurado)
-└── styles/globals.css   Design system: tokens (@theme), base e utilitários
+└── styles/             globals.css (tokens, base, ilustrações) e interactions.css (movimento e respostas a controles)
 tests/
 ├── e2e/                 Playwright, projetos desktop e mobile
 └── unit/                Playwright sem navegador, para funções puras
 eslint-rules/            Regras locais do toolkit (quality/max-lines etc.) e base do perfil leve do Next
 scripts/                 verify-quality-rules.mjs (autoverificação das regras locais)
-.agents/skills/          Skills do projeto, 8 (cópias em .claude/skills; origem em skills-lock.json)
-.claude/settings.json    Plugins do projeto (Ponytail e Caveman)
-.mcp.json, .codex/       MCP do projeto: Context7 e Chrome DevTools MCP (só no Claude); Context7 no Codex
-graphify-out/            Grafo de código gerado (ignorado pelo Git; regenerar quando necessário)
-docs/                    Documentação (ver índice em README.md); prompts/ e reviews/
+docs/                    Documentação (ver índice em README.md)
 ```
 
 Seções da página: Hero, Soluções, Como ajudamos, Projetos e Contato. **Navegação:** Soluções, Projetos e Contato. A seção Sobre e os perfis dos sócios foram removidos e seguem adiados. O formulário de contato vem depois dos canais, na seção Contato.
@@ -45,16 +41,15 @@ Interface e design system: `docs/design.md`; os valores ficam em `src/styles/glo
 ## Decisões
 
 - **Conteúdo.** Dados e textos dos canais ficam em `src/content/contact.ts`; projetos, serviços e benefícios também são listas tipadas em `src/content/`. Títulos e descrições de algumas seções ainda estão nos componentes; centralizá-los é um débito conhecido (revisão independente, baixa severidade).
-- **Vitrine de projetos.** `src/content/projects.ts` guarda o modelo (`id`, `title`, `category`, `kind` real ou conceitual, `description`, `problem`, `solution`, `technologies`, `image` ou `mockup`, `demoUrl`, `caseStudyUrl`). Hoje há três **demonstrações conceituais** (website, sistema de gestão, automação), sempre rotuladas; nenhum cliente, número ou resultado. A seção se adapta à quantidade: 0 mostra o aviso "Casos reais em breve"; 1 mostra o destaque sem controles; 2 ou mais viram carrossel manual (`ProjectCarousel`). O carrossel usa rolagem nativa com `scroll-snap` (gesto de arrastar, teclado e leitor de tela sem código extra), sem autoplay e sem loop; setas, pontos e indicador só existem com JavaScript (sem ele, todos os projetos continuam acessíveis pela rolagem). Projeto real: adicione no início da lista, com captura em `public/projects/`. As páginas `/fixtures/projetos/{0,1,2,5}` (quatro páginas estáticas) existem só quando o build roda com `NOXORA_FIXTURES=1` (definido em `playwright.config.ts`); em qualquer outro build, ou caminho, respondem 404 de verdade.
-- **Contato direto, por três cartões:** e-mail, WhatsApp e Instagram. O Instagram usa o perfil `@noxoragroup`, com abertura em nova aba e aviso acessível. E-mail e telefone ainda não definidos aparecem como pendentes, sem links fictícios.
-- **Configuração dos canais.** `CONTACT_EMAIL` ativa o link `mailto:` quando contém um endereço válido. `WHATSAPP_NUMBER` ativa o WhatsApp quando contém um número válido. Ambos são lidos no build; os cartões pendentes continuam visíveis quando a configuração está ausente ou inválida. Os canais funcionam sem JavaScript. O endereço de e-mail e o telefone não foram inventados.
+- **Vitrine de projetos.** `src/content/projects.ts` guarda o modelo (`id`, `title`, `category`, `kind` real ou conceitual, `description`, `problem`, `solution`, `technologies`, `image` ou `mockup`, `demoUrl`, `caseStudyUrl`). Hoje a vitrine exibe somente os três websites reais autorizados, com capturas locais; os exemplos conceituais foram removidos por decisão do responsável. Os reais usam objetivo, sem alegar histórico do cliente ou resultado comercial; tecnologias não confirmadas ficam vazias e não são exibidas. A seção se adapta à quantidade: 0 mostra o aviso "Casos reais em breve"; 1 mostra o destaque sem controles; 2 ou mais viram carrossel manual (`ProjectCarousel`). O carrossel usa rolagem nativa com `scroll-snap` (gesto de arrastar, teclado e leitor de tela sem código extra), sem autoplay e sem loop; setas, pontos e indicador só existem com JavaScript (sem ele, todos os projetos continuam acessíveis pela rolagem). Projeto real: adicione no início da lista, com captura em `public/projects/`. As páginas `/fixtures/projetos/{0,1,2,5}` (quatro páginas estáticas) existem só quando o build roda com `NOXORA_FIXTURES=1` (definido em `playwright.config.ts`); em qualquer outro build, ou caminho, respondem 404 de verdade.
+- **Contato direto, por três cartões:** e-mail, WhatsApp e Instagram. O e-mail padrão é `groupnoxora@gmail.com`, informado pelo responsável, com link `mailto:`. O Instagram usa o perfil `@noxoragroup`, com abertura em nova aba e aviso acessível. O telefone ainda não definido aparece como pendente, sem link fictício.
+- **Configuração dos canais.** `CONTACT_EMAIL` pode substituir o e-mail padrão por outro endereço válido. Ausente ou vazia, mantém `groupnoxora@gmail.com`; inválida, deixa o cartão pendente. `WHATSAPP_NUMBER` ativa o WhatsApp quando contém um número válido. Ambos são lidos no build. Os canais funcionam sem JavaScript. O e-mail não configura o destino do formulário, que continua dependendo de `CONTACT_WEBHOOK_URL`.
 - **Formulário de contato.** `lib/contact.ts` valida igual no cliente e no servidor; `lib/contact-action.ts` é a Server Action. Com JavaScript, valida antes de enviar, foca o primeiro campo inválido, mostra "Enviando…" e **intercepta o envio** por um envoltório que trata queda de rede (sem ele, a rejeição desmontaria o formulário e o rascunho se perderia); sem JavaScript vale a Server Action direta, exigida pelo envio nativo; sem JavaScript, a action valida e a página volta com o erro **e os valores digitados** (F03). A entrega é um POST JSON para `CONTACT_WEBHOOK_URL` (só servidor, lida em tempo de execução, nunca `NEXT_PUBLIC_*`), com tempo limite (padrão 8 s). **Sucesso só depois de HTTP 2xx do destino**; sem destino, "indisponível"; falha de entrega, erro com os valores preservados. Campo isca (honeypot) descarta robôs sem entregar. Logs trazem só o tipo do erro: nunca a URL, o e-mail ou a mensagem. **Sem limite de frequência** (pendência registrada em `docs/quality.md`). Bordas dos campos usam `control` (contraste ≥ 3:1).
 - **URL do site.** `lib/site-url.ts` valida `NEXT_PUBLIC_SITE_URL`: em desenvolvimento, ausente cai em `http://localhost:3000`; **em produção, ausente, vazia ou inválida interrompe o build** com mensagem clara. Isso impede esquecer a variável (ausente, vazia ou inválida); **não** impede um valor `localhost` escolhido de propósito, então confira o domínio definitivo na publicação.
-- **Movimento sem biblioteca.** `Reveal` (client, ~1 KB) usa `IntersectionObserver`. O HTML do servidor é totalmente visível; só depois da hidratação o que está abaixo da dobra é escondido, e nunca com `prefers-reduced-motion: reduce`. Sem JavaScript nada fica oculto. Não há animação infinita.
+- **Movimento sem biblioteca.** `Reveal` usa `IntersectionObserver`; o HTML do servidor é totalmente visível. `useMotionEnabled` compartilha a regra de pausa, preferência de movimento e visibilidade da aba entre `Reveal`, `PlayFigure`, `SweepOnView` e `MotionToggle`. `PlayFigure` repete apenas enquanto visível; `SweepOnView` ativa e remove `data-sweep` conforme a viewport. Loops CSS exigem `data-motion="on"`; `MotionToggle` atualiza `data-motion-active` para suspender animações em segundo plano. Pausar ou reduzir movimento restaura as figuras completas, sem timers de repetição. Sem JavaScript, não há loops nem conteúdo oculto.
 - **Hero.** Palco em camadas (L0 luz, L1 trilhos atrás, L2 o cubo, L3 trilho à frente; sem fichas de texto) com a imagem do cubo (`public/images/noxora-icon.png`, PNG transparente) servida por `next/image` com `preload`, `loading="eager"` e `fetchPriority="high"` (decisão por medição: o `preload` recuperou o LCP no celular). O reflexo reaproveita o mesmo arquivo. É uma imagem, não um modelo 3D; WebGL foi avaliado e descartado. A entrada animada nunca esconde texto nem o cubo.
 - **Fontes** via `next/font` (Manrope nos textos e Space Grotesk nos títulos), auto-hospedadas e com `display: swap`.
 - **Qualidade.** Perfil leve do toolkit para Next: presets oficiais do Next + `quality/max-lines` (350). Perfil tipado separado (`lint:typed`) para `no-floating-promises` e `no-misused-promises`. Detalhes em `docs/quality.md`.
-- **Arquivos de agentes fora do build.** `.agents/`, `.claude/`, `.codex/` e `.backups/` ficam fora do `tsconfig` e do ESLint; contêm instruções e scripts de terceiros que não fazem parte da aplicação.
 - **Decisão de nomes:** este arquivo mantém o nome `ARCHITECTURE.md` (equivalente canônico de `docs/architecture.md` do toolkit). Como o sistema de arquivos do Windows ignora maiúsculas, não há como manter os dois nomes.
 
 ## Variáveis de ambiente
@@ -64,7 +59,7 @@ Ver `.env.example`. Todas são lidas **no build**; alterá-las exige novo build.
 | Variável | Efeito |
 | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Obrigatória em produção (ver acima) |
-| `CONTACT_EMAIL` | Habilita o canal de e-mail |
+| `CONTACT_EMAIL` | Substitui o e-mail público padrão; ausente ou vazia, usa groupnoxora@gmail.com |
 | `WHATSAPP_NUMBER` | Habilita o canal de WhatsApp (somente dígitos, com DDI e DDD) |
 | `CONTACT_WEBHOOK_URL` | Destino do formulário. **Lida em tempo de execução, só no servidor.** Sem ela o formulário avisa que está indisponível |
 | `CONTACT_WEBHOOK_TIMEOUT_MS` | Opcional: tempo limite da entrega (padrão 8000) |
@@ -73,4 +68,4 @@ Para rodar `npm run build` localmente, copie `.env.example` para `.env.local` (a
 
 ## Manutenção
 
-Atualize este mapa quando diretórios, dependências relevantes, contratos ou fronteiras mudarem; remova decisões que deixaram de valer. Comandos: `AGENTS.md` e `docs/onboarding.md`.
+Atualize este mapa quando diretórios, dependências relevantes, contratos ou fronteiras mudarem; remova decisões que deixaram de valer. Comandos: `docs/onboarding.md`.

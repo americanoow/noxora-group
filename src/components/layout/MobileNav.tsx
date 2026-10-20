@@ -48,7 +48,7 @@ export function MobileNav({ items }: { items: readonly NavItem[] }) {
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex size-11 items-center justify-center rounded-full border border-control text-fg"
+        className="motion-button inline-flex size-11 items-center justify-center rounded-full border border-control text-fg"
       >
         <span className="sr-only">{open ? "Fechar menu" : "Abrir menu"}</span>
         {open ? (
@@ -62,7 +62,7 @@ export function MobileNav({ items }: { items: readonly NavItem[] }) {
         id={panelId}
         aria-label="Principal"
         hidden={!open}
-        className="absolute inset-x-0 top-full max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain border-b border-line bg-ink px-5 pt-2 pb-6"
+        className="motion-menu absolute inset-x-0 top-full max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain border-b border-line bg-ink px-5 pt-2 pb-6"
       >
         <ul className="flex flex-col">
           {items.map((item) => (

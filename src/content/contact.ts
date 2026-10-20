@@ -20,7 +20,7 @@ type ContactChannel = {
 
 // Lidos no build. Os canais pendentes continuam visíveis, sem links fictícios.
 export function getContactChannels(): readonly ContactChannel[] {
-  const configuredEmail = process.env.CONTACT_EMAIL?.trim() ?? "";
+  const configuredEmail = process.env.CONTACT_EMAIL?.trim() || "groupnoxora@gmail.com";
   const email = /^[^\s@?&#]+@[^\s@?&#]+\.[^\s@?&#]+$/.test(configuredEmail)
     ? configuredEmail
     : null;

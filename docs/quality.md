@@ -28,25 +28,12 @@ Cobrem comportamento visível e regressões, não repetem o código:
 - **e2e (`desktop` e `mobile`):** estrutura e SEO (h1 único, `lang`, regiões nomeadas, metadados, robots, sitemap, origem pública), canais de contato sem links fictícios, portfólio vazio sem cases, navegação por teclado, menu mobile, tokens do design system, texto mínimo de 14 px, foco sem alterar o raio e comportamento do `Reveal` (com movimento reduzido e sem JavaScript).
 - **Fase 3A (`prototype-3a.spec.ts`):** hero (texto aprovado, composição decorativa, cubo com prioridade alta, nada invisível com movimento reduzido nem durante os atrasos), header transparente e com superfície ao rolar, menu mobile alcançável em 568×320, 667×375 e 390×844 (F04), ausência de rolagem horizontal de 320 a 1440 px, palco do hero dentro da viewport de 1024 a 1920 px, e a ilustração de APIs e integrações (legenda curta, rótulo conceitual, sem nomes de empresas nem números de resultado, botão Repetir, estado final, movimento reduzido e sem JavaScript).
 - **Animações (`animations.spec.ts`):** reflexo do cubo definido como uma passada atrasada que começa e termina apagada; sinal das integrações (origens e destinos em sentidos opostos) e resposta dos destinos; documento da automação com "Repetir"; camadas, alinhamento dos blocos e reflexo do trilho/selo ao entrar na tela; troca de projetos sem mudar a altura; loops (figuras recomeçam sozinhas), botão "Pausar animações" para e retoma todos; movimento reduzido sem loops nem botão; sem JavaScript no estado final. Testes de figuras hidratam antes de rolar e rolam até a própria figura.
-- **Projetos (`projects.spec.ts`):** três demonstrações rotuladas e sem números, prévias sem texto, setas/pontos/indicador, sem loop e sem autoplay, teclado (setas, Home, End), alvos ≥ 24 px, rolagem real atualiza o indicador, movimento reduzido, sem JavaScript e as quantidades 0, 1, 2 e 5 (páginas de apoio `/fixtures`).
+- **Projetos (`projects.spec.ts`):** somente três sites reais com imagem carregada e links corretos; ausência de exemplos e prévias conceituais. Setas/pontos/indicador, sem loop e sem autoplay, teclado (setas, Home, End), alvos ≥ 24 px, rolagem real atualiza o indicador, movimento reduzido, sem JavaScript e as quantidades 0, 1, 2 e 5 (páginas de apoio `/fixtures`).
+- **Interações (`interactions.spec.ts`):** resposta de botões, links e cards ao mouse e foco; pausa e alteração de movimento reduzido durante a sessão; cubo sem loop fora da viewport; menu mobile preservando Escape e foco. O wordmark é verificado como expansão horizontal, sem onda vertical nem texto oculto.
 - **Fase 4:** `phase-4.spec.ts` (cinco benefícios com cena decorativa, ausência de `sticky`, nenhum número de resultado, alternância de superfícies, sem rolagem horizontal de 320 a 1440 px) e `contact.spec.ts` (canais sem links fictícios, formulário: rótulos, contraste da borda ≥ 3:1, validação, foco no primeiro inválido, valores preservados com e sem JavaScript, campo isca fora da árvore de acessibilidade).
 - **unit:** `contact.spec.ts` (validação, e a Server Action contra um destino HTTP local: inválido, indisponível, honeypot, sucesso só com 2xx e payload exato, HTTP 500, destino inalcançável, redirecionamento não seguido, tempo esgotado e teto do tempo, sem vazamento de URL, host, e-mail ou mensagem no log) e `resolveSiteUrl` (desenvolvimento, produção, vazio, inválido, protocolo não web, normalização).
 
 **Não existem:** auditoria automatizada de acessibilidade (axe), medição de Core Web Vitals, teste com leitor de tela real, teste em Safari/Firefox (os dois projetos usam Chromium), teste de envio real para um destino de produção (o caminho de sucesso foi provado com destino de teste). Não declare conformidade WCAG integral nem aprovação de Core Web Vitals sem esses dados.
-
-### Capacidades adotadas e o que cada uma provou (17/10/2026)
-
-| Capacidade | Evidência de execução | Pendente |
-| --- | --- | --- |
-| `next-bundle-optimizer` | `next analyze --output --snapshot` concluiu em 57 s (7 rotas) e `next analyze export` emitiu 5.601 registros JSONL. Somente análise; nenhum código alterado | Interpretar o baseline quando houver uma otimização pedida |
-| `next-dev-loop` | Validado ao vivo (18/10/2026): `/_next/mcp` com `get_compilation_issues` (0 problemas) e `get_routes` (6 rotas); `agent-browser` 0.39.1 leu a página, clicou em um CTA (URL passou a `#solucoes`) e o console ficou sem erros | Repetir após mudanças relevantes de runtime; `open` contra `next dev` não devolve o controle (usar `snapshot`) |
-| Chrome DevTools MCP | Servidor fixado em 1.11.0 respondeu ao handshake MCP e listou 32 ferramentas, incluindo `lighthouse_audit` e traces de desempenho | Uso real por um cliente; as ferramentas apareceram na lista da sessão, mas não foram chamadas |
-| Graphify | Grafo só de código: 191 nós, 316 arestas, 47 arquivos, 5,6 s; `query` e `path` confirmaram uma relação conhecida | Grafo desatualiza a cada mudança: regenerar antes de confiar nele; semântica de documentos não gerada |
-| RTK | `rtk gain` responde (versão correta) e `rtk init --show` confirma o hook | Reescrita real de comandos só observável em sessão nova |
-| Context7 | Endpoint remoto e a ferramenta MCP no cliente (sessão de 18/10/2026) responderam com documentação real do Next.js | Índice lista versões até 16.2.9, anteriores ao 16.4.2 do projeto; confirmar contra `node_modules/next/dist/docs/` |
-| Revisão de segurança | Prompt em `docs/prompts/security-review.md` | Nenhuma revisão executada neste projeto |
-
-Instalação e descoberta não provam execução: a coluna "Evidência" só registra o que foi observado.
 
 ### Lint tipado
 
@@ -76,13 +63,6 @@ Um **CLS de 0,026** apareceu em uma das execuções desktop da primeira rodada e
 ## Revisão após implementação ou correções
 
 Dimensione a revisão ao risco e ao diff real; use revisão independente em trabalho não trivial quando disponível. Registre o alvo exato, chamadores, contratos e testes conectados, achados confirmados e cobertura. Rodadas extras exigem nova evidência ou risco não resolvido; respeite contagem pedida pelo usuário sem inventar ciclos. Termine quando os achados relevantes estiverem resolvidos ou justificados, as checagens afetadas passarem e a verificação integrada e os riscos residuais estiverem registrados. Revisão independente indisponível ou checagem bloqueada fica como limitação explícita. Relatórios existentes: `docs/reviews/`.
-
-## Revisão de segurança
-
-- **Prompt reutilizável:** `docs/prompts/security-review.md` (cópia do toolkit, revisão registrada no cabeçalho). Modo repositório por padrão; modo diff com `base`, `head`, tipo de comparação e `dirty`.
-- **Skill:** `differential-review`, para mudanças sensíveis (por exemplo, o formulário de contato e seu webhook, quando existirem). Escopo e limites do prompt prevalecem sobre exemplos da skill, como `git checkout`.
-- **Relatório:** somente leitura, redigido, **fora do repositório**, em local privado. Não publique achados sensíveis nem os grave na documentação. Registre aqui só data, escopo e situação.
-- **Faixa para o modo diff:** o histórico começa em `a370506` e tem os commits de 18/10/2026 (`git log`). Informe `base` e `head` reais; alterações sem commit entram só com `dirty=include`, e `head` precisa ser o `HEAD` atual.
 
 ## Dependências e entrega
 

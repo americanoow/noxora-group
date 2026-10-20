@@ -47,7 +47,3 @@ next-env.d.ts
 /blob-report/
 /playwright/.cache/
 .backups/
-
-# agentes
-graphify-out/
-.claude/settings.local.json

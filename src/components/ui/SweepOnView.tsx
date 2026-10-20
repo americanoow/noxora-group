@@ -1,34 +1,37 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type HTMLAttributes } from "react";
+import { useMotionEnabled } from "./useMotionEnabled";
 
 /**
- * Marca o bloco com `data-sweep="play"` quando ele entra na tela, uma vez. O
- * CSS (globals.css) usa o atributo para tocar um reflexo de uma passada.
- * Com movimento reduzido ou sem JavaScript o atributo nunca aparece.
+ * Ativa o movimento só enquanto o bloco está visível e o movimento permitido.
+ * Ao sair da tela, pausar ou reduzir movimento, restaura o estado estático.
  */
-export function SweepOnView({ children, className }: { children: ReactNode; className?: string }) {
+export function SweepOnView({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) {
   const ref = useRef<HTMLDivElement>(null);
+  const enabled = useMotionEnabled();
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!enabled) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           element.dataset.sweep = "play";
-          observer.disconnect();
-        }
+        } else delete element.dataset.sweep;
       },
       { rootMargin: "0px 0px -15% 0px" },
     );
     observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      observer.disconnect();
+      delete element.dataset.sweep;
+    };
+  }, [enabled]);
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} className={className} {...props}>
       {children}
     </div>
   );

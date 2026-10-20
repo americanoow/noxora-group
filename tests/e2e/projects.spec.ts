@@ -11,29 +11,43 @@ test.describe("vitrine de projetos", () => {
     await page.goto("/");
   });
 
-  test("mostra três demonstrações conceituais, todas identificadas como tal", async ({ page }) => {
+  test("mostra somente os três sites reais construídos pela Noxora", async ({ page }) => {
     const slides = section(page).getByRole("article");
     await expect(slides).toHaveCount(3);
-    await expect(slides.getByText("Demonstração conceitual")).toHaveCount(3);
+    await expect(slides.getByText("Projeto Noxora", { exact: true })).toHaveCount(3);
+    await expect(slides.getByText("Demonstração conceitual")).toHaveCount(0);
     await expect(section(page).getByRole("heading", { level: 3 })).toHaveText([
-      "Website comercial",
-      "Sistema de gestão",
-      "Automação de processos",
+      "Bazar Oliveira",
+      "Clínica Multidisciplinar",
+      "PeB Estúdio Fotográfico",
     ]);
     // Nada de cliente, depoimento ou resultado numérico.
     const text = await section(page).innerText();
     expect(text).not.toMatch(/\d+\s?%/);
     expect(text).not.toMatch(/\b\d+\s?x\b/i);
     expect(text).not.toMatch(/depoimento/i);
-    await expect(section(page)).toContainText("primeiros projetos reais");
+    await expect(section(page)).not.toContainText("primeiros projetos reais");
+    const urls = [
+      "https://bazar-oliveira-page.vercel.app/",
+      "https://clinica-site-rose.vercel.app/",
+      "https://pebestudiofotografico.vercel.app/",
+    ];
+    for (const [index, url] of urls.entries()) {
+      const slide = slides.nth(index);
+      const link = slide.getByRole("link", { name: /Visitar site/ });
+      await expect(link).toHaveAttribute("href", url);
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      const image = slide.getByRole("img");
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(() => image.evaluate((el) => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+      await expect(slide.getByText("Demonstração conceitual")).toHaveCount(0);
+    }
   });
 
-  test("a prévia visual é decorativa e não traz texto legível", async ({ page }) => {
-    const previews = section(page).locator("article [data-preview]");
-    await expect(previews).toHaveCount(3);
-    for (const preview of await previews.all()) {
-      expect((await preview.innerText()).trim()).toBe("");
-    }
+  test("a vitrine usa capturas dos sites, sem prévias conceituais", async ({ page }) => {
+    await expect(section(page).locator("article [data-preview]")).toHaveCount(0);
+    await expect(section(page).getByRole("img")).toHaveCount(3);
   });
 
   test("setas, pontos e indicador navegam sem loop e sem autoplay", async ({ page }) => {

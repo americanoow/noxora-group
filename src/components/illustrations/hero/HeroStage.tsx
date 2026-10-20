@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SweepOnView } from "@/components/ui/SweepOnView";
 
 const CUBE = { src: "/images/noxora-icon.png", width: 1283, height: 1226 } as const;
 
@@ -15,7 +16,7 @@ const H = 1330;
  */
 export function HeroStage() {
   return (
-    <div className="relative">
+    <SweepOnView className="motion-stage relative">
       <div
         aria-hidden="true"
         className="hero-stage relative"
@@ -70,29 +71,31 @@ export function HeroStage() {
         </svg>
 
         {/* L2: o cubo (elemento de LCP no celular: carga imediata e prioridade alta) */}
-        <Image
-          src={CUBE.src}
-          alt=""
-          width={CUBE.width}
-          height={CUBE.height}
-          preload
-          loading="eager"
-          fetchPriority="high"
-          sizes="(min-width: 1024px) 620px, 78vw"
-          className="absolute top-0 left-0 z-20 h-auto w-full"
-        />
+        <div className="hero-object absolute inset-0 z-20">
+          <Image
+            src={CUBE.src}
+            alt=""
+            width={CUBE.width}
+            height={CUBE.height}
+            preload
+            loading="eager"
+            fetchPriority="high"
+            sizes="(min-width: 1024px) 620px, 78vw"
+            className="absolute top-0 left-0 z-20 h-auto w-full"
+          />
 
         {/* Luz percorrendo o cubo: o mesmo arquivo, mais claro e mascarado por uma faixa que
             atravessa uma vez, depois da entrada. Só toca o vidro; título e botões já estão visíveis. */}
-        <Image
-          src={CUBE.src}
-          alt=""
-          width={CUBE.width}
-          height={CUBE.height}
-          fetchPriority="low"
-          sizes="(min-width: 1024px) 620px, 78vw"
-          className="cube-sheen hero-sheen pointer-events-none absolute top-0 left-0 z-[25] h-auto w-full"
-        />
+          <Image
+            src={CUBE.src}
+            alt=""
+            width={CUBE.width}
+            height={CUBE.height}
+            fetchPriority="low"
+            sizes="(min-width: 1024px) 620px, 78vw"
+            className="cube-sheen hero-sheen pointer-events-none absolute top-0 left-0 z-[25] h-auto w-full"
+          />
+        </div>
 
         {/* Reflexo no piso: o mesmo arquivo, espelhado e esmaecido. A caixa corta o
             reflexo no fim do palco para que ele nunca fique sob o texto. */}
@@ -126,6 +129,6 @@ export function HeroStage() {
           />
         </svg>
       </div>
-    </div>
+    </SweepOnView>
   );
 }

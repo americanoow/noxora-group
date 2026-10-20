@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./interactions.css";
 
 /*
  * Design system Noxora: "Liquid Engineering" (direção A, "Estúdio de Luz").
@@ -220,18 +221,10 @@
   from { opacity: 0; transform: translate3d(0, 8px, 0) scale(0.97); }
   to { opacity: 1; transform: none; }
 }
-/* Wordmark: as letras sobem uma a uma; depois um brilho as percorre (0,9 s a cada 10 s). */
-@keyframes wm-in {
-  from { opacity: 0; transform: translate3d(0, 0.45em, 0); }
-  to { opacity: 1; transform: none; }
-}
-@keyframes wm-glint {
-  0%, 9%, 100% { color: inherit; text-shadow: none; }
-  4.5% { color: #fff; text-shadow: 0 0 14px rgb(143 180 255 / 0.7); }
-}
-@keyframes wm-glint-dot {
-  0%, 9%, 100% { color: inherit; text-shadow: none; }
-  4.5% { color: var(--color-light-ice); text-shadow: 0 0 16px rgb(143 180 255 / 0.9); }
+/* Expansão horizontal: letras se afastam do centro até 12 px e voltam juntas. */
+@keyframes wm-expand {
+  0%, 20%, 100% { transform: translate3d(0, 0, 0); }
+  10% { transform: translate3d(calc((var(--i) - 3) * 4px), 0, 0); }
 }
 @keyframes layer-in {
   from { opacity: 0; transform: translate3d(var(--lx, 0px), var(--ly, 12px), 0) scale(0.96); }
@@ -309,7 +302,7 @@
     mask-repeat: no-repeat;
   }
   /* Os loops só existem com JavaScript e sem pausa: <html data-motion="on"> (ui/MotionToggle.tsx). */
-  [data-motion="on"] .hero-sheen { animation: sheen-loop 9000ms ease-in-out 1900ms infinite; }
+  [data-motion="on"] [data-sweep="play"] .hero-sheen { animation: sheen-loop 9000ms ease-in-out 1900ms infinite; }
   /* Selo do contato: o mesmo reflexo, depois que o cubo entra na tela. */
   [data-motion="on"] [data-sweep="play"] .seal-sheen { animation: sheen-loop 9000ms ease-in-out 300ms infinite; }
   .hero-bead { stroke-dasharray: 0.1 1; stroke-dashoffset: 1; opacity: 0; animation: pulse-run 1500ms ease-in-out both, bead-visible 1500ms linear both; animation-delay: var(--d, 1300ms); }
@@ -325,10 +318,12 @@
   [data-play="playing"] .nx-node { animation: chip-in 500ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
   [data-play="playing"] .nx-ring { animation: ring-pulse 1100ms ease-out both; animation-delay: 1800ms; }
 
-  /* Wordmark do cabeçalho. A entrada roda uma vez; o brilho em loop só com os loops ligados. */
-  .wm-letter { animation: wm-in 600ms var(--ease-out-soft) both; animation-delay: calc(var(--i) * 70ms + 150ms); }
-  [data-motion="on"] .wm-glint { animation: wm-glint 10s linear infinite; animation-delay: calc(3200ms + var(--i) * 110ms); }
-  [data-motion="on"] .wm-dot { animation-name: wm-glint-dot; }
+  /* Header fixo: expansão só com movimento ligado; as letras nunca desaparecem. */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-motion="on"] .wm-letter {
+      animation: wm-expand calc(var(--duration-slow) * 10) ease-in-out infinite;
+    }
+  }
 
   /* Projetos: só depois da hidratação (data-active) e sem esconder nada antes disso. */
   [data-active="true"] .pj-preview { animation: pj-preview-in 700ms var(--ease-out-soft) both; }

@@ -16,7 +16,7 @@ Decisores de negócios de diferentes portes, de diferentes idades e níveis de f
 
 1. **Entender a proposta:** o visitante lê o hero e entende o que a Noxora faz.
 2. **Conhecer as soluções e os benefícios:** cada solução explica o benefício comercial, não só a tecnologia.
-3. **Ver projetos:** a seção é uma vitrine configurada em `src/content/projects.ts`: projetos reais autorizados e, enquanto não houver, demonstrações conceituais rotuladas. Sem nenhum item, mostra um aviso honesto.
+3. **Ver projetos:** a seção é uma vitrine configurada em `src/content/projects.ts`: três websites de autoria confirmada pelo responsável (Bazar Oliveira, Clínica Multidisciplinar e PeB Estúdio Fotográfico), com capturas e links. A vitrine mostra somente esses três trabalhos construídos. Sem nenhum item, mostra um aviso honesto.
 4. **Entrar em contato:** três canais (e-mail, WhatsApp, Instagram `@noxoragroup`). Canal ainda não definido aparece como "em definição", sem link fictício. Depois dos canais há um **formulário** com validação, estado de envio e erro; só confirma o envio depois que o destino confirma, e sem destino configurado avisa que está indisponível.
 
 ## MVP
@@ -49,12 +49,13 @@ Next.js 16.4.2 (App Router), TypeScript estrito, Tailwind CSS 4, sem persistênc
 
 | Item | Estado | Impacto |
 | --- | --- | --- |
-| E-mail e WhatsApp de contato | não fornecidos | cartões aparecem como "em definição" |
+| E-mail de contato | groupnoxora@gmail.com, informado pelo responsável | cartão com link para enviar e-mail |
+| WhatsApp de contato | não fornecido | cartão aparece como "em definição" |
 | Domínio público | não definido | `NEXT_PUBLIC_SITE_URL` é obrigatória para build de produção |
 | Destino do formulário (webhook) | não definido | o formulário avisa que o envio está indisponível e nunca simula sucesso |
 | Símbolo circular "N" | arquivo não fornecido | wordmark em texto permanece |
 | Integrantes da equipe | não fornecidos | seção Sobre adiada |
-| Projetos reais autorizados | nenhum informado | seção Projetos mostra três demonstrações conceituais rotuladas |
+| Projetos reais autorizados | três websites informados e autorizados em 19/10/2026 | somente os três sites construídos aparecem na vitrine; sem atribuir resultados comerciais ou tecnologias não confirmadas |
 | Política de privacidade (LGPD) | inexistente | necessária antes de coletar dados por formulário |
 | `docs/BRAND.md` e `docs/ROADMAP.md` | vazios | critérios de marca e roadmap ainda não registrados |
 
@@ -72,4 +73,4 @@ Portão 3B: validação visual da Fase 3A pelo responsável (hero, header e a il
 
 ## Manutenção
 
-Atualize este documento quando objetivo, escopo, restrições ou critérios mudarem. Decisões técnicas e evidências ficam em `docs/ARCHITECTURE.md` e `docs/setup.md`.
+Atualize este documento quando objetivo, escopo, restrições ou critérios mudarem. Decisões técnicas e evidências ficam em `docs/ARCHITECTURE.md`.

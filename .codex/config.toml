@@ -1,5 +1,0 @@
-# Configuração de projeto do Codex (exige que o projeto seja marcado como confiável).
-# Context7 remoto, sem chave: o limite anônimo é compartilhado. Autenticação e
-# modelo ficam fora do repositório.
-[mcp_servers.context7]
-url = "https://mcp.context7.com/mcp"

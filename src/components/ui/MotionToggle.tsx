@@ -2,6 +2,7 @@
 
 import { Pause, Play } from "lucide-react";
 import { useEffect, useSyncExternalStore } from "react";
+import { useMotionEnabled } from "./useMotionEnabled";
 
 /**
  * Liga e pausa as animações em loop do site (WCAG 2.2.2). O estado vive em
@@ -19,6 +20,11 @@ function subscribe(callback: () => void) {
 
 export function MotionToggle() {
   const motion = useSyncExternalStore(subscribe, read, () => "off");
+  const enabled = useMotionEnabled();
+
+  useEffect(() => {
+    document.documentElement.dataset.motionActive = String(enabled);
+  }, [enabled]);
 
   useEffect(() => {
     const root = document.documentElement;

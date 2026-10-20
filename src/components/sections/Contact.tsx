@@ -74,7 +74,7 @@ export function Contact() {
                     {channel.href ? (
                       <ArrowUpRight
                         aria-hidden="true"
-                        className="size-6 shrink-0 text-chrome transition-transform duration-(--duration-base) group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        className="size-6 shrink-0 text-chrome"
                       />
                     ) : (
                       <span className="shrink-0 rounded-full border border-line px-3 py-1 text-sm font-medium text-muted">
@@ -104,7 +104,7 @@ export function Contact() {
                     href={channel.href}
                     target={channel.external ? "_blank" : undefined}
                     rel={channel.external ? "noopener noreferrer" : undefined}
-                    className="group block h-full transition-opacity hover:opacity-90"
+                    className="motion-channel group block h-full"
                   >
                     {body}
                     <span className="sr-only">

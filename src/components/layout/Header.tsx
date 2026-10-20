@@ -23,7 +23,7 @@ export function Header() {
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="rounded-full px-4 py-2 text-sm text-muted transition-colors hover:text-fg"
+                  className="motion-nav rounded-full px-4 py-2 text-sm text-muted transition-colors hover:text-fg"
                 >
                   {item.label}
                 </a>
