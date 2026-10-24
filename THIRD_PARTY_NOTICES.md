@@ -10,6 +10,12 @@ As cenas de serviços adaptam as ideias visuais e de movimento abaixo para a ide
 - Botão com seta — zaby_4213 (Ferro): https://uiverse.io/zaby_4213/tough-lionfish-7.
   Alterações Uiverse: composição simplificada, paleta monocromática, check desenhado em SVG e botão de navegação sem controles fictícios. Referências aplicadas em ServiceDemos.tsx, service-scenes.css e Services.tsx.
 
+## Brilho nas soluções
+
+Shimmer Button e Animated Shiny Text — Magic UI / Dillion Verma, publicados no 21st.dev. Fontes: https://magicui.design/r/shimmer-button.json e https://magicui.design/r/animated-shiny-text.json.
+
+Adaptação em Services.tsx e service-scenes.css: anel conic-gradient mascarado, reflexo prateado sobre texto e faixa de luz no botão com seta do Uiverse já creditado. Implementação CSS vinculada ao SweepOnView, à solução aberta e à pausa global, com pausa longa entre ciclos. Movimento reduzido e ausência de JavaScript mantêm os destaques estáticos e legíveis.
+
 ## MIT License
 
 Copyright (c) Magic UI

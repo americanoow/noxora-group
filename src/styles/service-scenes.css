@@ -101,3 +101,76 @@
   .scene-network-icon { width: 2.5rem; height: 2.5rem; }
   .scene-network-input, .scene-network-output { transform: translate(-50%, -1.25rem); }
 }
+
+
+/* Shimmer Button / Animated Shiny Text (Magic UI, 21st.dev), adaptados à pausa global. */
+.solution-toggle { position: relative; isolation: isolate; border-color: var(--color-chrome); box-shadow: var(--shadow-ring); }
+.solution-toggle::before { content: ""; position: absolute; inset: -5px; border-radius: inherit; padding: 1px; pointer-events: none; opacity: 0; background: conic-gradient(transparent 65%, var(--color-chrome) 82%, var(--color-fg) 92%, transparent); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.service-benefit { color: var(--color-chrome); }
+@supports (background-clip: text) {
+  .service-benefit { background-image: linear-gradient(105deg, var(--color-chrome) 35%, var(--color-fg) 45%, var(--color-chrome) 55%); background-size: 250% 100%; background-position: 100% 0; background-clip: text; -webkit-background-clip: text; color: transparent; }
+}
+.solution-cta::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(105deg, transparent 35%, color-mix(in srgb, var(--color-chrome) 28%, transparent) 50%, transparent 65%); transform: translateX(-100%); }
+.solution-cta > span { position: relative; z-index: 1; }
+@keyframes solution-ring {
+  0% { opacity: 0; transform: rotate(0deg); }
+  3%, 13% { opacity: 1; }
+  19%, 100% { opacity: 0; transform: rotate(360deg); }
+}
+@keyframes solution-text-shine {
+  0%, 3% { background-position: 100% 0; }
+  19%, 100% { background-position: -100% 0; }
+}
+@keyframes solution-cta-shine {
+  0% { opacity: 0; transform: translateX(-100%); }
+  20%, 70% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-motion="on"] .solution-spotlight[data-sweep="play"] details:not([open]) .solution-toggle::before { animation: solution-ring calc(var(--duration-slow) * 20) ease-in-out infinite; animation-delay: calc(var(--attention-index, 0) * var(--duration-slow) * 5); }
+  [data-motion="on"] .solution-spotlight[data-sweep="play"] details[open] .service-benefit { animation: solution-text-shine calc(var(--duration-slow) * 20) var(--ease-out-soft) infinite; }
+  [data-motion="on"] .solution-cta:is(:hover, :focus-visible, :active)::after { animation: solution-cta-shine calc(var(--duration-slow) * 2) var(--ease-out-soft) both; }
+  [data-motion="on"] .solution-spotlight[data-sweep="play"] details[open] summary:is(:hover, :focus-visible) .solution-toggle::before { animation: solution-ring calc(var(--duration-slow) * 6) ease-in-out; }
+}
+
+
+/* Convite para descobrir os tópicos: o brilho fica nos botões ainda fechados. */
+.service-entry:not([open]) .solution-toggle::before { padding: 2px; }
+.solution-toggle::after { content: ""; position: absolute; inset: -9px; z-index: -1; border-radius: inherit; pointer-events: none; opacity: 0; background: radial-gradient(circle, color-mix(in srgb, var(--color-chrome) 55%, transparent), transparent 72%); }
+.service-entry:not([open]) summary:is(:hover, :focus-visible) .solution-toggle { background: var(--color-fg); color: var(--color-ink); }
+@keyframes solution-discovery-halo {
+  0% { opacity: 0; transform: scale(.9); }
+  4%, 10% { opacity: .7; transform: scale(1.08); }
+  19%, 100% { opacity: 0; transform: scale(1.5); }
+}
+@keyframes solution-discovery-plus {
+  0%, 15%, 100% { transform: scale(1); }
+  6% { transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-motion="on"] .solution-spotlight[data-sweep="play"] details:not([open]) .solution-toggle::after { animation: solution-discovery-halo calc(var(--duration-slow) * 20) ease-out infinite; animation-delay: calc(var(--attention-index, 0) * var(--duration-slow) * 5); }
+  [data-motion="on"] .solution-spotlight[data-sweep="play"] details:not([open]) .service-plus { animation: solution-discovery-plus calc(var(--duration-slow) * 20) var(--ease-out-soft) infinite; animation-delay: calc(var(--attention-index, 0) * var(--duration-slow) * 5); }
+}
+
+
+/* O texto acompanha o convite visual do +, mantendo a leitura estável. */
+.service-entry summary .service-benefit { position: relative; }
+.service-entry summary .service-benefit::after { content: ""; position: absolute; inset-inline: 0; bottom: -.4rem; height: 1px; pointer-events: none; opacity: 0; background: linear-gradient(90deg, transparent, var(--color-chrome), transparent); transform: scaleX(.65); }
+@keyframes solution-label-underline {
+  0% { opacity: 0; transform: scaleX(.65); }
+  5%, 12% { opacity: .8; transform: scaleX(1); }
+  19%, 100% { opacity: 0; transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-motion="on"] .solution-spotlight[data-sweep="play"] details:not([open]) summary .service-benefit { animation: solution-text-shine calc(var(--duration-slow) * 20) var(--ease-out-soft) infinite; animation-delay: calc(var(--attention-index, 0) * var(--duration-slow) * 5); }
+  [data-motion="on"] .solution-spotlight[data-sweep="play"] details:not([open]) summary .service-benefit::after { animation: solution-label-underline calc(var(--duration-slow) * 20) var(--ease-out-soft) infinite; animation-delay: calc(var(--attention-index, 0) * var(--duration-slow) * 5); }
+}
+@media (max-width: 1023px) {
+  .service-entry summary h3 { position: relative; }
+  @supports (background-clip: text) {
+    .service-entry summary h3 { background-image: linear-gradient(105deg, var(--color-chrome) 35%, var(--color-fg) 45%, var(--color-chrome) 55%); background-size: 250% 100%; background-position: 100% 0; background-clip: text; -webkit-background-clip: text; color: transparent; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-motion="on"] .solution-spotlight[data-sweep="play"] details:not([open]) summary h3 { animation: solution-text-shine calc(var(--duration-slow) * 20) var(--ease-out-soft) infinite; animation-delay: calc(var(--attention-index, 0) * var(--duration-slow) * 5); }
+  }
+}

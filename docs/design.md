@@ -67,3 +67,12 @@ Tipografia móvel (23/10/2026): abaixo de 640 px, títulos das seções Soluçõ
 
 
 Refino de leitura dos projetos no celular (23/10/2026): títulos dos projetos ampliados de 24 para 30 px; descrições e conteúdo dos detalhes de 18 para 20 px, com entrelinha 1,65 e texto chrome para maior contraste. A escala de Soluções permanece como no ajuste anterior.
+
+
+Brilho das soluções (23/10/2026): referências Shimmer Button e Animated Shiny Text adaptadas à paleta chrome. A solução aberta recebe anel no botão de expandir e reflexo na frase de benefício, com passagem curta a cada 12 segundos enquanto o bloco está visível. O CTA recebe uma faixa luminosa no hover, foco ou pressionamento. Sem JavaScript, pausado ou com movimento reduzido, permanece o destaque estático.
+
+
+Convite à descoberta (23/10/2026): o brilho automático do botão de expandir foi transferido para os tópicos fechados, antes do clique. Anel prateado de 2 px, halo e pequeno pulso no símbolo +, em ciclos de 12 segundos com atrasos de 3 segundos entre tópicos. Ao abrir, esse convite para; permanecem o benefício destacado e o efeito do CTA. Visibilidade, pausa, movimento reduzido e ausência de JavaScript continuam respeitados.
+
+
+Texto junto ao + (23/10/2026): nos tópicos fechados, as frases de benefício recebem reflexo prateado e um filete luminoso sincronizados ao botão. Abaixo de 1024 px, onde a frase lateral não é exibida, o reflexo passa pelo título do tópico. Tamanhos e hierarquia tipográfica preservados; sem movimento reduzido, sem pausa e somente enquanto visível.
