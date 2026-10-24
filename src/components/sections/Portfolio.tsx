@@ -5,13 +5,12 @@ import { Container } from "@/components/ui/Container";
 import { Facet } from "@/components/ui/Facet";
 import { RailDivider } from "@/components/ui/RailDivider";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { ProjectCarousel } from "./ProjectCarousel";
+import { Reveal } from "@/components/ui/Reveal";
 import { ProjectSlide } from "./ProjectSlide";
 
 /**
  * Vitrine de projetos. Cresce com `src/content/projects.ts`: nenhum projeto
- * mostra um aviso honesto; um mostra o destaque sem controles; dois ou mais
- * viram um carrossel manual.
+ * mostra um aviso honesto; os demais aparecem em sequência, sem carrossel.
  */
 export function Portfolio({ items = projects }: { items?: readonly Project[] }) {
   const onlyConcepts = items.length > 0 && items.every((project) => project.kind === "concept");
@@ -49,17 +48,13 @@ export function Portfolio({ items = projects }: { items?: readonly Project[] }) 
           </Facet>
         ) : (
           <>
-            {items.length === 1 ? (
-              <div className="mt-10">
-                <ProjectSlide project={items[0]} />
-              </div>
-            ) : (
-              <ProjectCarousel titles={items.map((project) => project.title)}>
-                {items.map((project) => (
-                  <ProjectSlide key={project.id} project={project} />
-                ))}
-              </ProjectCarousel>
-            )}
+            <div className="project-collection mt-12 grid gap-8 sm:gap-12">
+              {items.map((project) => (
+                <Reveal key={project.id}>
+                  <ProjectSlide project={project} />
+                </Reveal>
+              ))}
+            </div>
 
             <div className="mt-8 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center">
               {onlyConcepts ? (

@@ -1,5 +1,5 @@
-import { whatsappDefaultMessage } from "@/content/site";
-import { getWhatsAppUrl } from "@/lib/whatsapp";
+import { defaultWhatsAppNumber, whatsappDefaultMessage } from "@/content/site";
+import { formatPhone, getWhatsAppDigits, getWhatsAppUrl } from "@/lib/whatsapp";
 
 export const contactSection = {
   eyebrow: "Contato",
@@ -13,38 +13,43 @@ type ContactChannel = {
   label: string;
   value: string;
   description: string;
-  href: string | null;
+  href: string;
   action: string;
   external: boolean;
 };
 
-// Lidos no build. Os canais pendentes continuam visíveis, sem links fictícios.
+// Lidos no build. Só aparecem os canais válidos: nada "em definição" nem link fictício.
 export function getContactChannels(): readonly ContactChannel[] {
   const configuredEmail = process.env.CONTACT_EMAIL?.trim() || "groupnoxora@gmail.com";
   const email = /^[^\s@?&#]+@[^\s@?&#]+\.[^\s@?&#]+$/.test(configuredEmail)
     ? configuredEmail
     : null;
-  const whatsappUrl = getWhatsAppUrl(whatsappDefaultMessage);
+  const whatsappDigits = getWhatsAppDigits(defaultWhatsAppNumber);
+  const whatsappUrl = getWhatsAppUrl(whatsappDefaultMessage, defaultWhatsAppNumber);
 
-  return [
-    {
-      id: "email",
-      label: "E-mail",
-      value: email ?? "Endereço em definição",
-      description: email ? "Envie os detalhes do projeto." : "",
-      href: email ? `mailto:${email}` : null,
-      action: "Enviar e-mail",
-      external: false,
-    },
-    {
-      id: "whatsapp",
-      label: "WhatsApp",
-      value: whatsappUrl ? "Converse com a Noxora" : "Número em definição",
-      description: whatsappUrl ? "Conversa direta com a equipe." : "",
-      href: whatsappUrl,
-      action: "Abrir WhatsApp",
-      external: true,
-    },
+  const channels: (ContactChannel | null)[] = [
+    whatsappUrl && whatsappDigits
+      ? {
+          id: "whatsapp",
+          label: "WhatsApp",
+          value: formatPhone(whatsappDigits),
+          description: "Conversa direta com a equipe.",
+          href: whatsappUrl,
+          action: "Abrir WhatsApp",
+          external: true,
+        }
+      : null,
+    email
+      ? {
+          id: "email",
+          label: "E-mail",
+          value: email,
+          description: "Envie os detalhes do projeto.",
+          href: `mailto:${email}`,
+          action: "Enviar e-mail",
+          external: false,
+        }
+      : null,
     {
       id: "instagram",
       label: "Instagram",
@@ -55,4 +60,5 @@ export function getContactChannels(): readonly ContactChannel[] {
       external: true,
     },
   ];
+  return channels.filter((channel): channel is ContactChannel => channel !== null);
 }

@@ -17,5 +17,8 @@ export const navItems: readonly NavItem[] = [
   { label: "Contato", href: "#contato" },
 ];
 
+/** Número público de WhatsApp da Noxora (DDI 55, DDD 21). WHATSAPP_NUMBER pode substituí-lo. */
+export const defaultWhatsAppNumber = "5521994941194";
+
 export const whatsappDefaultMessage =
   "Olá, Noxora! Gostaria de conversar sobre um projeto.";

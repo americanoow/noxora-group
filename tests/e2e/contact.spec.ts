@@ -4,24 +4,36 @@ const section = (page: Page) =>
   page.getByRole("region", { name: "Seu próximo projeto começa com uma conversa." });
 const form = (page: Page) => page.getByRole("form", { name: "Envie uma mensagem" });
 
-// O servidor usa o e-mail padrão, sem WhatsApp nem destino do formulário.
+// O servidor usa os canais padrão (WhatsApp, e-mail, Instagram), sem destino do formulário.
 test.describe("canais de contato", () => {
-  test("mostra o e-mail da Noxora, o WhatsApp pendente e o Instagram", async ({ page }) => {
+  test("mostra o WhatsApp, o e-mail da Noxora e o Instagram", async ({ page }) => {
     await page.goto("/#contato");
     const contact = section(page);
 
     const email = contact.getByRole("link", { name: /Enviar e-mail/ });
     await expect(email).toContainText("groupnoxora@gmail.com");
     await expect(email).toHaveAttribute("href", "mailto:groupnoxora@gmail.com");
-    await expect(contact.getByText("Número em definição")).toBeVisible();
-    await expect(contact.getByText("Em breve")).toHaveCount(1);
-    await expect(contact.locator('a[href^="https://wa.me/"]')).toHaveCount(0);
+    await expect(contact.getByText("Em breve")).toHaveCount(0);
+    await expect(contact.getByText("Número em definição")).toHaveCount(0);
+
+    const whatsapp = contact.getByRole("link", { name: /WhatsApp/ });
+    await expect(whatsapp).toContainText("(21) 99494-1194");
+    await expect(whatsapp).toHaveAttribute("href", /^https:\/\/wa\.me\/5521994941194\?text=/);
+    await expect(whatsapp).toHaveAttribute("target", "_blank");
+    await expect(whatsapp).toHaveAttribute("rel", "noopener noreferrer");
 
     const instagram = contact.getByRole("link", { name: /Instagram/ });
     await expect(instagram).toContainText("@noxoragroup");
     await expect(instagram).toHaveAttribute("href", "https://www.instagram.com/noxoragroup/");
-    await expect(instagram).toHaveAttribute("target", "_blank");
+    await expect(instagram).not.toHaveAttribute("target", "_blank");
     await expect(instagram).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(instagram).not.toContainText("abre em nova aba");
+    await page.route("https://www.instagram.com/noxoragroup/", async (route) => {
+      await route.fulfill({ contentType: "text/html", body: "<title>Instagram de teste</title>" });
+    });
+    await instagram.click();
+    await expect(page).toHaveURL("https://www.instagram.com/noxoragroup/");
+    expect(page.context().pages()).toHaveLength(1);
   });
 
   test("os canais permanecem acessíveis sem JavaScript", async ({ browser }) => {
@@ -31,6 +43,12 @@ test.describe("canais de contato", () => {
       await page.goto("/#contato");
       await expect(page.getByRole("link", { name: /Instagram/ })).toBeVisible();
       await expect(page.getByRole("link", { name: /Enviar e-mail/ })).toHaveAttribute("href", "mailto:groupnoxora@gmail.com");
+      await page.route("https://www.instagram.com/noxoragroup/", async (route) => {
+        await route.fulfill({ contentType: "text/html", body: "<title>Instagram de teste</title>" });
+      });
+      await page.getByRole("link", { name: /Instagram/ }).click();
+      await expect(page).toHaveURL("https://www.instagram.com/noxoragroup/");
+      expect(context.pages()).toHaveLength(1);
     } finally {
       await context.close();
     }
@@ -44,9 +62,10 @@ test.describe("composição do contato", () => {
     const tiles = section(page).getByRole("listitem");
     await expect(tiles).toHaveCount(3);
     // Mede só depois da animação de entrada, que desloca as caixas: primeiro nada fica
-    // "escondido" esperando a vez, depois as transições em curso terminam.
+    // "escondido" esperando a vez, depois as transições em curso terminam (as pausadas, de
+    // figuras fora da tela, não terminam nunca e não deslocam estas caixas).
     await page.waitForFunction(() => document.querySelectorAll("#contato [data-reveal='hidden']").length === 0);
-    await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect!.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => null))));
+    await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.playState === "running" && a.effect!.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => null))));
 
     const boxes = await Promise.all((await tiles.all()).map((tile) => tile.boundingBox()));
     const tops = boxes.map((box) => Math.round(box!.y));

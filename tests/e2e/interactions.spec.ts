@@ -11,11 +11,11 @@ test("botões, navegação e cards respondem ao mouse e ao teclado", async ({ pa
   await nav.focus();
   await expect.poll(() => nav.evaluate((el) => getComputedStyle(el, "::after").transform)).toBe("matrix(1, 0, 0, 1, 0, 0)");
   await expect(nav).toBeFocused();
-  const card = page.locator("#solucoes li.motion-card").first();
-  await card.hover();
-  await expect.poll(() => card.evaluate((el) => getComputedStyle(el).translate)).toBe("0px -4px");
-  // Uma peça informativa continua sem fingir ser botão.
-  await expect(card).not.toHaveAttribute("tabindex");
+  const service = page.locator("#solucoes summary").nth(1);
+  await service.focus();
+  await expect(service).toBeFocused();
+  await service.press("Enter");
+  await expect(page.locator("#solucoes details").nth(1)).toHaveAttribute("open", "");
 });
 
 test("o cubo e os reflexos só repetem enquanto estão na tela", async ({ page }) => {
@@ -37,7 +37,7 @@ test("pausa e alteração de movimento reduzido restauram as figuras completas",
   await page.getByRole("button", { name: "Pausar animações" }).click();
   await expect(page.locator("[data-play]")).toHaveCount(0);
   await expect(page.locator("[data-sweep]")).toHaveCount(0);
-  expect(await page.locator(".nx-layer").first().evaluate((el) => getComputedStyle(el).opacity)).toBe("1");
+  expect(await page.locator(".scene-desktop").first().evaluate((el) => getComputedStyle(el).opacity)).toBe("1");
   await page.getByRole("button", { name: "Retomar animações" }).click();
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(page.locator("html")).toHaveAttribute("data-motion-active", "false");

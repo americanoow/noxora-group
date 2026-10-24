@@ -1,29 +1,53 @@
-export type Benefit = {
-  id: "manual" | "integrar" | "digitalizar" | "produtos" | "experiencia";
-  /** Rótulo curto: o gráfico "antes e depois" carrega a mensagem. */
-  title: string;
-};
+/** "Como ajudamos": uma transformação concreta, diferente do que "Soluções" explica. */
+export const benefitsSection = {
+  eyebrow: "Como ajudamos",
+  title: "Do pedido recebido à equipe avisada.",
+  description: "Uma entrada. Informações organizadas. Equipe atualizada.",
+} as const;
 
-// Sem números ou percentuais: só entram aqui resultados que possamos comprovar.
-export const benefits: readonly Benefit[] = [
-  { id: "manual", title: "Menos trabalho manual" },
-  { id: "integrar", title: "Operações integradas" },
-  { id: "digitalizar", title: "Processos digitais" },
-  { id: "produtos", title: "Produtos digitais" },
-  { id: "experiencia", title: "Clientes bem atendidos" },
-];
+/** Demonstração em três passos: dados fictícios e genéricos, sem cliente nem número de resultado. */
+export const exampleFlow = {
+  label: "Do pedido recebido à equipe avisada",
+  concept: "Demonstração conceitual",
+  first: "Ver exemplo",
+  again: "Repetir",
+  steps: [
+    {
+      id: "recebido",
+      title: "Pedido recebido",
+      note: "O pedido chega do jeito que o cliente escreve: solto, numa mensagem.",
+      message: "Oi! Quero 2 caixas do modelo azul para sexta, pode ser?",
+    },
+    {
+      id: "organizado",
+      title: "Informação organizada",
+      note: "A informação é separada em campos: item, quantidade e prazo.",
+      fields: [
+        ["Item", "Caixa, modelo azul"],
+        ["Quantidade", "2"],
+        ["Prazo", "Sexta"],
+      ],
+    },
+    {
+      id: "avisado",
+      title: "Equipe avisada",
+      note: "A equipe é avisada na hora, sem ninguém precisar repassar.",
+      alert: "Novo pedido para a equipe",
+      status: "Avisado",
+    },
+  ],
+} as const;
 
-export const beforeAfter = {
-  label: "De processos desconectados a uma operação integrada",
-  before: {
-    title: "Hoje: processos desconectados",
-    note: "Informações espalhadas. Tarefas repetitivas.",
-  },
-  after: {
-    title: "Com a Noxora: operação integrada",
-    note: "Informações conectadas. Processos automatizados.",
-    core: "Solução Noxora",
-  },
-  /** Os mesmos quatro pontos do dia a dia nos dois painéis. */
-  tools: ["Planilhas", "E-mails", "Mensagens", "Pedidos"],
+
+export const processSection = {
+  eyebrow: "Do primeiro contato à entrega",
+  title: "Boas soluções começam por entender o negócio.",
+  description: "Cada projeto tem seu contexto. É a partir dele que definimos o que construir e como chegar lá.",
+  cta: "Conte o que você quer construir",
+  steps: [
+    { title: "Entender", description: "Conversamos sobre sua empresa, seus desafios e o que precisa mudar." },
+    { title: "Desenhar", description: "Organizamos o escopo e a experiência de quem vai usar a solução." },
+    { title: "Desenvolver", description: "Transformamos a ideia em um produto, com testes e espaço para ajustes." },
+    { title: "Acompanhar", description: "Alinhamos a entrega, orientamos o uso e conversamos sobre os próximos passos." },
+  ],
 } as const;

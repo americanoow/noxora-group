@@ -1,75 +1,11 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-const benefits = (page: Page) =>
-  page.getByRole("region", { name: "Menos atrito na operação. Mais espaço para crescer." });
-
-test.describe("Como ajudamos", () => {
-  test("mostra o antes e depois em um gráfico e cinco rótulos curtos", async ({ page }) => {
-    await page.goto("/");
-    const section = benefits(page);
-
-    // O gráfico é um grupo nomeado; os nomes e as frases são texto real, não só ícones.
-    const graphic = section.getByRole("group", {
-      name: "De processos desconectados a uma operação integrada",
-    });
-    await expect(graphic).toBeVisible();
-    await expect(graphic.getByRole("heading", { level: 3 })).toHaveText([
-      "Hoje: processos desconectados",
-      "Com a Noxora: operação integrada",
-    ]);
-    for (const name of ["Planilhas", "E-mails", "Mensagens", "Pedidos"]) {
-      const labels = graphic.getByText(name, { exact: true });
-      await expect(labels).toHaveCount(2);
-      for (const label of await labels.all()) await expect(label).toBeVisible();
-    }
-    await expect(graphic.getByText("Solução Noxora")).toBeVisible();
-    await expect(graphic.getByText("Informações espalhadas. Tarefas repetitivas.")).toBeVisible();
-    await expect(graphic.getByText("Informações conectadas. Processos automatizados.")).toBeVisible();
-    // Ícones e traços são decorativos.
-    await expect(graphic.locator("svg:not([aria-hidden='true'])")).toHaveCount(0);
-
-    await expect(section.getByRole("listitem")).toHaveText([
-      "Menos trabalho manual",
-      "Operações integradas",
-      "Processos digitais",
-      "Produtos digitais",
-      "Clientes bem atendidos",
-    ]);
-  });
-
-  test("é curto: não há parágrafos corridos", async ({ page }) => {
-    await page.goto("/");
-    const section = benefits(page);
-
-    // O único <p> é o rótulo "Como ajudamos" acima do título; não há texto corrido.
-    await expect(section.locator("p")).toHaveCount(1);
-    const words = (await section.innerText()).split(/\s+/).filter(Boolean).length;
-    expect(words).toBeLessThanOrEqual(60);
-  });
-
-  test("é compacto (cabe em menos altura que a versão anterior)", async ({ page, isMobile }) => {
-    await page.goto("/");
-    const height = await page.locator("#beneficios").evaluate((el) => el.getBoundingClientRect().height);
-    // Antes: 1213 px no desktop e 2068 px no celular.
-    expect(height).toBeLessThan(isMobile ? 1500 : 1000);
-  });
-
-  test("não usa rolagem presa (sticky) nem rola só um dos lados", async ({ page }) => {
-    await page.goto("/");
-    const sticky = await page.evaluate(() =>
-      [...document.querySelectorAll("#beneficios *")].filter(
-        (el) => getComputedStyle(el).position === "sticky",
-      ).length,
-    );
-    expect(sticky).toBe(0);
-  });
-
-  test("não promete resultados numéricos", async ({ page }) => {
-    await page.goto("/");
-    const text = await page.locator("#beneficios").innerText();
-    expect(text).not.toMatch(/\d+\s?%/);
-    expect(text).not.toMatch(/\b\d+\s?x\b/i);
-  });
+test("etapas apresentam o processo sem prometer resultados", async ({ page }) => {
+  await page.goto("/#beneficios");
+  const section = page.locator("#beneficios");
+  await expect(section.getByRole("heading", { level: 3 })).toHaveText(["Entender", "Desenhar", "Desenvolver", "Acompanhar"]);
+  await expect(section.getByRole("link")).toHaveAttribute("href", "#contato");
+  expect(await section.innerText()).not.toMatch(/\d+\s?%/);
 });
 
 test.describe("ritmo visual", () => {
@@ -82,10 +18,10 @@ test.describe("ritmo visual", () => {
       }),
     );
     const [, solucoes, beneficios, projetos] = backgrounds;
-    // Soluções e Projetos usam grafite; Como ajudamos fica sobre o preto.
-    expect(solucoes).toBe("rgb(20, 20, 22)");
+    // Preto, superfície e grafite criam o ritmo das seções centrais.
+    expect(solucoes).toBe("rgb(0, 0, 0)");
     expect(projetos).toBe("rgb(20, 20, 22)");
-    expect(beneficios).toBe("rgba(0, 0, 0, 0)");
+    expect(beneficios).toBe("rgb(10, 10, 10)");
   });
 
   for (const width of [320, 390, 768, 1024, 1440]) {

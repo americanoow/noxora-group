@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { site } from "@/content/site";
 import "@/styles/globals.css";
+import "@/styles/service-scenes.css";
 
 const manrope = Manrope({
   variable: "--font-manrope",

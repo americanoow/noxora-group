@@ -25,6 +25,9 @@ export function HeroStage() {
         {/* Piso: brilho elíptico sob o cubo */}
         <div className="absolute top-[80%] left-[6%] h-[12%] w-[88%] rounded-[50%] bg-[radial-gradient(closest-side,rgb(212_216_222/0.2),rgb(143_180_255/0.06)_60%,transparent)]" />
 
+        {/* Luz da cena: passa devagar, em momentos espaçados, sem tocar o texto (fica dentro do palco). */}
+        <div className="scene-pass pointer-events-none absolute inset-[-4%] z-[5]" />
+
         {/* L1: trilhos atrás do cubo */}
         <svg
           viewBox={`0 0 ${W} ${H}`}

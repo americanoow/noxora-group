@@ -163,7 +163,7 @@ export function ProjectPreview({ project }: { project: Project }) {
         alt={alt}
         width={width}
         height={height}
-        sizes="(min-width: 1024px) 640px, 100vw"
+        sizes="(min-width: 1024px) 720px, 100vw"
         className="aspect-[16/10] w-full rounded-xl object-cover"
       />
     );

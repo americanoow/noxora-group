@@ -11,9 +11,9 @@ import { ContactForm } from "./ContactForm";
 const icons = { email: Mail, whatsapp: MessageCircle, instagram: Camera };
 
 /**
- * Fecho da página. Ênfase nos contatos: três peças lado a lado; o formulário
- * vem logo abaixo. Canal ainda não definido aparece como "Em breve", sem link
- * fictício.
+ * Fecho da página, compacto: o título, o selo do cubo, três canais enxutos lado
+ * a lado (só os válidos; nada "em definição") e o formulário, que é o único
+ * bloco com o canto chanfrado.
  */
 export function Contact() {
   const channels = getContactChannels();
@@ -39,13 +39,13 @@ export function Contact() {
             eyebrow={contactSection.eyebrow}
             title={contactSection.title}
           />
-          <SweepOnView className="relative w-28 shrink-0 sm:w-36">
+          <SweepOnView className="relative w-20 shrink-0 sm:w-28">
             <Image
               src="/images/noxora-icon.png"
               alt=""
               width={1283}
               height={1226}
-              sizes="144px"
+              sizes="112px"
               className="h-auto w-full drop-shadow-[0_18px_30px_rgb(0_0_0/0.8)]"
             />
             {/* O cubo pega a luz uma vez ao entrar na tela (mesma ideia do hero). */}
@@ -54,73 +54,46 @@ export function Contact() {
               alt=""
               width={1283}
               height={1226}
-              sizes="144px"
+              sizes="112px"
               aria-hidden="true"
               className="cube-sheen seal-sheen pointer-events-none absolute inset-0 h-auto w-full"
             />
           </SweepOnView>
         </div>
 
-        <ul className="mt-10 grid gap-4 md:grid-cols-3">
+        <ul className="mt-8 grid gap-3 md:grid-cols-3">
           {channels.map((channel) => {
             const Icon = icons[channel.id];
-            const body = (
-              <Facet size="sm" innerClassName="bg-graphite-2" className="h-full">
-                <div className="flex h-full flex-col gap-6 p-6">
-                  <div className="flex items-start justify-between gap-3">
-                    <span className="grid size-14 place-items-center rounded-lg border border-line bg-ink text-chrome">
-                      <Icon aria-hidden="true" className="size-7" strokeWidth={1.5} />
-                    </span>
-                    {channel.href ? (
-                      <ArrowUpRight
-                        aria-hidden="true"
-                        className="size-6 shrink-0 text-chrome"
-                      />
-                    ) : (
-                      <span className="shrink-0 rounded-full border border-line px-3 py-1 text-sm font-medium text-muted">
-                        {contactSection.comingSoon}
-                      </span>
-                    )}
-                  </div>
-                  <div>
+            const opensNewTab = channel.external && channel.id !== "instagram";
+            return (
+              <li key={channel.id} className="min-w-0">
+                <a
+                  href={channel.href}
+                  target={opensNewTab ? "_blank" : undefined}
+                  rel={channel.external ? "noopener noreferrer" : undefined}
+                  className="motion-channel group flex h-full items-center gap-4 rounded-xl border border-line bg-graphite-1 px-5 py-4 transition-colors hover:border-control"
+                >
+                  <span className="grid size-11 shrink-0 place-items-center rounded-full border border-line bg-ink text-chrome">
+                    <Icon aria-hidden="true" className="size-5" strokeWidth={1.5} />
+                  </span>
+                  <span className="min-w-0 flex-1">
                     <span className="block text-sm text-muted">{channel.label}</span>
-                    <span className="mt-1 block font-display text-xl font-semibold wrap-anywhere text-fg">
+                    <span className="block font-display text-base font-semibold wrap-anywhere text-fg">
                       {channel.value}
                     </span>
-                    {channel.description ? (
-                      <span className="mt-1 block text-sm text-muted">
-                        {channel.description}
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-              </Facet>
-            );
-
-            return (
-              <li key={channel.id}>
-                {channel.href ? (
-                  <a
-                    href={channel.href}
-                    target={channel.external ? "_blank" : undefined}
-                    rel={channel.external ? "noopener noreferrer" : undefined}
-                    className="motion-channel group block h-full"
-                  >
-                    {body}
-                    <span className="sr-only">
-                      {channel.action}
-                      {channel.external ? ` ${contactSection.newTab}` : ""}
-                    </span>
-                  </a>
-                ) : (
-                  body
-                )}
+                  </span>
+                  <ArrowUpRight aria-hidden="true" className="size-5 shrink-0 text-chrome" />
+                  <span className="sr-only">
+                    {channel.action}
+                    {opensNewTab ? ` ${contactSection.newTab}` : ""}
+                  </span>
+                </a>
               </li>
             );
           })}
         </ul>
 
-        <Facet size="lg" innerClassName="bg-graphite-2" className="mx-auto mt-8 max-w-3xl">
+        <Facet size="lg" innerClassName="bg-graphite-2" className="mx-auto mt-6 max-w-3xl">
           <ContactForm whatsappUrl={whatsappUrl} />
         </Facet>
       </Container>

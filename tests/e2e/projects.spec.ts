@@ -3,22 +3,19 @@ import { expect, test, type Page } from "@playwright/test";
 const section = (page: Page) =>
   page.getByRole("region", { name: "Veja como transformamos problemas em soluções." });
 const carousel = (page: Page) => section(page).getByRole("region", { name: "Projetos" });
-const scroller = (page: Page) => carousel(page).getByRole("group", { name: /Use as setas/ });
-const position = (page: Page) => carousel(page).getByText(/^Projeto \d de \d$/);
 
 test.describe("vitrine de projetos", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
   });
 
-  test("mostra somente os três sites reais construídos pela Noxora", async ({ page }) => {
+  test("mostra somente os dois sites reais construídos pela Noxora", async ({ page }) => {
     const slides = section(page).getByRole("article");
-    await expect(slides).toHaveCount(3);
-    await expect(slides.getByText("Projeto Noxora", { exact: true })).toHaveCount(3);
+    await expect(slides).toHaveCount(2);
+    await expect(slides.getByText("Projeto Noxora", { exact: true })).toHaveCount(2);
     await expect(slides.getByText("Demonstração conceitual")).toHaveCount(0);
     await expect(section(page).getByRole("heading", { level: 3 })).toHaveText([
       "Bazar Oliveira",
-      "Clínica Multidisciplinar",
       "PeB Estúdio Fotográfico",
     ]);
     // Nada de cliente, depoimento ou resultado numérico.
@@ -29,7 +26,6 @@ test.describe("vitrine de projetos", () => {
     await expect(section(page)).not.toContainText("primeiros projetos reais");
     const urls = [
       "https://bazar-oliveira-page.vercel.app/",
-      "https://clinica-site-rose.vercel.app/",
       "https://pebestudiofotografico.vercel.app/",
     ];
     for (const [index, url] of urls.entries()) {
@@ -39,127 +35,55 @@ test.describe("vitrine de projetos", () => {
       await expect(link).toHaveAttribute("target", "_blank");
       await expect(link).toHaveAttribute("rel", "noopener noreferrer");
       const image = slide.getByRole("img");
+      const imageLink = slide.getByRole("link", { name: /pela imagem/ });
+      await expect(imageLink).toHaveAttribute("href", url);
+      await expect(imageLink).toHaveAttribute("target", "_blank");
+      await expect(imageLink).toHaveAttribute("rel", "noopener noreferrer");
+      await expect(imageLink.getByRole("img")).toHaveCount(1);
       await image.scrollIntoViewIfNeeded();
       await expect.poll(() => image.evaluate((el) => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
       await expect(slide.getByText("Demonstração conceitual")).toHaveCount(0);
     }
   });
 
+  test("a apresentação inicial é curta: nome, tipo, frase factual, captura e acesso", async ({ page }) => {
+    const slides = section(page).getByRole("article");
+    const summaries = [
+      "Catálogo por categorias, busca de produtos e pedidos pelo WhatsApp.",
+      "Galeria de fotografias, pacotes e contato direto pelo WhatsApp.",
+    ];
+    for (const [index, summary] of summaries.entries()) {
+      const slide = slides.nth(index);
+      await expect(slide.getByText(summary, { exact: true })).toBeAttached();
+      await expect(slide.getByText("Website", { exact: true })).toBeAttached();
+      // Objetivo e solução ficam recolhidos em "Ver detalhes".
+      await expect(slide.locator("details")).not.toHaveAttribute("open", "");
+      await expect(slide.getByText("Objetivo", { exact: true })).toBeHidden();
+    }
+  });
+
+  test("Ver detalhes abre objetivo e solução, por mouse e por teclado", async ({ page }) => {
+    const slide = section(page).getByRole("article").first();
+    const summary = slide.getByText("Ver detalhes");
+    await expect(summary).toBeVisible();
+    await summary.click();
+    await expect(slide.getByText("Objetivo", { exact: true })).toBeVisible();
+    await expect(slide.getByText("Apresentar os materiais e facilitar a escolha dos produtos para retirada na loja.")).toBeVisible();
+    await expect(slide.getByText("Catálogo por categorias, busca de produtos e carrinho com envio do pedido pelo WhatsApp.")).toBeVisible();
+    // Teclado: Enter fecha de novo.
+    await summary.focus();
+    await page.keyboard.press("Enter");
+    await expect(slide.getByText("Objetivo", { exact: true })).toBeHidden();
+  });
+
+  test("não há vídeo, player nem aviso de vídeo em breve", async ({ page }) => {
+    await expect(section(page).locator("video, iframe")).toHaveCount(0);
+    await expect(section(page)).not.toContainText(/vídeo|assistir/i);
+  });
+
   test("a vitrine usa capturas dos sites, sem prévias conceituais", async ({ page }) => {
     await expect(section(page).locator("article [data-preview]")).toHaveCount(0);
-    await expect(section(page).getByRole("img")).toHaveCount(3);
-  });
-
-  test("setas, pontos e indicador navegam sem loop e sem autoplay", async ({ page }) => {
-    const prev = carousel(page).getByRole("button", { name: "Projeto anterior" });
-    const next = carousel(page).getByRole("button", { name: "Próximo projeto" });
-
-    await expect(position(page)).toHaveText("Projeto 1 de 3");
-    await expect(prev).toHaveAttribute("aria-disabled", "true");
-
-    await next.click();
-    await expect(position(page)).toHaveText("Projeto 2 de 3");
-    await expect(prev).toHaveAttribute("aria-disabled", "false");
-
-    await carousel(page).getByRole("button", { name: /Ir para o projeto 3/ }).click();
-    await expect(position(page)).toHaveText("Projeto 3 de 3");
-    await expect(next).toHaveAttribute("aria-disabled", "true");
-    // Sem loop: no último projeto, "próximo" não volta ao primeiro.
-    await next.click({ force: true });
-    await page.waitForTimeout(500);
-    await expect(position(page)).toHaveText("Projeto 3 de 3");
-    await expect(carousel(page).getByRole("button", { name: /Ir para o projeto 3/ })).toHaveAttribute(
-      "aria-current",
-      "true",
-    );
-
-    // Sem autoplay: a posição não muda sozinha.
-    await carousel(page).getByRole("button", { name: /Ir para o projeto 1/ }).click();
-    await expect(position(page)).toHaveText("Projeto 1 de 3");
-    await page.waitForTimeout(2500);
-    await expect(position(page)).toHaveText("Projeto 1 de 3");
-  });
-
-  test("o teclado troca de projeto e o foco fica visível", async ({ page, isMobile }) => {
-    test.skip(isMobile, "Teclado físico não se aplica ao celular.");
-    const area = scroller(page);
-    await expect(position(page)).toBeVisible(); // hidratou
-    await area.focus();
-    await expect(area).toBeFocused();
-    const outline = await area.evaluate((el) => getComputedStyle(el).outlineStyle);
-    expect(outline).toBe("solid");
-
-    await page.keyboard.press("ArrowRight");
-    await expect(position(page)).toHaveText("Projeto 2 de 3");
-    await page.keyboard.press("End");
-    await expect(position(page)).toHaveText("Projeto 3 de 3");
-    await page.keyboard.press("ArrowLeft");
-    await expect(position(page)).toHaveText("Projeto 2 de 3");
-    await page.keyboard.press("Home");
-    await expect(position(page)).toHaveText("Projeto 1 de 3");
-  });
-
-  test("os controles são alcançáveis e têm alvo de pelo menos 24 px", async ({ page }) => {
-    const buttons = carousel(page).getByRole("button");
-    await expect(buttons).toHaveCount(5);
-    for (const button of await buttons.all()) {
-      const box = await button.boundingBox();
-      expect(box!.width).toBeGreaterThanOrEqual(24);
-      expect(box!.height).toBeGreaterThanOrEqual(24);
-    }
-    const next = carousel(page).getByRole("button", { name: "Próximo projeto" });
-    await next.focus();
-    await expect(next).toBeFocused();
-  });
-
-  test("a rolagem real (gesto de arrastar) atualiza o indicador", async ({ page }) => {
-    await expect(position(page)).toBeVisible(); // hidratou
-    await scroller(page).evaluate((el) => {
-      el.style.scrollSnapType = "none";
-      el.scrollTo({ left: (el.children[1] as HTMLElement).offsetLeft, behavior: "auto" });
-      el.style.scrollSnapType = "";
-    });
-    await expect(position(page)).toHaveText("Projeto 2 de 3");
-  });
-
-  test("o próximo projeto aparece de lado, sinalizando que há mais", async ({ page }) => {
-    await expect(position(page)).toBeVisible(); // hidratou
-    const { sliderRight, nextLeft, nextRight } = await scroller(page).evaluate((el) => {
-      const box = el.getBoundingClientRect();
-      const next = (el.children[1] as HTMLElement).getBoundingClientRect();
-      return { sliderRight: box.right, nextLeft: next.left, nextRight: next.right };
-    });
-    expect(nextLeft).toBeLessThan(sliderRight - 12); // um pedaço visível
-    expect(nextRight).toBeGreaterThan(sliderRight); // e continua cortado
-  });
-
-  test("o mouse arrasta para trocar de projeto", async ({ page, isMobile }) => {
-    test.skip(isMobile, "No celular o arrasto é o toque nativo.");
-    await expect(position(page)).toBeVisible(); // hidratou
-    await scroller(page).scrollIntoViewIfNeeded();
-    const box = (await scroller(page).boundingBox())!;
-    const y = box.y + 80;
-    await page.mouse.move(box.x + box.width * 0.7, y);
-    await page.mouse.down();
-    await page.mouse.move(box.x + box.width * 0.4, y, { steps: 8 });
-    await page.mouse.up();
-    await expect(position(page)).toHaveText("Projeto 2 de 3");
-    // Arrasto curto volta ao mesmo projeto.
-    await page.mouse.move(box.x + box.width * 0.5, y);
-    await page.mouse.down();
-    await page.mouse.move(box.x + box.width * 0.5 + 20, y, { steps: 4 });
-    await page.mouse.up();
-    await expect(position(page)).toHaveText("Projeto 2 de 3");
-  });
-
-  test("o conteúdo do projeto ativo entra em sequência e termina visível", async ({ page }) => {
-    await expect(position(page)).toBeVisible(); // hidratou
-    const reveal = carousel(page).getByRole("group", { name: /^1 de 3/ }).locator(".pj-reveal");
-    await expect(reveal).toHaveCount(4);
-    await expect.poll(() => reveal.evaluateAll((els) => els.every((el) => getComputedStyle(el).opacity === "1"))).toBe(true);
-    const delays = await reveal.evaluateAll((els) => els.map((el) => parseFloat(getComputedStyle(el).animationDelay)));
-    expect(delays).toEqual([...delays].sort((x, y) => x - y)); // um depois do outro
-    expect(new Set(delays).size).toBe(delays.length);
+    await expect(section(page).getByRole("img")).toHaveCount(2);
   });
 
   test("a página não ganha rolagem horizontal", async ({ page }) => {
@@ -168,30 +92,22 @@ test.describe("vitrine de projetos", () => {
   });
 });
 
-test.describe("movimento reduzido", () => {
+test.describe("movimento reduzido: conteúdo do projeto visível", () => {
   test.use({ reducedMotion: "reduce" });
 
-  test("a troca de projeto é instantânea", async ({ page }) => {
+  test("texto e captura aparecem sem esperar animação", async ({ page }) => {
     await page.goto("/");
-    await expect(position(page)).toBeVisible(); // hidratou
-    // Clica e olha dois quadros depois, dentro da página (não depende da carga da máquina):
-    // sem animação a rolagem já chegou; a suave ainda estaria a caminho.
-    const settled = await scroller(page).evaluate(async (el) => {
-      const next = el.parentElement!.querySelector<HTMLButtonElement>("button[aria-label='Próximo projeto']")!;
-      next.click();
-      for (let i = 0; i < 4; i++) await new Promise((resolve) => requestAnimationFrame(resolve));
-      return el.scrollLeft >= (el.children[1] as HTMLElement).offsetLeft * 0.9;
-    });
-    expect(settled).toBe(true);
+    const reveal = section(page).locator(".pj-reveal, .pj-preview");
+    await expect.poll(() => reveal.evaluateAll((els) => els.every((el) => getComputedStyle(el).opacity === "1"))).toBe(true);
   });
 });
 
 test.describe("sem JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 
-  test("os três projetos continuam presentes e sem controles inúteis", async ({ page }) => {
+  test("os dois projetos continuam presentes e sem controles inúteis", async ({ page }) => {
     await page.goto("/");
-    await expect(section(page).getByRole("article")).toHaveCount(3);
+    await expect(section(page).getByRole("article")).toHaveCount(2);
     await expect(carousel(page).getByRole("button")).toHaveCount(0);
   });
 });
@@ -217,24 +133,6 @@ test.describe("quantidade de projetos", () => {
     await expect(carousel(page)).toHaveCount(0);
     await expect(section(page).getByRole("button")).toHaveCount(0);
     await expect(section(page).getByText(/Projeto \d de \d/)).toHaveCount(0);
-  });
-
-  test("2 projetos: carrossel com dois pontos", async ({ page }) => {
-    await page.goto(fixture(2));
-    const c = carousel(page);
-    await expect(c.getByRole("article")).toHaveCount(2);
-    await expect(c.getByRole("button", { name: /Ir para o projeto/ })).toHaveCount(2);
-    await expect(c.getByText("Projeto 1 de 2")).toBeVisible();
-    await c.getByRole("button", { name: "Próximo projeto" }).click();
-    await expect(c.getByText("Projeto 2 de 2")).toBeVisible();
-  });
-
-  test("5 projetos: o indicador acompanha até o último", async ({ page }) => {
-    await page.goto(fixture(5));
-    const c = carousel(page);
-    await expect(c.getByRole("button", { name: /Ir para o projeto/ })).toHaveCount(5);
-    await c.getByRole("button", { name: /Ir para o projeto 5/ }).click();
-    await expect(c.getByText("Projeto 5 de 5")).toBeVisible();
   });
 
   test("nenhuma quantidade gera rolagem horizontal da página, nem em 360 px", async ({ page }) => {

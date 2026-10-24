@@ -1,0 +1,64 @@
+/* Interações da apresentação editorial. Valores vêm dos tokens globais. */
+.service-entry summary { touch-action: manipulation; }
+.service-entry summary:hover h3 { color: var(--color-chrome); }
+.service-entry[open] .service-plus { transform: rotate(45deg); }
+.service-plus { transition: transform var(--duration-base) var(--ease-out-soft); }
+.service-entry[open] > summary { padding-bottom: 2rem; }
+.service-body { min-width: 0; }
+.project-editorial .pj-preview { overflow: hidden; border-radius: var(--radius-xl); }
+.project-editorial img { transition: transform var(--duration-slow) var(--ease-out-soft); }
+@media (prefers-reduced-motion: no-preference) {
+  [data-motion="on"] .service-entry[open] .service-body {
+    animation: stage-in var(--duration-slow) var(--ease-out-soft) both;
+  }
+  @media (hover: hover) {
+    [data-motion="on"] .project-editorial:hover img { transform: scale(1.02); }
+  }
+}
+@media (min-width: 1024px) {
+  .project-collection > :nth-child(even) .project-editorial > div {
+    grid-template-columns: 1fr 1.9fr;
+  }
+  .project-collection > :nth-child(even) .pj-preview { order: 2; }
+}
+
+
+/* Leitura ampliada no celular, sem alterar a escala do desktop ou das ilustrações. */
+@media (max-width: 639px) {
+  #solucoes header > p,
+  #projetos header > p {
+    font-size: var(--text-base);
+  }
+  #solucoes h2,
+  #projetos h2 {
+    font-size: var(--text-3xl);
+    line-height: var(--text-h2--line-height);
+    text-wrap: balance;
+  }
+  #solucoes summary h3 {
+    font-size: var(--text-2xl);
+    line-height: var(--text-h3--line-height);
+    text-wrap: balance;
+  }
+  #solucoes .service-body > div:first-child > p:nth-child(2) {
+    font-size: var(--text-body-lg);
+    line-height: var(--text-body-lg--line-height);
+  }
+  #solucoes .service-body > div:first-child > ul li,
+  #solucoes .solution-cta,
+  .project-editorial .pj-reveal > a,
+  .project-editorial details summary {
+    font-size: var(--text-base);
+  }
+  .project-editorial h3 {
+    font-size: var(--text-3xl);
+    line-height: var(--text-h3--line-height);
+    text-wrap: balance;
+  }
+  .project-editorial h3 + p,
+  .project-editorial dd {
+    font-size: var(--text-h3);
+    line-height: var(--text-body-lg--line-height);
+    color: var(--color-chrome);
+  }
+}

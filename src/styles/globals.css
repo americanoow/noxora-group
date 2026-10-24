@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "./interactions.css";
+@import "./studio.css";
+
 
 /*
  * Design system Noxora: "Liquid Engineering" (direção A, "Estúdio de Luz").
@@ -237,6 +239,30 @@
   }
   to { opacity: 1; transform: none; }
 }
+/* Demonstrações de Soluções (illustrations/services/ServiceDemos.tsx). */
+@keyframes hl-flash {
+  0% { opacity: 0; transform: scale(0.96); }
+  25%, 70% { opacity: 0.9; transform: none; }
+  100% { opacity: 0; }
+}
+/* O pedido avança de coluna em coluna (passo = largura do cartão + 1 rem de espaço). */
+@keyframes order-move {
+  0%, 38% { transform: translate3d(calc(-200% - 2rem), 0, 0); }
+  52%, 72% { transform: translate3d(calc(-100% - 1rem), 0, 0); }
+  90%, 100% { transform: none; }
+}
+@keyframes head-blink {
+  0%, 100% { color: var(--color-muted); }
+  20%, 70% { color: var(--color-fg); }
+}
+@keyframes head-on {
+  from { color: var(--color-muted); }
+  to { color: var(--color-fg); }
+}
+@keyframes check-pop {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: none; }
+}
 /* Um documento percorre origem, regra e destino (distâncias em cqw da figura). */
 @keyframes doc-run {
   0% { opacity: 0; transform: translate3d(-12cqw, 0, 0) scale(0.9); }
@@ -246,6 +272,12 @@
   65% { opacity: 1; transform: translate3d(34cqw, 0, 0) scale(0.92); }
   88% { opacity: 1; transform: translate3d(68cqw, 0, 0) scale(0.92); }
   100% { opacity: 0; transform: translate3d(68cqw, 0, 0) scale(0.8); }
+}
+/* Luz suave que atravessa a cena atrás do cubo (4 s de passagem a cada 14 s). */
+@keyframes scene-pass {
+  0% { opacity: 0; transform: translate3d(-32%, 0, 0); }
+  8%, 22% { opacity: 1; }
+  30%, 100% { opacity: 0; transform: translate3d(32%, 0, 0); }
 }
 /* Reflexo prata sobre o cubo: uma faixa de luz atravessa a máscara (1,6 s a cada 9 s). */
 @keyframes sheen-loop {
@@ -303,6 +335,14 @@
   }
   /* Os loops só existem com JavaScript e sem pausa: <html data-motion="on"> (ui/MotionToggle.tsx). */
   [data-motion="on"] [data-sweep="play"] .hero-sheen { animation: sheen-loop 9000ms ease-in-out 1900ms infinite; }
+  /* A luz da cena: uma faixa fraca, contida pelo palco (máscara radial), atrás do cubo e dos trilhos. */
+  .scene-pass {
+    opacity: 0;
+    background: linear-gradient(105deg, transparent 38%, rgb(143 180 255 / 0.13) 50%, transparent 62%);
+    -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent);
+    mask-image: radial-gradient(closest-side, #000 55%, transparent);
+  }
+  [data-motion="on"] [data-sweep="play"] .scene-pass { animation: scene-pass 14000ms ease-in-out 3200ms infinite; }
   /* Selo do contato: o mesmo reflexo, depois que o cubo entra na tela. */
   [data-motion="on"] [data-sweep="play"] .seal-sheen { animation: sheen-loop 9000ms ease-in-out 300ms infinite; }
   .hero-bead { stroke-dasharray: 0.1 1; stroke-dashoffset: 1; opacity: 0; animation: pulse-run 1500ms ease-in-out both, bead-visible 1500ms linear both; animation-delay: var(--d, 1300ms); }
@@ -347,6 +387,17 @@
   [data-play="playing"] .nx-doc { animation: doc-run 3000ms ease-in-out both; }
   [data-play="playing"] .nx-done { animation: light-on 400ms ease-out both; animation-delay: 2600ms; }
 
+  /* Demonstrações de Soluções: anéis que acendem, pedido que avança, confirmações. */
+  .nx-hl { opacity: 0; }
+  [data-play="playing"] .nx-hl { animation: hl-flash 1300ms ease-out both; animation-delay: var(--d, 0ms); }
+  [data-play="armed"] .order-card { opacity: 0; }
+  [data-play="armed"] .order-head-end { color: var(--color-muted); }
+  [data-play="playing"] .order-card { animation: order-move 2900ms ease-in-out both; }
+  [data-play="playing"] .order-head-pass { animation: head-blink 1200ms ease-in-out both; animation-delay: var(--d, 0ms); }
+  [data-play="playing"] .order-head-end { animation: head-on 400ms ease-out both; animation-delay: 2500ms; }
+  [data-play="armed"] .nx-check { opacity: 0; }
+  [data-play="playing"] .nx-check { animation: check-pop 350ms var(--ease-out-soft) both; animation-delay: var(--d, 0ms); }
+
   /* Trilho cromado: um reflexo curto ao entrar na tela (ui/RailDivider.tsx). */
   .rail-sheen { opacity: 0; transform: translate3d(-100%, 0, 0); }
   [data-motion="on"] [data-sweep="play"] .rail-sheen { animation: rail-loop 12000ms ease-in-out infinite; }
@@ -354,7 +405,7 @@
   /* Impressão e captura de página: nada fica escondido por um estado de animação. */
   @media print {
     [data-play] * { animation: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important; }
-    .nx-doc, .nx-respond, .nx-pulse, .nx-ring { opacity: 0 !important; }
+    .nx-doc, .nx-respond, .nx-pulse, .nx-ring, .nx-hl { opacity: 0 !important; }
   }
 }
 

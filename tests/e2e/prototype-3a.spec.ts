@@ -148,84 +148,25 @@ test.describe("sem rolagem horizontal", () => {
   }
 });
 
-const apiFigure = (page: Page) =>
-  page.getByRole("article", { name: "APIs e integrações" });
-
-test.describe("ilustração de APIs e integrações", () => {
-  test("tem legenda curta, rótulo conceitual e é decorativa", async ({ page }) => {
-    await page.goto("/");
-    const card = apiFigure(page);
-
-    await expect(card).toContainText("Dados que circulam sem redigitação.");
-    await expect(card.getByText("Demonstração conceitual")).toBeVisible();
-    await expect(card.locator('[aria-hidden="true"]').first()).toBeAttached();
-  });
-
-  test("sem nomes de empresas nem números de resultado", async ({ page }) => {
-    await page.goto("/");
-    const text = await page.locator("#solucoes").innerText();
-
-    expect(text).not.toMatch(/\d+\s?%/);
-    expect(text).not.toMatch(/\b\d+\s?x\b/i);
-    expect(text).not.toMatch(/\b(sap|salesforce|stripe|shopify|totvs|vtex)\b/i);
-  });
-
-  test("o botão Repetir reinicia a animação e termina no estado final", async ({ page }) => {
+test.describe("demonstrações expansíveis", () => {
+  test("cada painel identifica sua demonstração conceitual e oferece repetição", async ({ page }) => {
     await page.goto("/#solucoes");
-    const card = apiFigure(page);
-    const replay = card.getByRole("button", { name: "Repetir animação" });
-    await expect(replay).toBeVisible();
-
-    await replay.click();
-    const figure = card.locator("[data-play]");
-    await expect(figure).toHaveAttribute("data-play", /armed|playing/);
-    await expect(figure).toHaveAttribute("data-play", "playing");
-
-    // Ao fim, todos os conectores estão desenhados (traço completo).
-    await page.waitForTimeout(2500);
-    const offsets = await card
-      .locator(".nx-link")
-      .evaluateAll((paths) => paths.map((p) => getComputedStyle(p).strokeDashoffset));
-    expect(offsets.length).toBe(6);
-    for (const offset of offsets) expect(parseFloat(offset)).toBeCloseTo(0, 1);
+    for (const panel of await page.locator("#solucoes details").all()) {
+      if (!(await panel.getAttribute("open") !== null)) await panel.locator("summary").click();
+      await expect(panel.getByText("Demonstração conceitual")).toBeVisible();
+      const replay = panel.getByRole("button", { name: /Repetir a animação/ });
+      await expect(replay).toBeVisible();
+      await expect.poll(async () => (await replay.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      await expect(panel.locator("[data-in-view] > div").first()).toHaveAttribute("aria-hidden", "true");
+    }
   });
 
-  test("é acessível por teclado: o botão Repetir recebe foco visível", async ({
-    page,
-    isMobile,
-  }) => {
-    test.skip(isMobile, "Foco por teclado é testado no desktop.");
+  test("movimento reduzido deixa a demonstração completa e sem repetição", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/#solucoes");
-    const replay = apiFigure(page).getByRole("button", { name: "Repetir animação" });
-    await replay.focus();
-    await expect(replay).toBeFocused();
-    await expect(replay).toHaveCSS("outline-style", "solid");
-  });
-
-  test.describe("movimento reduzido", () => {
-    test.use({ reducedMotion: "reduce" });
-
-    test("mostra o estado final sem animar e sem botão de repetir", async ({ page }) => {
-      await page.goto("/#solucoes");
-      await page.waitForTimeout(500);
-      const card = apiFigure(page);
-
-      await expect(card.locator("[data-play]")).toHaveCount(0);
-      await expect(card.getByRole("button", { name: "Repetir animação" })).toBeHidden();
-      await expect(card.locator(".nx-node").first()).toHaveCSS("opacity", "1");
-    });
-  });
-
-  test.describe("sem JavaScript", () => {
-    test.use({ javaScriptEnabled: false });
-
-    test("a ilustração aparece completa e estática", async ({ page }) => {
-      await page.goto("/#solucoes");
-      const card = apiFigure(page);
-
-      await expect(card.locator(".nx-node").first()).toBeVisible();
-      await expect(card.locator("[data-play]")).toHaveCount(0);
-      await expect(card.getByText("Demonstração conceitual")).toBeVisible();
-    });
+    const panel = page.locator("#solucoes details").nth(2);
+    await panel.locator("summary").click();
+    await expect(panel.locator(".scene-integrations-done")).toHaveCSS("opacity", "1");
+    await expect(panel.getByRole("button", { name: /Repetir a animação/ })).toBeHidden();
   });
 });

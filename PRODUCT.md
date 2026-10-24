@@ -16,8 +16,8 @@ Decisores de negócios de diferentes portes, de diferentes idades e níveis de f
 
 1. **Entender a proposta:** o visitante lê o hero e entende o que a Noxora faz.
 2. **Conhecer as soluções e os benefícios:** cada solução explica o benefício comercial, não só a tecnologia.
-3. **Ver projetos:** a seção é uma vitrine configurada em `src/content/projects.ts`: três websites de autoria confirmada pelo responsável (Bazar Oliveira, Clínica Multidisciplinar e PeB Estúdio Fotográfico), com capturas e links. A vitrine mostra somente esses três trabalhos construídos. Sem nenhum item, mostra um aviso honesto.
-4. **Entrar em contato:** três canais (e-mail, WhatsApp, Instagram `@noxoragroup`). Canal ainda não definido aparece como "em definição", sem link fictício. Depois dos canais há um **formulário** com validação, estado de envio e erro; só confirma o envio depois que o destino confirma, e sem destino configurado avisa que está indisponível.
+3. **Ver projetos:** a seção é uma vitrine configurada em `src/content/projects.ts`: dois websites de autoria confirmada pelo responsável (Bazar Oliveira e PeB Estúdio Fotográfico), com captura em destaque, uma frase factual curta e link; objetivo e solução ficam em "Ver detalhes". A vitrine mostra somente esses dois trabalhos construídos. Sem nenhum item, mostra um aviso honesto.
+4. **Entrar em contato:** três canais (e-mail, WhatsApp, Instagram `@noxoragroup`). O WhatsApp público é (21) 99494-1194 (`WHATSAPP_NUMBER` pode substituí-lo); canal inválido não aparece, sem link fictício. Depois dos canais há um **formulário** com validação, estado de envio e erro; só confirma o envio depois que o destino confirma, e sem destino configurado avisa que está indisponível.
 
 ## MVP
 
@@ -50,7 +50,7 @@ Next.js 16.4.2 (App Router), TypeScript estrito, Tailwind CSS 4, sem persistênc
 | Item | Estado | Impacto |
 | --- | --- | --- |
 | E-mail de contato | groupnoxora@gmail.com, informado pelo responsável | cartão com link para enviar e-mail |
-| WhatsApp de contato | não fornecido | cartão aparece como "em definição" |
+| WhatsApp de contato | (21) 99494-1194, informado pelo responsável | `WHATSAPP_NUMBER` o substitui; valor inválido esconde o canal |
 | Domínio público | não definido | `NEXT_PUBLIC_SITE_URL` é obrigatória para build de produção |
 | Destino do formulário (webhook) | não definido | o formulário avisa que o envio está indisponível e nunca simula sucesso |
 | Símbolo circular "N" | arquivo não fornecido | wordmark em texto permanece |
@@ -74,3 +74,13 @@ Portão 3B: validação visual da Fase 3A pelo responsável (hero, header e a il
 ## Manutenção
 
 Atualize este documento quando objetivo, escopo, restrições ou critérios mudarem. Decisões técnicas e evidências ficam em `docs/ARCHITECTURE.md`.
+
+
+## Atualização de 23/10/2026
+
+O site será usado na bio do Instagram. A apresentação prioriza toque e rolagem: soluções expansíveis, etapas de trabalho e três projetos acessíveis sem carrossel. Não foram adicionados resultados comerciais nem depoimentos.
+
+
+## Vitrine atual — 23/10/2026
+
+A pedido do responsável, o site da Clínica Multidisciplinar foi retirado da vitrine. Permanecem Bazar Oliveira e PeB Estúdio Fotográfico.

@@ -107,3 +107,11 @@ html[data-motion="paused"] { scroll-behavior: auto; }
 html[data-motion-active="false"] *,
 html[data-motion-active="false"] *::before,
 html[data-motion-active="false"] *::after { animation-play-state: paused !important; }
+
+/* Movimento reduzido: as entradas terminam na hora (duração ~0), em vez de ficarem
+   congeladas no primeiro quadro, com o texto invisível. A pausa só vale para aba em segundo plano. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion-active="false"] *,
+  html[data-motion-active="false"] *::before,
+  html[data-motion-active="false"] *::after { animation-play-state: running !important; }
+}

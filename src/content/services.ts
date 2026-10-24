@@ -56,3 +56,34 @@ export const services: readonly Service[] = [
     ],
   },
 ];
+
+/** Textos dentro das demonstrações de Soluções (dados genéricos, sem clientes nem números). */
+export const serviceDemos = {
+  concept: "Demonstração conceitual",
+  replay: "Repetir",
+  replayLabel: (title: string) => `Repetir a animação: ${title}`,
+  web: { desktop: "Computador", phone: "Celular" },
+  sistemas: {
+    columns: ["Recebido", "Em produção", "Concluído"],
+    card: "Pedido 01",
+    others: ["Pedido 02", "Pedido 03"],
+  },
+  integracoes: {
+    nodes: ["Loja virtual", "Integração", "ERP"],
+    token: "Venda 01",
+    done: "Estoque atualizado",
+  },
+  automacao: {
+    input: "Relatório semanal",
+    actions: ["Reúne os dados", "Envia à equipe"],
+  },
+} as const;
+
+
+export const servicesSection = {
+  eyebrow: "O que criamos",
+  title: "Tecnologia no formato do seu negócio.",
+  description: "Da presença digital à operação: conectamos design e desenvolvimento para tirar seu projeto do papel.",
+  applications: "Possibilidades de aplicação",
+  cta: "Conversar sobre esta solução",
+} as const;

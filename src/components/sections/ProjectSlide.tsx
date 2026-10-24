@@ -1,96 +1,101 @@
 import type { CSSProperties } from "react";
-import { ArrowUpRight, Lightbulb, Target } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { projectLabels, type Project } from "@/content/projects";
 import { ProjectPreview } from "@/components/illustrations/projects/ProjectPreview";
-import { Badge } from "@/components/ui/Badge";
-import { Facet } from "@/components/ui/Facet";
 
 /**
- * Um projeto na vitrine: a prévia visual domina; ao lado, o que é, o problema
- * e a solução em uma linha cada. Demonstração conceitual é sempre rotulada.
+ * Um projeto na vitrine: a captura domina; ao lado, o tipo, o nome, uma frase
+ * factual e o acesso ao site. Objetivo e solução ficam em "Ver detalhes" (um
+ * <details> nativo: teclado, leitor de tela e sem JavaScript). Demonstração
+ * conceitual é sempre rotulada.
  */
 // Ordem da entrada em sequência do conteúdo (ver `.pj-reveal` em globals.css).
 const step = (index: number) => ({ "--i": index }) as CSSProperties;
+
+const linkClass =
+  "inline-flex min-h-11 items-center gap-1.5 rounded-full border border-control px-4 text-sm font-medium text-fg transition-colors hover:border-fg/70 hover:bg-white/5";
 
 export function ProjectSlide({ project }: { project: Project }) {
   const titleId = `projeto-${project.id}`;
   const concept = project.kind === "concept";
 
   return (
-    <Facet as="article" aria-labelledby={titleId} size="lg" innerClassName="bg-surface" className="w-full">
-      <div className="grid gap-6 p-4 sm:p-6 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-10 lg:p-8">
-        <div className="pj-preview min-w-0">
-          <ProjectPreview project={project} />
-        </div>
-
-        <div className="grid min-w-0 gap-5 px-1 pb-2 sm:px-2 lg:pb-0">
-          <div className="pj-reveal flex flex-wrap items-center gap-2" style={step(0)}>
-            <Badge variant="solid">{project.category}</Badge>
-            {concept ? (
-              <Badge className="border-light-ice/40 text-light-ice">Demonstração conceitual</Badge>
-            ) : <Badge>{projectLabels.real}</Badge>}
+    <article aria-labelledby={titleId} className="project-editorial w-full border-t border-line pt-8">
+      <div className="grid gap-6 lg:grid-cols-[1.9fr_1fr] lg:items-center lg:gap-10">
+        {project.image && project.demoUrl ? (
+          <a
+            href={project.demoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={projectLabels.previewLink(project.title)}
+            className="pj-preview block min-w-0 rounded-xl"
+          >
+            <ProjectPreview project={project} />
+          </a>
+        ) : (
+          <div className="pj-preview min-w-0">
+            <ProjectPreview project={project} />
           </div>
+        )}
+
+        <div className="grid min-w-0 content-center gap-4 px-1 pb-2 sm:px-2 lg:pb-0">
+          <p className="pj-reveal flex flex-wrap items-center gap-x-2 text-sm text-muted" style={step(0)}>
+            <span>{project.category}</span>
+            <span aria-hidden="true">·</span>
+            <span className={concept ? "text-light-ice" : undefined}>
+              {concept ? "Demonstração conceitual" : projectLabels.real}
+            </span>
+          </p>
 
           <div className="pj-reveal" style={step(1)}>
             <h3 id={titleId} className="font-display text-h3 font-semibold text-fg">
               {project.title}
             </h3>
-            <p className="mt-2 text-base text-muted sm:text-lg">{project.description}</p>
+            <p className="mt-2 text-base text-muted sm:text-lg">{project.summary}</p>
           </div>
 
-          <dl className="pj-reveal grid gap-3" style={step(2)}>
-            <div className="flex items-start gap-3">
-              <dt className="mt-0.5 shrink-0">
-                <Target aria-hidden="true" className="size-5 text-chrome" strokeWidth={1.75} />
-                <span className="sr-only">{concept ? "Problema" : projectLabels.goal}</span>
-              </dt>
-              <dd className="text-fg">{project.problem}</dd>
-            </div>
-            <div className="flex items-start gap-3">
-              <dt className="mt-0.5 shrink-0">
-                <Lightbulb aria-hidden="true" className="size-5 text-light-ice" strokeWidth={1.75} />
-                <span className="sr-only">Solução</span>
-              </dt>
-              <dd className="text-fg">{project.solution}</dd>
-            </div>
-          </dl>
+          <div className="pj-reveal flex flex-wrap gap-x-5 gap-y-1" style={step(2)}>
+            {project.demoUrl ? (
+              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                {concept ? "Ver demonstração" : projectLabels.visit}
+                <span className="sr-only"> de {project.title} (abre em nova aba)</span>
+                <ArrowUpRight aria-hidden="true" className="size-4" />
+              </a>
+            ) : null}
+            {project.caseStudyUrl ? (
+              <a href={project.caseStudyUrl} className={linkClass}>
+                Ler estudo de caso
+                <span className="sr-only"> de {project.title}</span>
+                <ArrowUpRight aria-hidden="true" className="size-4" />
+              </a>
+            ) : null}
+          </div>
 
-          {project.technologies.length > 0 ? <ul className="pj-reveal flex flex-wrap gap-2" aria-label="Tecnologias" style={step(3)}>
-            {project.technologies.map((technology) => (
-              <li key={technology}>
-                <Badge>{technology}</Badge>
-              </li>
-            ))}
-          </ul> : null}
-
-          {project.demoUrl || project.caseStudyUrl ? (
-            <div className="pj-reveal flex flex-wrap gap-x-6 gap-y-2" style={step(4)}>
-              {project.demoUrl ? (
-                <a
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-fg underline-offset-4 hover:underline"
-                >
-                  {concept ? "Ver demonstração" : projectLabels.visit}
-                  <span className="sr-only"> de {project.title} (abre em nova aba)</span>
-                  <ArrowUpRight aria-hidden="true" className="size-4" />
-                </a>
+          <details className="pj-reveal group" style={step(3)}>
+            <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-md text-sm text-muted transition-colors marker:hidden hover:text-fg [&::-webkit-details-marker]:hidden">
+              {projectLabels.details}
+              <span className="sr-only"> de {project.title}</span>
+              <ChevronDown aria-hidden="true" className="size-4 transition-transform group-open:rotate-180" />
+            </summary>
+            <dl className="mt-2 grid gap-3 text-base">
+              <div>
+                <dt className="text-sm text-muted">{concept ? projectLabels.problem : projectLabels.goal}</dt>
+                <dd className="text-fg">{project.problem}</dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted">{projectLabels.solution}</dt>
+                <dd className="text-fg">{project.solution}</dd>
+              </div>
+              {project.technologies.length > 0 ? (
+                <div>
+                  <dt className="text-sm text-muted">Tecnologias</dt>
+                  <dd className="text-fg">{project.technologies.join(", ")}</dd>
+                </div>
               ) : null}
-              {project.caseStudyUrl ? (
-                <a
-                  href={project.caseStudyUrl}
-                  className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-fg underline-offset-4 hover:underline"
-                >
-                  Ler estudo de caso
-                  <span className="sr-only"> de {project.title}</span>
-                  <ArrowUpRight aria-hidden="true" className="size-4" />
-                </a>
-              ) : null}
-            </div>
-          ) : null}
+            </dl>
+          </details>
         </div>
       </div>
-    </Facet>
+    </article>
   );
 }

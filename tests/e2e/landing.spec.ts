@@ -12,7 +12,7 @@ test.describe("estrutura e SEO", () => {
     );
 
     for (const name of [
-      "Soluções sob medida para cada etapa do seu negócio.",
+      "Tecnologia no formato do seu negócio.",
       "Veja como transformamos problemas em soluções.",
       "Seu próximo projeto começa com uma conversa.",
     ]) {
